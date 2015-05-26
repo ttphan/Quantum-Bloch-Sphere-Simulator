@@ -3,68 +3,40 @@
 	<head>
 	<style>
 		body {
-		margin: 0px;
-		padding: 0px;
+			margin: 10px;
+			padding: 10px;
+			background-color: #FF8C00;
+			font-family: "Verdana", sans-serif;
+			color:red
 		}
+		table, th, td {
+			color:blue
+        }
+        th, td {
+			padding: 10px;
+			border: 1px solid black;
+			text-align: left;
+			background-color: #FF00FF;
+        }
 	</style>
 	</head>
 	<body>
-	<div id="container"></div>
-		<script src="http://www.html5canvastutorials.com/libraries/three.min.js"></script>
-		<script defer="defer">
-			// renderer
-			var renderer = new THREE.WebGLRenderer();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-			document.body.appendChild(renderer.domElement);
-	 
-			// camera
-			var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-			camera.position.z = 5;
-	 
-			// scene
-			var scene = new THREE.Scene();
-					
-			// sphere
-			// the first argument of THREE.SphereGeometry is the radius, the second argument is
-			// the segmentsWidth, and the third argument is the segmentsHeight.  Increasing the 
-			// segmentsWidth and segmentsHeight will yield a more perfect circle, but will degrade
-			// rendering performance
-			var sphereGeometry = new THREE.SphereGeometry(1, 100, 100);
-			var sphereMaterial = new THREE.MeshBasicMaterial( { 
-				color: 0x00ff00, 
-				transparent: true, 
-				opacity: 0.25 
-			});
-			
-			var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
-			scene.add(sphere);
-
-			var vectorMaterial = new THREE.LineBasicMaterial({
-	        	color: 0x0000ff
-	    	});
-	    	
-	    	var vectorGeometry = new THREE.Geometry();
-	    	vectorGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-	    	vectorGeometry.vertices.push(new THREE.Vector3(0, 1, 0));
-
-	    	var vector = new THREE.Line(vectorGeometry, vectorMaterial);
-	    	scene.add(vector);
-		 
-				var render = function () {
-					requestAnimationFrame( render );
-
-					sphere.rotation.x += 0.1;
-					sphere.rotation.y += 0.1;
-					sphere.rotation.z += 0.025;
-
-					vector.rotation.x += 0.1;
-					vector.rotation.y += 0.1;
-					vector.rotation.z += 0.025;
-
-					renderer.render(scene, camera);
-				};
-
-				render();
-		</script>
+		<div id="container"></div>
+		<script src="js/lib/three.js"></script>
+		
+		<center>
+		<h1>Kale Koppen Niet Te Stoppen - Epic Quantum</h1>
+		<table style="width:80%" cellspacing="10">
+			<tr>
+				<td>Choose wave function</td>
+				<td rowspan="2">
+					<canvas id="myCanvas" width="500" height="500"></canvas>
+				</td>
+			</tr>
+			<tr>
+				<td>Timeline</td>
+			</tr>
+		</table>
+		</center>
 	</body>
 </html>      
