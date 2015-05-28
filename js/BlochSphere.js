@@ -15,14 +15,12 @@ window.onload = function() {
 		camera = new THREE.PerspectiveCamera(45, c.width / c.height, 1, 1000);
 		camera.position.z = 5;
 
+		// Trackball controls
 		controls = new THREE.TrackballControls( camera, c );
 		controls.rotateSpeed = 5.0;
-
 		controls.noZoom = false;
 		controls.noPan = true;
-
 		controls.dynamicDampingFactor = 0.3;
-
 		controls.addEventListener( 'change', render );
 
 		// scene
@@ -38,7 +36,7 @@ window.onload = function() {
 		// rendering performance
 		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
 		var sphereMaterial = new THREE.MeshBasicMaterial( { 
-			color: 0x00ff00, 
+			color: 0xADD8E6, 
 			transparent: true, 
 			opacity: 0.25 
 		});
@@ -46,8 +44,12 @@ window.onload = function() {
 		var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
 		blochSphere.add(sphere);
 
+		// circle
+		var circles = buildCircles();
+		blochSphere.add(circles);
+
 		// Add axes
-		axes = buildAxes( 1.5 );
+		var axes = buildAxes( 1.5 );
 		blochSphere.add( axes );
 
 		scene.add(blochSphere);
@@ -80,7 +82,6 @@ window.onload = function() {
 	}
 
 	function render() {
-		requestAnimationFrame( render );
 		renderer.render(scene, camera);
 	}
 }
@@ -115,6 +116,54 @@ function buildAxis( src, dst, colorHex, dashed ) {
 	var axis = new THREE.Line( geom, mat, THREE.LinePieces );
 
 	return axis;
+
+}
+
+
+function buildCircles() {
+	var circles = new THREE.Object3D();
+
+	circles.add(buildCircle(1,32,0));//Math.PI/2));
+	circles.add(buildCircle(1,32,'x'));
+	circles.add(buildCircle(1,32,'y'));
+
+	return circles;
+}
+
+function buildCircle(radius,segments,rot) {
+	var circle = new THREE.Object3D();
+
+	var circleGeometry = new THREE.CircleGeometry( radius, segments );
+	var lineGeometry = new THREE.CircleGeometry( radius, segments );
+
+	var circleMaterial = new THREE.MeshBasicMaterial( { 
+		color: 0xffffff, 
+		transparent: true, 
+		side: THREE.DoubleSide,
+		opacity: 0.05,
+		depthWrite: false, 
+		depthTest: false
+	});
+	var lineMaterial = new THREE.LineDashedMaterial( {
+		color: 0xffffff, 
+		transparent: true,
+		opacity: 0.5,
+		depthWrite: false, 
+		depthTest: false,
+		dashSize: 1000,
+		gapSize: 5, 
+		linewidth: 0.5
+	});
+
+	var base =  new THREE.Mesh(circleGeometry, circleMaterial);
+	var line = new THREE.Line(lineGeometry,lineMaterial);
+
+	if (rot ==='x') {	circle.rotation.x = Math.PI/2; }
+	else if (rot ==='y') {circle.rotation.y = Math.PI/2; }
+
+	circle.add(base);
+	circle.add(line);
+	return circle;
 
 }
 
