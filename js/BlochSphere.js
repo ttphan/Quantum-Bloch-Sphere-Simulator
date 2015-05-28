@@ -20,7 +20,7 @@ window.onload = function() {
 		controls.rotateSpeed = 5.0;
 		controls.noZoom = false;
 		controls.noPan = true;
-		controls.dynamicDampingFactor = 0.3;
+		controls.dynamicDampingFactor = 1;
 		controls.addEventListener( 'change', render );
 
 		// scene
@@ -71,8 +71,8 @@ window.onload = function() {
 			scene.add( arrowHelper );
 		} // drawArrow
 		
-		//var knop = document.getElementById("knop");
-		//knop.addEventListener( 'click', drawArrow);
+		var knop = document.getElementById("knop");
+		knop.addEventListener( 'click', drawArrow);
 
 	}
 
