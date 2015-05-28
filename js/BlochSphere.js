@@ -52,6 +52,26 @@ window.onload = function() {
 
 		scene.add(blochSphere);
 		render();
+		
+		
+		function drawArrow( ) {
+		    var a = new Number(document.getElementById("input_a").value);
+			var b = new Number(document.getElementById("input_b").value);
+			var c = new Number(document.getElementById("input_c").value);
+			var d = new Number(document.getElementById("input_d").value);
+		    var dir = getVector(a,b,c,d);
+			
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var length = 1;
+			var hex = 0xffff00;
+
+			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+			scene.add( arrowHelper );
+		} // drawArrow
+		
+		//var knop = document.getElementById("knop");
+		//knop.addEventListener( 'click', drawArrow);
+
 	}
 
 	function animate() {
@@ -97,3 +117,18 @@ function buildAxis( src, dst, colorHex, dashed ) {
 	return axis;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
