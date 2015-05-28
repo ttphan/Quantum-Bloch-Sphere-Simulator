@@ -21,7 +21,7 @@ window.onload = function() {
 		controls.noZoom = false;
 		controls.noPan = true;
 
-		controls.dynamicDampingFactor = 0.3;
+		controls.dynamicDampingFactor = 1;
 
 		controls.addEventListener( 'change', render );
 
@@ -80,7 +80,6 @@ window.onload = function() {
 	}
 
 	function render() {
-		requestAnimationFrame( render );
 		renderer.render(scene, camera);
 	}
 }
