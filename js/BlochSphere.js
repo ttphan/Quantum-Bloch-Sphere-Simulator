@@ -38,7 +38,7 @@ window.onload = function() {
 		// the segmentsWidth, and the third argument is the segmentsHeight.  Increasing the 
 		// segmentsWidth and segmentsHeight will yield a more perfect circle, but will degrade
 		// rendering performance
-		var sphereGeometry = new THREE.SphereGeometry(1, 100, 100);
+		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
 		var sphereMaterial = new THREE.MeshBasicMaterial( { 
 			color: 0x00ff00, 
 			transparent: true, 
@@ -78,7 +78,6 @@ function buildAxes( length ) {
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, true ) ); // -Z
 
 		return axes;
-
 }
 
 function buildAxis( src, dst, colorHex, dashed ) {
