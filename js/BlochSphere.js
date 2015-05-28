@@ -69,8 +69,8 @@ window.onload = function() {
 			scene.add( arrowHelper );
 		} // drawArrow
 		
-		//var knop = document.getElementById("knop");
-		//knop.addEventListener( 'click', drawArrow);
+		var knop = document.getElementById("knop");
+		knop.addEventListener( 'click', drawArrow);
 
 	}
 
