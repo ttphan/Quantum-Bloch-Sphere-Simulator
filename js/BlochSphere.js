@@ -15,20 +15,18 @@ window.onload = function() {
 		camera = new THREE.PerspectiveCamera(45, c.width / c.height, 1, 1000);
 		camera.position.z = 5;
 
-		controls = new THREE.TrackballControls( camera );
+		controls = new THREE.TrackballControls( camera, c );
 		controls.rotateSpeed = 5.0;
 
 		controls.noZoom = false;
 		controls.noPan = true;
 
-		controls.staticMoving = true;
 		controls.dynamicDampingFactor = 0.3;
 
 		controls.addEventListener( 'change', render );
 
 		// scene
 		scene = new THREE.Scene();
-
 
 		// Bloch sphere object
 		var blochSphere = new THREE.Object3D();
