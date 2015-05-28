@@ -16,11 +16,13 @@ window.onload = function() {
 		camera.position.z = 5;
 
 		// Trackball controls
-		controls = new THREE.TrackballControls( camera, c );
-		controls.rotateSpeed = 5.0;
-		controls.noZoom = false;
+		controls = new THREE.OrbitControls( camera, c );
+		controls.rotateSpeed = 1.0;
 		controls.noPan = true;
-		controls.dynamicDampingFactor = 1;
+
+		controls.minDistance = 2;
+		controls.maxDistance = 5;
+
 		controls.addEventListener( 'change', render );
 
 		// scene
