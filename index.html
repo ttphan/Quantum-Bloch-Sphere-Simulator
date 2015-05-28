@@ -14,6 +14,7 @@
         }
         th, td {
 			padding: 10px;
+			vertical-align:top;
 			border: 1px solid black;
 			text-align: left;
 			background-color: #FF00FF;
@@ -26,12 +27,67 @@
 		<script src="js/lib/three.js"></script>
 		<script src="js/lib/TrackballControls.js"></script>
 		<script src="js/BlochSphere.js"></script>
+		<script src="computeVector.js"></script>
+		<script src="js/lib/math.js"></script>
+		
+		<script>
+		  function showState() {
+		    var a = new Number(document.getElementById("input_a").value);
+			var b = new Number(document.getElementById("input_b").value);
+			var c = new Number(document.getElementById("input_c").value);
+			var d = new Number(document.getElementById("input_d").value);
+		    var vector = getVector(a,b,c,d);
+			alert("x: "+vector.x+" y: "+vector.y+" z: "+vector.z)
+		  } // showState
+		  
+		  function showLatex() {
+		    var code = "\\left|\\Psi\\right> = a\\left|1\\right> + b\\left|0\\right>"
+			var eqImg = document.getElementById("eqImg");
+			eqImg.src = "http://latex.codecogs.com/gif.latex?\\bg_white \\200dpi " + code;
+		  } // showLatex
+		  
+		  function flashtext(ele,col) {
+			var tmpColCheck = document.getElementById("titel").style.color;
+
+			if (tmpColCheck === 'green') {
+				document.getElementById("titel").style.color = col;
+			} else {
+				document.getElementById("titel").style.color = 'green';
+			}
+		  } // flashText 
+
+          setInterval(function() {
+            flashtext('flashingtext','red');
+		  }, 1000 );
+		  
+		</script>
 		
 		<center>
-		<h1>Kale Koppen Niet Te Stoppen - Epic Quantum</h1>
+		<h1 id="titel">
+			<img src="flaming1.gif" style="width:40px;height:40px;"/>
+			Quantum Bloch-sphere Simulator 
+			<img src="flaming1.gif" style="width:40px;height:40px;"/>
+		</h1>
+		
+				
+		
 		<table style="width:80%" cellspacing="10">
 			<tr>
-				<td>Choose wave function</td>
+				<td>
+					Choose density matrix
+					<br/>
+					<input type="text" id="input_a" value="1337">
+					<input type="text" id="input_b" value="0">
+					<br/>
+					<input type="text" id="input_c" value="0">
+					<input type="text" id="input_d" value="0">
+					<br/>
+					<button onClick="showState();showLatex();">Show state in Bloch-sphere</button>
+					<br/>
+					<img id="eqImg"/>
+				</td>
+				
+				
 				<td rowspan="2">
 					<canvas id="myCanvas" width="500" height="500"></canvas>
 				</td>
