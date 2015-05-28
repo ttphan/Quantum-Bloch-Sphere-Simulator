@@ -104,9 +104,9 @@ function buildAxis( src, dst, colorHex, dashed ) {
 		mat; 
 
 	if(dashed) {
-		mat = new THREE.LineDashedMaterial({ linewidth: 3, color: colorHex, dashSize: 3, gapSize: 3 });
+		mat = new THREE.LineDashedMaterial({ linewidth: 2, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
 	} else {
-		mat = new THREE.LineBasicMaterial({ linewidth: 3, color: colorHex });
+		mat = new THREE.LineBasicMaterial({ linewidth: 2, color: colorHex });
 	}
 
 	geom.vertices.push( src.clone() );
@@ -150,10 +150,12 @@ function buildCircle(radius,segments,rot) {
 		opacity: 0.5,
 		depthWrite: false, 
 		depthTest: false,
-		dashSize: 1000,
-		gapSize: 5, 
+		dashSize: 0.1,
+		gapSize: 0.1, 
 		linewidth: 0.5
 	});
+
+	lineGeometry.computeLineDistances();
 
 	var base =  new THREE.Mesh(circleGeometry, circleMaterial);
 	var line = new THREE.Line(lineGeometry,lineMaterial);
