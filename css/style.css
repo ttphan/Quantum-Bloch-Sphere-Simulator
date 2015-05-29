@@ -7,41 +7,55 @@ body {
 	color:black;
 }
 
-#container {
+#app {
 	vertical-align: middle;
 	width: 900px;
 	height: 600px;
+}
 
+.blue {
+	background-color:lightblue;
+}
+
+.alpha60 {
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(255, 255, 255);
+	/* RGBa with 0.6 opacity */
+	background: rgba(255, 255, 255, 0.6);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 }
 
 h2 {
 	font-family: "Arial", sans-serif;
 	font-size: 14px;
 	text-align: left;
-	margin-left: 10px;
-
+	margin: 10px;
+	padding: 0px;
 }
 
-.half {
-	float: left;
-	width: 48%;
-	height: 95%;
-	margin-left: 5px;
-}
-
-.blocks {
+div.blocks {
 	border: 1px solid white;
-	background-color:lightblue;
+	padding: 0px;
+}
+
+div#sphere {
 	padding: 10px;
-	margin-top: 5px;
 }
 
-#inputfields .blocks {
-	height: 47.5%;
+div.colspace {
+	padding-right: 10px;
+	padding-left: 10px;
 }
 
-#sphere .blocks {
-	height: 100%;
+.row {
+	margin: 0px;
+}
+
+div.spaceRow {
+	margin-top: 10px;
 }
 
 canvas {

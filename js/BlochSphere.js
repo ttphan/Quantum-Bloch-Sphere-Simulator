@@ -155,7 +155,7 @@ function buildCircle(radius,segments,rot) {
 		depthTest: false,
 		dashSize: 0.1,
 		gapSize: 0.1, 
-		linewidth: 2
+		linewidth: 1
 	});
 
 	lineGeometry.computeLineDistances();

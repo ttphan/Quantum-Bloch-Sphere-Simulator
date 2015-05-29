@@ -13,6 +13,8 @@
 		<script src="js/lib/math.js"></script>
 		<script src="computeVector.js"></script>
 
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	</head>
 
 	<body>
@@ -23,27 +25,32 @@
 		</h1>
 		
 		
-		<div id = "container">
-			<div id="inputfields" class="half">
-				<div id="states" class="blocks">
-					<h2> Choose density matrix </h2>
-					<br/>
-					<input type="text" id="input_a" value="1">
-					<input type="text" id="input_b" value="0">
-					<br/>
-					<input type="text" id="input_c" value="0">
-					<input type="text" id="input_d" value="0">
-					<br/>
-					<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
-					<br/>
+		<div id = "app" class="blue">
+			<div id="inputfields" class="col-md-7 colspace container">
+				<div class="row spaceRow">
+					<div id="states" class="blocks alpha60">
+						<h2> Choose density matrix </h2>
+						<input type="text" id="input_a" value="1">
+						<input type="text" id="input_b" value="0">
+						<br/>
+						<input type="text" id="input_c" value="0">
+						<input type="text" id="input_d" value="0">
+						<br/>
+						<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
+						<br/>
+					</div>
 				</div>
-				<div id="timeline" class="blocks">
-					<h2> Construct circuit </h2> ----------------------------
+				<div class="row spaceRow">
+					<div id="timeline" class="blocks alpha60">
+						<h2> Construct circuit </h2> ----------------------------
+					</div>
 				</div>
 
 			</div>
-			<div id="sphere" class="half blocks">
-				<canvas id="myCanvas" width="400" height="400"></canvas>
+			<div class="col-md-5 colspace">
+				<div id="sphere" class="blocks spaceRow alpha60">
+					<canvas id="myCanvas" width="300" height="300"></canvas>
+				</div>
 			</div>
 
 		</div>
