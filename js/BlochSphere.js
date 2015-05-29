@@ -38,7 +38,7 @@ window.onload = function() {
 		// rendering performance
 		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
 		var sphereMaterial = new THREE.MeshBasicMaterial( { 
-			color: 0xADD8E6, 
+			color: 0x0099CC, 
 			transparent: true, 
 			opacity: 0.25 
 		});
@@ -51,7 +51,7 @@ window.onload = function() {
 		blochSphere.add(circles);
 
 		// Add axes
-		var axes = buildAxes( 1.5 );
+		var axes = buildAxes( 2 );
 		blochSphere.add( axes );
 
 		scene.add(blochSphere);
@@ -67,7 +67,7 @@ window.onload = function() {
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
 			var length = 1;
-			var hex = 0xffff00;
+			var hex = 0x000000;
 
 			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
 			scene.add( arrowHelper );
@@ -84,6 +84,7 @@ window.onload = function() {
 	}
 
 	function render() {
+		renderer.setClearColor( 0xffffff, 1);
 		renderer.render(scene, camera);
 	}
 }
@@ -125,7 +126,7 @@ function buildAxis( src, dst, colorHex, dashed ) {
 function buildCircles() {
 	var circles = new THREE.Object3D();
 
-	circles.add(buildCircle(1,32,0));//Math.PI/2));
+	circles.add(buildCircle(1,32,0));
 	circles.add(buildCircle(1,32,'x'));
 	circles.add(buildCircle(1,32,'y'));
 
@@ -142,7 +143,7 @@ function buildCircle(radius,segments,rot) {
 		color: 0xffffff, 
 		transparent: true, 
 		side: THREE.DoubleSide,
-		opacity: 0.05,
+		opacity: 0.1,
 		depthWrite: false, 
 		depthTest: false
 	});
