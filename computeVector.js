@@ -32,7 +32,7 @@ function stateToDensityMatrix(state) {
 }
 
 function tensorProduct(state1,state2) {
-      return [math.multiply(state1[0],state2[0],
+      return [math.multiply(state1[0],state2[0]),
             math.multiply(state1[0],state2[1]),
             math.multiply(state1[1],state2[0]),
             math.multiply(state1[1],state2[1])]
