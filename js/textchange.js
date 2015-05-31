@@ -3,7 +3,7 @@ function showState() {
 	var b = new Number(document.getElementById("input_b").value);
 	var c = new Number(document.getElementById("input_c").value);
 	var d = new Number(document.getElementById("input_d").value);
-	var vector = getVector(a,b,c,d);
+	var vector = getVector([[a,b],[c,d]]);
 	alert("x: "+vector.x+" y: "+vector.y+" z: "+vector.z)
 } // showState
 
@@ -13,16 +13,16 @@ function showLatex() {
 	eqImg.src = "http://latex.codecogs.com/gif.latex?\\bg_white \\200dpi " + code;
 } // showLatex
 
-function flashtext(ele,col) {
-	var tmpColCheck = document.getElementById("titel").style.color;
+// function flashtext(ele,col) {
+// 	var tmpColCheck = document.getElementById("titel").style.color;
 
-	if (tmpColCheck === 'green') {
-		document.getElementById("titel").style.color = col;
-	} else {
-		document.getElementById("titel").style.color = 'green';
-	}
-} // flashText 
+// 	if (tmpColCheck === 'green') {
+// 		document.getElementById("titel").style.color = col;
+// 	} else {
+// 		document.getElementById("titel").style.color = 'green';
+// 	}
+// } // flashText 
 
-setInterval(function() {
-	flashtext('flashingtext','red');
-}, 1000 );
+// setInterval(function() {
+// 	flashtext('flashingtext','red');
+// }, 1000 );

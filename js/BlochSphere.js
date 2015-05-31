@@ -14,6 +14,8 @@ window.onload = function() {
 		// camera
 		camera = new THREE.PerspectiveCamera(45, c.width / c.height, 1, 1000);
 		camera.position.z = 5;
+		camera.position.x = 5;
+		camera.position.y = 5;
 
 		// Trackball controls
 		controls = new THREE.OrbitControls( camera, c );
@@ -51,7 +53,7 @@ window.onload = function() {
 		blochSphere.add(circles);
 
 		// Add axes
-		var axes = buildAxes( 2 );
+		var axes = buildAxes( 1.5 );
 		blochSphere.add( axes );
 
 		scene.add(blochSphere);
