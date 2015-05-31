@@ -66,10 +66,12 @@ window.onload = function() {
 			var c = new Number(document.getElementById("input_c").value);
 			var d = new Number(document.getElementById("input_d").value);
 		    var dir = getVector([[a,b],[c,d]]);
+		    dir.z = (dir.z).im;
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
-			var length = 1;
-			var hex = 0x000000;
+			var length = Math.sqrt(Math.pow(a,2) + Math.pow(b, 2) + Math.pow(c,2));
+			console.log(length);
+			var hex = '#'+Math.floor(Math.random()*16777215).toString(16);
 
 			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
 			scene.add( new THREE.ArrowHelper( dir, origin, length, hex ) );
