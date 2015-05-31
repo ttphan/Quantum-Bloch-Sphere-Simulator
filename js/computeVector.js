@@ -15,8 +15,8 @@ var stateZero = [[1],[0]];
 function getVector(densMatrix){
       //var densMatrix = [[a,b],[c,d]];
       var xCoor = trace(math.multiply(densMatrix,gateX));
-      var yCoor = trace(math.multiply(densMatrix,gateY));
-      var zCoor = trace(math.multiply(densMatrix,gateZ));
+      var yCoor = trace(math.multiply(densMatrix,gateZ));
+      var zCoor = trace(math.multiply(densMatrix,gateY));
 
       var vector = new THREE.Vector3( xCoor, yCoor, zCoor );
       return vector;
