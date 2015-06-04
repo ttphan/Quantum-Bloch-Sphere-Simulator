@@ -15,6 +15,14 @@ body {
 
 .blue {
 	background-color:lightblue;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(173, 216, 230);
+	/* RGBa with 0.6 opacity */
+	background: rgba(173, 216, 230, 0.8);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 }
 
 .alpha60 {
