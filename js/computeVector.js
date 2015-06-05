@@ -34,20 +34,20 @@ function getEigenvalues(matrix) {
       d = matrix[1][1];
       part1 = math.multiply(-1,math.add(a,d));
       part2 = math.pow(math.add(a,d),2);
-      part3 = math.substract(math.multiply(a,d), math.multiply(c,d));
-      lambda1 = math.add(part1, math.sqrt(math.substract(part2,part3)));
+      part3 = math.subtract(math.multiply(a,d), math.multiply(c,d));
+      lambda1 = math.add(part1, math.sqrt(math.subtract(part2,part3)));
       lambda1 = math.multiply(0.5,lambda1);
-      lambda2 = math.substract(part1, math.sqrt(math.substract(part2,part3)));
+      lambda2 = math.subtract(part1, math.sqrt(math.subtract(part2,part3)));
       lambda2 = math.multiply(0.5,lambda2);
       return [lambda1, lambda2];
 }
 
 function conjugateTranspose(matrix) {
-      return math.conjugate(math.transpose(matrix));
+      return math.conj(math.transpose(matrix));
 }
 
 function stateToDens(state) {
-      //state = [a,b];
+      state = [[state[0],state[1]];
       return math.multiply(state, math.transpose(state));
 }
 
@@ -63,7 +63,7 @@ function controlledGate(gate) {
 }
 
 function getPhaseShiftGate(shift) {
-      return [[1,0],[0,Math.exp(complexi*shift)]];
+      return [[1,0],[0,Math.exp(math.multiply(complexi,shift))]];
 }
 
 function applyGate(state,gate) {
@@ -71,24 +71,24 @@ function applyGate(state,gate) {
 }
 
 function depolNoise(densMatrix, r) {
-      return math.multiply(r,densMatrix) + math.multiply((1-r),maxMixed);
+      return math.add (math.multiply(r,densMatrix), math.multiply((1-r),maxMixed));
 }
 
 function dephaseNoiseX(densMatrix,r) {
-      return math.multiply(r,densMatrix) 
-            + math.multiply((1-r),math.multiply(math.multiply(gateX,densMatrix),gateX));
+      return math.add(math.multiply(r,densMatrix), 
+            math.multiply((1-r),math.multiply(math.multiply(gateX,densMatrix),gateX)));
 }
 
 function dephaseNoiseZ(densMatrix,r) {
-      return math.multiply(r,densMatrix) 
-            + math.multiply((1-r),math.multiply(math.multiply(gateZ,densMatrix),gateZ));
+      return math.add(math.multiply(r,densMatrix), 
+            math.multiply((1-r),math.multiply(math.multiply(gateZ,densMatrix),gateZ)));
 }
 
 function ampDampNoise(densMatrix,r) {
-      a0 = stateToDens(stateZero) + math.multiply(math.sqrt(r),stateToDens(stateOne));
+      a0 = math.add(stateToDens(stateZero), math.multiply(math.sqrt(r),stateToDens(stateOne)));
       a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,stateOne.transpose()));
-      return math.multiply(math.multiply(a0,densMatrix), math.conjugateTranspose(a0)) + 
-            math.multiply(math.multiply(a1,densMatrix), math.conjugateTranspose(a1));
+      return math.add(math.multiply(math.multiply(a0,densMatrix), math.conjugateTranspose(a0)), 
+            math.multiply(math.multiply(a1,densMatrix), math.conjugateTranspose(a1)));
 }
 
 function isPure(densMatrix) {
@@ -117,18 +117,18 @@ function getPadeApproxExp(matrix, approx) {
       var num = identity;
       for (var i = 0; i < approx; i++) {
             factor = 1/math.factorial(i+2);
-            addterm = math.multiply(math.pow(matrix,i+1), factor));
+            addterm = math.multiply(math.pow(matrix,i+1), factor);
             num = math.add(num, addterm);
             if (i % 2 == 0) {
                   denom = math.add(denom,addterm);
             } else {
-                  denom = math.substrac(denom,addterm);
+                  denom = math.subtract(denom,addterm);
             }
       }
       return math.multiply(num,math.inv(denom));
 }
 
 function getUnitaryAtTime(unitary, time) {
-      var unitary = math.multiply(math.multiply(time,math.complex("-i")),unitary)
+      var unitary = math.multiply(math.multiply(time,math.complex("-i")),unitary);
       return getPadeApproxExp(unitary);
 }
