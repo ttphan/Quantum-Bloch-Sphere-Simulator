@@ -74,3 +74,7 @@ function ampDampNoise(densMatrix,r) {
       return math.multiply(math.multiply(a0,densMatrix), math.conjugateTranspose(a0)) + 
             math.multiply(math.multiply(a1,densMatrix), math.conjugateTranspose(a1));
 }
+
+function isPure(densMatrix) {
+      return trace(math.multiply(densMatrix, math.transpose(densMatrix))) == 1;
+}
