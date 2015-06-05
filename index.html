@@ -23,32 +23,27 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 		<script>
-		   
-			window.onLoad() {
-			
-				function stateSliderChange(id) {
-					if (id == 1) { // slider1 changed, so change slider 2
-					  var slider = document.getElementById("rangeState1Var2");
-					  slider.value = 100 - document.getElementById("rangeState1Var1").value;
-					} // if
-					else if (id == 2) { // slider2 changed, so change slider 1
-					  var slider = document.getElementById("rangeState1Var1");
-					  slider.value = 100 - document.getElementById("rangeState1Var2").value;
-					} // if
-					
-					var a = new Number(document.getElementById("rangeState1Var1").value);
-					var b = new Number(document.getElementById("rangeState1Var2").value);
-					a = a / 100;
-					b = b / 100;
-					
-					var elem = document.getElementById("state1Text");
-					elem.innerHTML = "&#936 = " + a + "|0> + " + b + "|1>";
-					
-					var matrix = stateToDens([[a],[b]]);
-					alert("00:" + matrix[0][0]);
-				} // stateSliderChange
+			function stateSliderChange(id) {
+				if (id == 1) { // slider1 changed, so change slider 2
+				  var slider = document.getElementById("rangeState1Var2");
+				  slider.value = 100 - document.getElementById("rangeState1Var1").value;
+				} // if
+				else if (id == 2) { // slider2 changed, so change slider 1
+				  var slider = document.getElementById("rangeState1Var1");
+				  slider.value = 100 - document.getElementById("rangeState1Var2").value;
+				} // if
 				
-			}
+				var a = new Number(document.getElementById("rangeState1Var1").value);
+				var b = new Number(document.getElementById("rangeState1Var2").value);
+				a = a / 100;
+				b = b / 100;
+				
+				var elem = document.getElementById("state1Text");
+				elem.innerHTML = "&#936 = " + a + "|0> + " + b + "|1>";
+				
+				var matrix = stateToDens([[a],[b]]);
+				alert("00:" + matrix[0][0]);
+			} // stateSliderChange
 		</script
 		
 	</head>
@@ -65,22 +60,7 @@
 		
 		<div id = "app" class="blue">
 			<div id="inputfields" class="col-md-7 colspace container">
-				<div class="row spaceRow">
-					<!--
-					<div id="states" class="blocks alpha60">
-						<h2> Choose density matrix </h2>
-						<input type="text" id="input_a" value="1">
-						<input type="text" id="input_b" value="0">
-						<br/>
-						<input type="text" id="input_c" value="0">
-						<input type="text" id="input_d" value="0">
-						<br/>
-						<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
-						<br/>
-						<img id="eqImg"/>
-					</div>
-					-->
-					
+				<div class="row spaceRow">		
 					<div class="blocks alpha60">
 						<ul class="nav nav-tabs">
 							<li class="active">
@@ -120,7 +100,7 @@
 								<br/><br/>
 								<p>State: </p>
 								<div id="state1Text">
-								  "&#936 = 0.5|0> + 0.5|1>;
+								  <p>&#936 = 0.5|0> + 0.5|1></p>
 								</div>
 								<br/>
 								<input type="range" id="rangeState1Var1" value="50" style="width:200px;" onChange="stateSliderChange(1)">
