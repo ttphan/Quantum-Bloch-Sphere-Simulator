@@ -76,22 +76,10 @@ tabblad {
 	float:left;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.range-slider {
+    position: relative;
+    height: 60px;
+}
 
 table, th, td {
 	color:blue

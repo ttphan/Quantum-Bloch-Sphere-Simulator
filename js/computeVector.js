@@ -1,4 +1,3 @@
-
 var complexi = math.complex('i');
 var gateX = [[0,1],[1,0]];
 var gateY = [[0,math.complex('-i')],[math.complex('i'),0]];

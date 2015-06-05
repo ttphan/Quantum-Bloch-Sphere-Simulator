@@ -3,6 +3,7 @@ window.onload = function() {
 
 	init();
 	animate();
+	gui();
 
 	function init() {
 		var c = document.getElementById('myCanvas');
@@ -10,12 +11,13 @@ window.onload = function() {
 		// renderer
 		renderer = new THREE.WebGLRenderer({canvas: c});
 		renderer.setSize(c.width, c.height);
+		renderer.autoClear = false;
 
 		// camera
 		camera = new THREE.PerspectiveCamera(45, c.width / c.height, 1, 1000);
-		camera.position.z = 5;
-		camera.position.x = 5;
-		camera.position.y = 5;
+		camera.position.z = 3;
+		camera.position.x = 1;
+		camera.position.y = 1;
 
 		// Trackball controls
 		controls = new THREE.OrbitControls( camera, c );
@@ -29,6 +31,7 @@ window.onload = function() {
 
 		// scene
 		scene = new THREE.Scene();
+		sceneCircles = new THREE.Scene();
 
 		// Bloch sphere object
 		var blochSphere = new THREE.Object3D();
@@ -50,7 +53,7 @@ window.onload = function() {
 
 		// circle
 		var circles = buildCircles();
-		blochSphere.add(circles);
+		sceneCircles.add(circles);
 
 		// Add axes
 		var axes = buildAxes( 1.5 );
@@ -72,6 +75,7 @@ window.onload = function() {
 		    temp = dir.y;
 		    dir.y = dir.z;
 		    dir.z = temp.im;
+		    //dir.y = -1 * dir.y;
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
 			var length = dir.length();
@@ -97,6 +101,9 @@ window.onload = function() {
 
 	function render() {
 		renderer.setClearColor( 0xffffff, 1);
+		renderer.clear();
+		renderer.render(sceneCircles, camera);
+		renderer.clearDepth();
 		renderer.render(scene, camera);
 	}
 }
@@ -108,8 +115,8 @@ function buildAxes( length ) {
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, false ) ); // +Z
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, true ) ); // -Z
+		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, true ) ); // +Z
+		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, false ) ); // -Z
 
 		return axes;
 }
@@ -121,7 +128,7 @@ function buildAxis( src, dst, colorHex, dashed ) {
 	if(dashed) {
 		mat = new THREE.LineDashedMaterial({ linewidth: 3, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
 	} else {
-		mat = new THREE.LineBasicMaterial({ linewidth: 3, color: colorHex });
+		mat = new THREE.LineBasicMaterial({ linewidth: 3, color: colorHex, depthTest: false });
 	}
 
 	geom.vertices.push( src.clone() );
@@ -160,7 +167,7 @@ function buildCircle(radius,segments,rot) {
 		depthTest: false
 	});
 	var lineMaterial = new THREE.LineDashedMaterial( {
-		color: 0xffffff, 
+		color: 'gray', 
 		transparent: true,
 		opacity: 0.5,
 		depthWrite: false, 
