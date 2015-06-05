@@ -66,10 +66,17 @@ window.onload = function() {
 			var c = new Number(document.getElementById("input_c").value);
 			var d = new Number(document.getElementById("input_d").value);
 		    var dir = getVector([[a,b],[c,d]]);
-		    dir.z = (dir.z).im;
+
+		    // Switch z and y axis to compensate for computer graphics/physics
+		    // difference quirks.
+		    temp = dir.y;
+		    dir.y = dir.z;
+		    dir.z = temp.im;
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
-			var length = Math.sqrt(Math.pow(a,2) + Math.pow(b, 2) + Math.pow(c,2));
+			var length = dir.length();
+			console.log(a + ', ' + b + ', ' + c + ', ' + d);
+			console.log(dir.x + ', ' + dir.y + ', ' + dir.z);
 			console.log(length);
 			var hex = '#'+Math.floor(Math.random()*16777215).toString(16);
 
