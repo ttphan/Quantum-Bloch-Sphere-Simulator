@@ -1,4 +1,3 @@
-
 var complexi = math.complex('i');
 var gateX = [[0,1],[1,0]];
 var gateY = [[0,math.complex('-i')],[math.complex('i'),0]];
@@ -117,7 +116,7 @@ function getPadeApproxExp(matrix, approx) {
       var num = identity;
       for (var i = 0; i < approx; i++) {
             factor = 1/math.factorial(i+2);
-            addterm = math.multiply(math.pow(matrix,i+1), factor));
+            addterm = math.multiply(math.pow(matrix,i+1), factor);
             num = math.add(num, addterm);
             if (i % 2 == 0) {
                   denom = math.add(denom,addterm);

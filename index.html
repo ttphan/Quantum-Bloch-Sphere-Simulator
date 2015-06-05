@@ -8,57 +8,24 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+		<!-- https://github.com/IonDen/ion.rangeSlider -->
+		<script src="js/ion.rangeSlider.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.css">
+		<link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.skinNice.css">
+
 		<script src="js/lib/three.js"></script>
 		<script src="js/lib/OrbitControls.js"></script>
-		<script src="js/textchange.js"></script>
 		<script src="js/BlochSphere.js"></script>
 		<script src="js/lib/math.js"></script>
 		<script src="js/computeVector.js"></script>
+		<script src="js/gui.js"></script>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-
-		<!-- stuff regarding the tabs-->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-		<script>
-			function stateSliderChange(id) {
-				var a = new Number(document.getElementById("rangeState1Var1").value);
-				var b = new Number(document.getElementById("rangeState1Var2").value);
-			
-				if (id == 1) { // slider1 changed, so change slider 2
-				  var slider = document.getElementById("rangeState1Var2");
-				  slider.value = Math.sqrt(10000 - a*a);
-				} // if
-				else if (id == 2) { // slider2 changed, so change slider 1
-				  var slider = document.getElementById("rangeState1Var1");
-				  slider.value = Math.sqrt(10000 - b*b);
-				} // if
-				
-				a = new Number(document.getElementById("rangeState1Var1").value);
-				b = new Number(document.getElementById("rangeState1Var2").value);
-				a = a / 100;
-				b = b / 100;
-				
-				var elem = document.getElementById("state1Text");
-				elem.innerHTML = "&#936 = " + a + "|0> + " + b + "|1>";
-				
-				var matrix = stateToDens([[a],[b]]);
-				
-				document.getElementById("input_a").value = matrix[0][0];
-				document.getElementById("input_b").value = matrix[0][1];
-				document.getElementById("input_c").value = matrix[1][0];
-				document.getElementById("input_d").value = matrix[1][1];
-			} // stateSliderChange
-		</script
-		
+		<meta name="viewport" content="width=device-width, initial-scale=1">	
 	</head>
 
 	<body>
-		
-
-		
+			
 		<center>
 		<h1 id="titel">
 			Quantum Bloch-sphere Simulator 
@@ -67,31 +34,31 @@
 		
 		<div id = "app" class="blue">
 			<div id="inputfields" class="col-md-7 colspace container">
-				<div class="row spaceRow">		
+				<div class="row spaceRow">	
 					<div class="blocks alpha60">
 						<ul class="nav nav-tabs">
 							<li class="active">
 								<a data-toggle="tab" href="#section1">
-									<img src="blok1.png" style="width:20px;height:20px;"/>
-									<img src="psi1.png" style="width:33px;height:25px;"/>
+									<img src="img/blok1.png" style="width:20px;height:20px;"/>
+									<img src="img/psi1.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#section2">
-									<img src="blok2.png" style="width:20px;height:20px;"/>
-									<img src="psi2.png" style="width:33px;height:25px;"/>
+									<img src="img/blok2.png" style="width:20px;height:20px;"/>
+									<img src="img/psi2.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#section3">
-									<img src="blok3.png" style="width:20px;height:20px;"/>
-									<img src="psi3.png" style="width:33px;height:25px;"/>
+									<img src="img/blok3.png" style="width:20px;height:20px;"/>
+									<img src="img/psi3.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#section4">
-									<img src="blok4.png" style="width:20px;height:20px;"/>
-									<img src="psi4.png" style="width:33px;height:25px;"/>
+									<img src="img/blok4.png" style="width:20px;height:20px;"/>
+									<img src="img/psi4.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 						</ul>
@@ -104,14 +71,28 @@
 								<br/>
 								<input type="text" id="input_c" value="0" style="width:60px;">
 								<input type="text" id="input_d" value="0" style="width:60px;">
-								<br/><br/>
+								<br/>
+
+								<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
+								<br/>
+
 								<p>State: </p>
 								<div id="state1Text">
 								  <p>&#936 = 0.5|0> + 0.5|1></p>
 								</div>
 								<br/>
-								<input type="range" id="rangeState1Var1" value="50" style="width:200px;" onChange="stateSliderChange(1)">
-								<input type="range" id="rangeState1Var2" value="50" style="width:200px;" onChange="stateSliderChange(2)">
+								
+								<div class = "row">
+									<div class="range-slider col-md-8 col-md-offset-2">
+									    <input type="text" class="js-range-slider-1" value="" />
+									</div>
+								</div>
+								<div class = "row">
+									<div class="range-slider col-md-8 col-md-offset-2">
+									    <input type="text" class="js-range-slider-2" value="" />
+									</div>
+								</div>
+
 							</div>
 							<div id="section2" class="tab-pane fade">
 								<h3>Section 2</h3>

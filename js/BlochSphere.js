@@ -3,6 +3,7 @@ window.onload = function() {
 
 	init();
 	animate();
+	gui();
 
 	function init() {
 		var c = document.getElementById('myCanvas');
@@ -13,9 +14,9 @@ window.onload = function() {
 
 		// camera
 		camera = new THREE.PerspectiveCamera(45, c.width / c.height, 1, 1000);
-		camera.position.z = 5;
-		camera.position.x = 5;
-		camera.position.y = 5;
+		camera.position.z = 3;
+		camera.position.x = 1;
+		camera.position.y = 1;
 
 		// Trackball controls
 		controls = new THREE.OrbitControls( camera, c );
@@ -72,6 +73,7 @@ window.onload = function() {
 		    temp = dir.y;
 		    dir.y = dir.z;
 		    dir.z = temp.im;
+		    //dir.y = -1 * dir.y;
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
 			var length = dir.length();
@@ -108,8 +110,8 @@ function buildAxes( length ) {
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
 		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, false ) ); // +Z
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, true ) ); // -Z
+		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, true ) ); // +Z
+		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, false ) ); // -Z
 
 		return axes;
 }
