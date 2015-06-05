@@ -24,17 +24,20 @@
 
 		<script>
 			function stateSliderChange(id) {
+				var a = new Number(document.getElementById("rangeState1Var1").value);
+				var b = new Number(document.getElementById("rangeState1Var2").value);
+			
 				if (id == 1) { // slider1 changed, so change slider 2
 				  var slider = document.getElementById("rangeState1Var2");
-				  slider.value = 100 - document.getElementById("rangeState1Var1").value;
+				  slider.value = Math.sqrt(10000 - a*a);
 				} // if
 				else if (id == 2) { // slider2 changed, so change slider 1
 				  var slider = document.getElementById("rangeState1Var1");
-				  slider.value = 100 - document.getElementById("rangeState1Var2").value;
+				  slider.value = Math.sqrt(10000 - b*b);
 				} // if
 				
-				var a = new Number(document.getElementById("rangeState1Var1").value);
-				var b = new Number(document.getElementById("rangeState1Var2").value);
+				a = new Number(document.getElementById("rangeState1Var1").value);
+				b = new Number(document.getElementById("rangeState1Var2").value);
 				a = a / 100;
 				b = b / 100;
 				
@@ -42,7 +45,11 @@
 				elem.innerHTML = "&#936 = " + a + "|0> + " + b + "|1>";
 				
 				var matrix = stateToDens([[a],[b]]);
-				alert("00:" + matrix[0][0]);
+				
+				document.getElementById("input_a").value = matrix[0][0];
+				document.getElementById("input_b").value = matrix[0][1];
+				document.getElementById("input_c").value = matrix[1][0];
+				document.getElementById("input_d").value = matrix[1][1];
 			} // stateSliderChange
 		</script
 		
@@ -92,11 +99,11 @@
 							<div id="section1" class="tab-pane fade in active">
 								<h3>State 1</h3>
 								<p>Density matrix: </p>
-								<input type="text" id="input_a" value="1" style="width:40px;">
-								<input type="text" id="input_b" value="0" style="width:40px;">
+								<input type="text" id="input_a" value="1" style="width:60px;">
+								<input type="text" id="input_b" value="0" style="width:60px;">
 								<br/>
-								<input type="text" id="input_c" value="0" style="width:40px;">
-								<input type="text" id="input_d" value="0" style="width:40px;">
+								<input type="text" id="input_c" value="0" style="width:60px;">
+								<input type="text" id="input_d" value="0" style="width:60px;">
 								<br/><br/>
 								<p>State: </p>
 								<div id="state1Text">
