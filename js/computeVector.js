@@ -34,9 +34,9 @@ function getEigenvalues(matrix) {
       part1 = math.multiply(-1,math.add(a,d));
       part2 = math.pow(math.add(a,d),2);
       part3 = math.substract(math.multiply(a,d), math.multiply(c,d));
-      lambda1 = math.add(part1, math.sqrt(math.substract(part2,part3));
+      lambda1 = math.add(part1, math.sqrt(math.substract(part2,part3)));
       lambda1 = math.multiply(0.5,lambda1);
-      lambda2 = math.substract(part1, math.sqrt(math.substract(part2,part3));
+      lambda2 = math.substract(part1, math.sqrt(math.substract(part2,part3)));
       lambda2 = math.multiply(0.5,lambda2);
       return [lambda1, lambda2];
 }
