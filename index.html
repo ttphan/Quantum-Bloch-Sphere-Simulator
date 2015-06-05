@@ -1,101 +1,142 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<style>
-		body {
-			margin: 10px;
-			padding: 10px;
-			background-color: #FF8C00;
-			font-family: "Verdana", sans-serif;
-			color:red
-		}
-		table, th, td {
-			color:blue
-        }
-        th, td {
-			padding: 10px;
-			vertical-align:top;
-			border: 1px solid black;
-			text-align: left;
-			background-color: #FF00FF;
-        }
-	</style>
-	</head>
-	<body>
-		<div id="container"></div>
+	    <title>Quantum 4 Life</title>
+	
 		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<script src="js/lib/three.js"></script>
 		<script src="js/lib/OrbitControls.js"></script>
+		<script src="js/textchange.js"></script>
 		<script src="js/BlochSphere.js"></script>
-		<script src="computeVector.js"></script>
 		<script src="js/lib/math.js"></script>
-		
+		<script src="js/computeVector.js"></script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- stuff regarding the tabs-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
 		<script>
-		  function showState() {
-		    var a = new Number(document.getElementById("input_a").value);
-			var b = new Number(document.getElementById("input_b").value);
-			var c = new Number(document.getElementById("input_c").value);
-			var d = new Number(document.getElementById("input_d").value);
-		    var vector = getVector([[a,b],[c,d]);
-			alert("x: "+vector.x+" y: "+vector.y+" z: "+vector.z)
-		  } // showState
-		  
-		  function showLatex() {
-		    var code = "\\left|\\Psi\\right> = a\\left|1\\right> + b\\left|0\\right>"
-			var eqImg = document.getElementById("eqImg");
-			eqImg.src = "http://latex.codecogs.com/gif.latex?\\bg_white \\200dpi " + code;
-		  } // showLatex
-		  
-		  function flashtext(ele,col) {
-			var tmpColCheck = document.getElementById("titel").style.color;
+			function stateSliderChange(id) {
+				var a = new Number(document.getElementById("rangeState1Var1").value);
+				var b = new Number(document.getElementById("rangeState1Var2").value);
+			
+				if (id == 1) { // slider1 changed, so change slider 2
+				  var slider = document.getElementById("rangeState1Var2");
+				  slider.value = Math.sqrt(10000 - a*a);
+				} // if
+				else if (id == 2) { // slider2 changed, so change slider 1
+				  var slider = document.getElementById("rangeState1Var1");
+				  slider.value = Math.sqrt(10000 - b*b);
+				} // if
+				
+				a = new Number(document.getElementById("rangeState1Var1").value);
+				b = new Number(document.getElementById("rangeState1Var2").value);
+				a = a / 100;
+				b = b / 100;
+				
+				var elem = document.getElementById("state1Text");
+				elem.innerHTML = "&#936 = " + a + "|0> + " + b + "|1>";
+				
+				var matrix = stateToDens([[a],[b]]);
+				
+				document.getElementById("input_a").value = matrix[0][0];
+				document.getElementById("input_b").value = matrix[0][1];
+				document.getElementById("input_c").value = matrix[1][0];
+				document.getElementById("input_d").value = matrix[1][1];
+			} // stateSliderChange
+		</script
+		
+	</head>
 
-			if (tmpColCheck === 'green') {
-				document.getElementById("titel").style.color = col;
-			} else {
-				document.getElementById("titel").style.color = 'green';
-			}
-		  } // flashText 
+	<body>
+		
 
-          setInterval(function() {
-            flashtext('flashingtext','red');
-		  }, 1000 );
-		  
-		</script>
 		
 		<center>
 		<h1 id="titel">
-			<img src="flaming1.gif" style="width:40px;height:40px;"/>
 			Quantum Bloch-sphere Simulator 
-			<img src="flaming1.gif" style="width:40px;height:40px;"/>
 		</h1>
 		
-				
 		
-		<table style="width:80%" cellspacing="10">
-			<tr>
-				<td>
-					Choose density matrix
-					<br/>
-					<input type="text" id="input_a" value="1337">
-					<input type="text" id="input_b" value="0">
-					<br/>
-					<input type="text" id="input_c" value="0">
-					<input type="text" id="input_d" value="0">
-					<br/>
-					<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
-					<br/>
-					<img id="eqImg"/>
-				</td>
+		<div id = "app" class="blue">
+			<div id="inputfields" class="col-md-7 colspace container">
+				<div class="row spaceRow">		
+					<div class="blocks alpha60">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle="tab" href="#section1">
+									<img src="blok1.png" style="width:20px;height:20px;"/>
+									<img src="psi1.png" style="width:33px;height:25px;"/>
+								</a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#section2">
+									<img src="blok2.png" style="width:20px;height:20px;"/>
+									<img src="psi2.png" style="width:33px;height:25px;"/>
+								</a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#section3">
+									<img src="blok3.png" style="width:20px;height:20px;"/>
+									<img src="psi3.png" style="width:33px;height:25px;"/>
+								</a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#section4">
+									<img src="blok4.png" style="width:20px;height:20px;"/>
+									<img src="psi4.png" style="width:33px;height:25px;"/>
+								</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div id="section1" class="tab-pane fade in active">
+								<h3>State 1</h3>
+								<p>Density matrix: </p>
+								<input type="text" id="input_a" value="1" style="width:60px;">
+								<input type="text" id="input_b" value="0" style="width:60px;">
+								<br/>
+								<input type="text" id="input_c" value="0" style="width:60px;">
+								<input type="text" id="input_d" value="0" style="width:60px;">
+								<br/><br/>
+								<p>State: </p>
+								<div id="state1Text">
+								  <p>&#936 = 0.5|0> + 0.5|1></p>
+								</div>
+								<br/>
+								<input type="range" id="rangeState1Var1" value="50" style="width:200px;" onChange="stateSliderChange(1)">
+								<input type="range" id="rangeState1Var2" value="50" style="width:200px;" onChange="stateSliderChange(2)">
+							</div>
+							<div id="section2" class="tab-pane fade">
+								<h3>Section 2</h3>
+								<p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+							</div>
+						</div>
+					</div>
+					
+				</div>
 				
-				
-				<td rowspan="2">
-					<canvas id="myCanvas" width="500" height="500"></canvas>
-				</td>
-			</tr>
-			<tr>
-				<td>Timeline</td>
-			</tr>
-		</table>
+				<div class="row spaceRow">
+					<div id="timeline" class="blocks alpha60">
+						<h2> Construct circuit </h2> ----------------------------
+					</div>
+				</div>
+
+			</div>
+			<div class="col-md-5 colspace">
+				<div id="sphere" class="blocks spaceRow alpha60">
+					<canvas id="myCanvas" width="300" height="300"></canvas>
+				</div>
+			</div>
+
+		</div>
+
 		</center>
 	</body>
 </html>      

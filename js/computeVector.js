@@ -48,7 +48,7 @@ function conjugateTranspose(matrix) {
 
 function stateToDens(state) {
       //state = [a,b];
-      return math.multiply(state,transpose(state));
+      return math.multiply(state, math.transpose(state));
 }
 
 function tensorProduct(state1,state2) {
