@@ -7,7 +7,7 @@ body {
 	color:black;
 }
 
-#sliders input[type=checkbox] {
+.sliders input[type=checkbox] {
 	margin-top: 20px;
 }
 

@@ -40,25 +40,25 @@
 					<div class="blocks alpha60">
 						<ul class="nav nav-tabs">
 							<li class="active">
-								<a data-toggle="tab" href="#section1">
+								<a data-toggle="tab" href="#section1" id='tab1'>
 									<img src="img/blok1.png" style="width:20px;height:20px;"/>
 									<img src="img/psi1.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 							<li>
-								<a data-toggle="tab" href="#section2">
+								<a data-toggle="tab" href="#section2" id='tab2'>
 									<img src="img/blok2.png" style="width:20px;height:20px;"/>
 									<img src="img/psi2.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 							<li>
-								<a data-toggle="tab" href="#section3">
+								<a data-toggle="tab" href="#section3" id='tab3'>
 									<img src="img/blok3.png" style="width:20px;height:20px;"/>
 									<img src="img/psi3.png" style="width:33px;height:25px;"/>
 								</a>
 							</li>
 							<li>
-								<a data-toggle="tab" href="#section4">
+								<a data-toggle="tab" href="#section4" id='tab4'>
 									<img src="img/blok4.png" style="width:20px;height:20px;"/>
 									<img src="img/psi4.png" style="width:33px;height:25px;"/>
 								</a>
@@ -68,14 +68,14 @@
 							<div id="section1" class="tab-pane fade in active">
 								<h3>State 1</h3>
 								<p>Density matrix: </p>
-								<input type="text" id="input_a" value="1.00" style="width:60px;">
-								<input type="text" id="input_b" value="0.00" style="width:60px;">
+								<input type="text" id="input_1_a" value="1.00" style="width:60px;">
+								<input type="text" id="input_1_b" value="0.00" style="width:60px;">
 								<br/>
-								<input type="text" id="input_c" value="0.00" style="width:60px;">
-								<input type="text" id="input_d" value="0.00" style="width:60px;">
+								<input type="text" id="input_1_c" value="0.00" style="width:60px;">
+								<input type="text" id="input_1_d" value="0.00" style="width:60px;">
 								<br/>
 
-								<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
+								<button id="btn_show_state_1" onClick="showState(1)">Show state in Bloch-sphere</button>
 								<br/>
 
 								<p>State: </p>
@@ -83,29 +83,139 @@
 								  <p>&#936 = 1|0> + 0|1></p>
 								</div>
 								<br/>
-								<div id="sliders">
+								<div class="sliders">
 									<div class="row">
 										<div class="range-slider col-md-8">
-										    <input type="text" class="js-range-slider-1" value="" />
+										    <input type="text" class="js-range-slider-1-1" value="" />
 										</div>
 										<div class="col-md-4">
-											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative1_1" onchange="forceNegative(this)"> Negative values</label>
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_1_1" onchange="updateStateGui(1)"> Negative values</label>
 										</div>
 									</div>
 									<div class="row">
 										<div class="range-slider col-md-8">
-										    <input type="text" class="js-range-slider-2" value="" />
+										    <input type="text" class="js-range-slider-1-2" value="" />
 										</div>
 										<div class="col-md-4">
-											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative1_2" onchange="forceNegative(this)"> Negative values</label>
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_1_2" onchange="updateStateGui(1)"> Negative values</label>
 										</div>
 									</div>
 								</div>
 
 							</div>
+
 							<div id="section2" class="tab-pane fade">
-								<h3>Section 2</h3>
-								<p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+								<h3>State 2</h3>
+								<p>Density matrix: </p>
+								<input type="text" id="input_2_a" value="1.00" style="width:60px;">
+								<input type="text" id="input_2_b" value="0.00" style="width:60px;">
+								<br/>
+								<input type="text" id="input_2_c" value="0.00" style="width:60px;">
+								<input type="text" id="input_2_d" value="0.00" style="width:60px;">
+								<br/>
+
+								<button id="btn_show_state_2" onClick="showState(2)">Show state in Bloch-sphere</button>
+								<br/>
+
+								<p>State: </p>
+								<div id="state2Text">
+								  <p>&#936 = 1|0> + 0|1></p>
+								</div>
+								<br/>
+								<div class="sliders">
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-2-1" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_2_1" onchange="updateStateGui(2)"> Negative values</label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-2-2" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_2_2" onchange="updateStateGui(2)"> Negative values</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div id="section3" class="tab-pane fade">
+								<h3>State 3</h3>
+								<p>Density matrix: </p>
+								<input type="text" id="input_3_a" value="1.00" style="width:60px;">
+								<input type="text" id="input_3_b" value="0.00" style="width:60px;">
+								<br/>
+								<input type="text" id="input_3_c" value="0.00" style="width:60px;">
+								<input type="text" id="input_3_d" value="0.00" style="width:60px;">
+								<br/>
+
+								<button id="btn_show_state_3" onClick="showState(3)">Show state in Bloch-sphere</button>
+								<br/>
+
+								<p>State: </p>
+								<div id="state3Text">
+								  <p>&#936 = 1|0> + 0|1></p>
+								</div>
+								<br/>
+								<div class="sliders">
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-3-1" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_3_1" onchange="updateStateGui(3)"> Negative values</label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-3-2" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_3_2" onchange="updateStateGui(3)"> Negative values</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div id="section4" class="tab-pane fade">
+								<h3>State 4</h3>
+								<p>Density matrix: </p>
+								<input type="text" id="input_4_a" value="1.00" style="width:60px;">
+								<input type="text" id="input_4_b" value="0.00" style="width:60px;">
+								<br/>
+								<input type="text" id="input_4_c" value="0.00" style="width:60px;">
+								<input type="text" id="input_4_d" value="0.00" style="width:60px;">
+								<br/>
+
+								<button id="btn_show_state_4" onClick="showState(4)">Show state in Bloch-sphere</button>
+								<br/>
+
+								<p>State: </p>
+								<div id="state4Text">
+								  <p>&#936 = 1|0> + 0|1></p>
+								</div>
+								<br/>
+								<div class="sliders">
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-4-1" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_4_1" onchange="updateStateGui(4)"> Negative values</label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-4-2" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative_4_2" onchange="updateStateGui(4)"> Negative values</label>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

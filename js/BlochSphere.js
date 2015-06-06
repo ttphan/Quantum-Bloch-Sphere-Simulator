@@ -1,9 +1,14 @@
-window.onload = function() {
+$(document).ready(function() {
 	var camera, controls, scene, renderer;
 
 	init();
 	animate();
 	gui();
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+	    var tab = $(e.target).attr('id');
+	    activeTab = parseInt(tab.substring(tab.length-1));	
+	});
 
 	function init() {
 		var c = document.getElementById('myCanvas');
@@ -63,11 +68,12 @@ window.onload = function() {
 		render();
 		
 		
-		function drawArrow( ) {
-		    var a = new Number(document.getElementById("input_a").value);
-			var b = new Number(document.getElementById("input_b").value);
-			var c = new Number(document.getElementById("input_c").value);
-			var d = new Number(document.getElementById("input_d").value);
+		function drawArrow() {
+			var colours = ['red', 'green', 'blue', 'yellow'];
+		    var a = new Number(document.getElementById("input_" + activeTab + "_a").value);
+			var b = new Number(document.getElementById("input_" + activeTab + "_b").value);
+			var c = new Number(document.getElementById("input_" + activeTab + "_c").value);
+			var d = new Number(document.getElementById("input_" + activeTab + "_d").value);
 		    var dir = getVector([[a,b],[c,d]]);
 
 		    // Switch z and y axis to compensate for computer graphics/physics
@@ -79,19 +85,18 @@ window.onload = function() {
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
 			var length = dir.length();
-			console.log(a + ', ' + b + ', ' + c + ', ' + d);
-			console.log(dir.x + ', ' + dir.y + ', ' + dir.z);
-			console.log(length);
-			var hex = '#'+Math.floor(Math.random()*16777215).toString(16);
+
+			var hex = colours[activeTab - 1];
 
 			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
 			scene.add( new THREE.ArrowHelper( dir, origin, length, hex ) );
 			render();
 		} // drawArrow
-		
-		var knop = document.getElementById("knop");
-		knop.addEventListener( 'click', drawArrow);
 
+		for (var i = 1; i <= 4; i++) {
+			var button = $("#btn_show_state_" + i)[0];
+			button.addEventListener( 'click', drawArrow);
+		}
 	}
 
 	function animate() {
@@ -106,7 +111,7 @@ window.onload = function() {
 		renderer.clearDepth();
 		renderer.render(scene, camera);
 	}
-}
+});
 
 function buildAxes( length ) {
 		var axes = new THREE.Object3D();
