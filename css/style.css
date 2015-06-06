@@ -7,6 +7,10 @@ body {
 	color:black;
 }
 
+#sliders input[type=checkbox] {
+	margin-top: 20px;
+}
+
 #app {
 	vertical-align: middle;
 	width: 900px;

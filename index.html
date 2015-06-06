@@ -5,12 +5,13 @@
 	
 		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		
 
 		<!-- https://github.com/IonDen/ion.rangeSlider -->
-		<script src="js/ion.rangeSlider.min.js"></script>
+		<script src="js/lib/ion.rangeSlider.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.css">
 		<link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.skinNice.css">
 
@@ -67,11 +68,11 @@
 							<div id="section1" class="tab-pane fade in active">
 								<h3>State 1</h3>
 								<p>Density matrix: </p>
-								<input type="text" id="input_a" value="1" style="width:60px;">
-								<input type="text" id="input_b" value="0" style="width:60px;">
+								<input type="text" id="input_a" value="1.00" style="width:60px;">
+								<input type="text" id="input_b" value="0.00" style="width:60px;">
 								<br/>
-								<input type="text" id="input_c" value="0" style="width:60px;">
-								<input type="text" id="input_d" value="0" style="width:60px;">
+								<input type="text" id="input_c" value="0.00" style="width:60px;">
+								<input type="text" id="input_d" value="0.00" style="width:60px;">
 								<br/>
 
 								<button id="knop" onClick="showState();showLatex();">Show state in Bloch-sphere</button>
@@ -79,18 +80,25 @@
 
 								<p>State: </p>
 								<div id="state1Text">
-								  <p>&#936 = 0.5|0> + 0.5|1></p>
+								  <p>&#936 = 1|0> + 0|1></p>
 								</div>
 								<br/>
-								
-								<div class = "row">
-									<div class="range-slider col-md-8 col-md-offset-2">
-									    <input type="text" class="js-range-slider-1" value="" />
+								<div id="sliders">
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-1" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative1_1" onchange="forceNegative(this)"> Negative values</label>
+										</div>
 									</div>
-								</div>
-								<div class = "row">
-									<div class="range-slider col-md-8 col-md-offset-2">
-									    <input type="text" class="js-range-slider-2" value="" />
+									<div class="row">
+										<div class="range-slider col-md-8">
+										    <input type="text" class="js-range-slider-2" value="" />
+										</div>
+										<div class="col-md-4">
+											<label><input type="checkbox" name="checkbox" value="value" class="check_negative" id="negative1_2" onchange="forceNegative(this)"> Negative values</label>
+										</div>
 									</div>
 								</div>
 
