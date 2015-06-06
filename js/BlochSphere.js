@@ -1,6 +1,8 @@
 $(document).ready(function() {
 	var camera, controls, scene, renderer;
 
+	var arrows = [null, null, null, null];
+
 	init();
 	animate();
 	gui();
@@ -87,9 +89,15 @@ $(document).ready(function() {
 			var length = dir.length();
 
 			var hex = colours[activeTab - 1];
+			var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
 
-			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
-			scene.add( new THREE.ArrowHelper( dir, origin, length, hex ) );
+			if (arrows[activeTab-1] != null) {
+				scene.remove(arrows[activeTab-1]);
+			}
+
+			arrows[activeTab-1] = arrow;
+			scene.add( arrow );
+
 			render();
 		} // drawArrow
 
