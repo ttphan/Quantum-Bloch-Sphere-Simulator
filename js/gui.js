@@ -54,11 +54,11 @@ function gui() {
 		var elem = document.getElementById("state1Text");
 		elem.innerHTML = "&#936 = " + a + "|0> + " + b + "|1>";
 
-		var matrix = stateToDens([[a],[b]]);
+		var matrix = stateToDens([[a+0],[b+0]]);
 		
-		document.getElementById("input_a").value = matrix[0][0];
-		document.getElementById("input_b").value = matrix[0][1];
-		document.getElementById("input_c").value = matrix[1][0];
-		document.getElementById("input_d").value = matrix[1][1];
+		document.getElementById("input_a").value = matrix[0][0].toFixed(2);
+		document.getElementById("input_b").value = matrix[0][1].toFixed(2);
+		document.getElementById("input_c").value = matrix[1][0].toFixed(2);
+		document.getElementById("input_d").value = matrix[1][1].toFixed(2);
 	}
 }

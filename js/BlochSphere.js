@@ -162,7 +162,7 @@ function buildCircle(radius,segments,rot) {
 		color: 0xffffff, 
 		transparent: true, 
 		side: THREE.DoubleSide,
-		opacity: 0.1,
+		opacity: 0.3,
 		depthWrite: false, 
 		depthTest: false
 	});

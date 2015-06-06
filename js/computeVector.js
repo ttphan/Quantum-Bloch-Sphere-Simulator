@@ -31,13 +31,12 @@ function getEigenvalues(matrix) {
       b = matrix[0][1];
       c = matrix[1][0];
       d = matrix[1][1];
-      part1 = math.multiply(-1,math.add(a,d));
-      part2 = math.pow(math.add(a,d),2);
-      part3 = math.subtract(math.multiply(a,d), math.multiply(c,d));
-      lambda1 = math.add(part1, math.sqrt(math.subtract(part2,part3)));
-      lambda1 = math.multiply(0.5,lambda1);
-      lambda2 = math.subtract(part1, math.sqrt(math.subtract(part2,part3)));
-      lambda2 = math.multiply(0.5,lambda2);
+      partA = 1;
+      partB = math.chain(a).add(d).multiply(-1).done();
+      partC = math.subtract(math.multiply(a,d),math.multiply(c,d));
+      partsqrt = math.chain(partC).multiply(partA).multiply(-4).add(math.pow(partB,2)).sqrt().done();
+      lambda1 = math.chain(-1).multiply(partB).add(partsqrt).multiply(0.5).done();
+      lambda2 = math.chain(-1).multiply(partB).subtract(partsqrt).multiply(0.5).done();
       return [lambda1, lambda2];
 }
 
@@ -46,7 +45,7 @@ function conjugateTranspose(matrix) {
 }
 
 function stateToDens(state) {
-      state = [[state[0],state[1]];
+      //state = [[state[0]],[state[1]]];
       return math.multiply(state, math.transpose(state));
 }
 
@@ -70,44 +69,46 @@ function applyGate(state,gate) {
 }
 
 function depolNoise(densMatrix, r) {
-      return math.add (math.multiply(r,densMatrix), math.multiply((1-r),maxMixed));
+      return math.add(math.multiply(r,densMatrix), math.multiply((1-r),maxMixed));
 }
 
 function dephaseNoiseX(densMatrix,r) {
       return math.add(math.multiply(r,densMatrix), 
-            math.multiply((1-r),math.multiply(math.multiply(gateX,densMatrix),gateX)));
+            math.chain(1-r).multiply(gateX).multiply(densMatrix).multiply(gateX).done());
 }
 
 function dephaseNoiseZ(densMatrix,r) {
       return math.add(math.multiply(r,densMatrix), 
-            math.multiply((1-r),math.multiply(math.multiply(gateZ,densMatrix),gateZ)));
+            math.chain(1-r).multiply(gateZ).multiply(densMatrix).multiply(gateZ).done());
 }
 
 function ampDampNoise(densMatrix,r) {
       a0 = math.add(stateToDens(stateZero), math.multiply(math.sqrt(r),stateToDens(stateOne)));
-      a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,stateOne.transpose()));
-      return math.add(math.multiply(math.multiply(a0,densMatrix), math.conjugateTranspose(a0)), 
-            math.multiply(math.multiply(a1,densMatrix), math.conjugateTranspose(a1)));
+      a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,math.transpose(stateOne)));
+      return math.add(math.multiply(math.multiply(a0,densMatrix), conjugateTranspose(a0)), 
+            math.multiply(math.multiply(a1,densMatrix), conjugateTranspose(a1)));
 }
 
 function isPure(densMatrix) {
-      return trace(math.multiply(densMatrix, math.transpose(densMatrix))) == 1;
+      return math.round(trace(math.multiply(densMatrix, math.transpose(densMatrix)))) == 1;
 }
 
 function isValidTrace(densMatrix) {
-      return trace(densMatrix) == 1;
+      return trace(densMatrix).toFixed(2) == 1;
 }
 
 function isValidHermitian(densMatrix) {
-      return densMatrix == conjugateTranspose(densMatrix);
+      densMatrix = math.round(densMatrix);
+      return matrixEquals(densMatrix, conjugateTranspose(densMatrix));
 }
 
 function isValidEigenvalues(densMatrix) {
       eigval = getEigenvalues(densMatrix);
+      console.log(eigval);
       return ((eigval[0] <= 1) && (eigval[0] >= 0) && (eigval[1] <= 1) && (eigval[1] >= 0));
 }
 
-function isHamiltonianTracd(matrix) {
+function isHamiltonianTrace(matrix) {
       return trace(matrix) == 0;
 }
 
@@ -129,5 +130,16 @@ function getPadeApproxExp(matrix, approx) {
 
 function getUnitaryAtTime(unitary, time) {
       var unitary = math.multiply(math.multiply(time,math.complex("-i")),unitary);
-      return getPadeApproxExp(unitary);
+      return getPadeApproxExp(unitary,4);
+}
+
+function makeMixedState(densMat1, prob1, densMat2, prob2) {
+      return math.add(math.multiply(densMat1,prob1),math.multiply(densMat2,prob2));
+}
+
+function matrixEquals(mat1, mat2) {
+      return ((mat1[0][0] == mat2[0][0]) && 
+              (mat1[1][0] == mat2[1][0]) && 
+              (mat1[0][1] == mat2[0][1]) &&
+              (mat1[1][1] == mat2[1][1]));
 }
