@@ -75,23 +75,7 @@ canvas {
 	height: 100%;
 }
 
-
-tabblad {
-	float:left;
-}
-
 .range-slider {
     position: relative;
     height: 60px;
-}
-
-table, th, td {
-	color:blue
-}
-th, td {
-	padding: 10px;
-	vertical-align:top;
-	border: 1px solid black;
-	text-align: left;
-	background-color: #FF00FF;
 }
