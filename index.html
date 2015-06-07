@@ -76,6 +76,39 @@
 					<div id="timeline" class="blocks alpha60">
 						<h3>Add noise</h3>
 						
+						<div style="height:40px">
+							<img src="img/noiseEq_D.png" id="noise-equation-img"/>
+						</div>
+						<br/>
+						
+						Noise type: 
+						<select id="noise-select" onchange="onNoiseSelectionChanged();">
+							<option value="D">Depolarizing</option>
+							<option value="PhX">Dephase X</option>
+							<option value="PhZ">Dephase Z</option>
+							<option value="A">Amplitude damping</option>
+						</select>
+						<br/>
+						Apply to: 
+						<select>
+							<option value="all">All qubits</option>
+							<option value="1">&#936&#x2081</option>
+							<option value="2">&#936&#x2082</option>
+							<option value="3">&#936&#x2083</option>
+							<option value="4">&#936&#x2084</option>
+						</select>
+						<br/>
+						
+						
+						<div class='sliders'>
+							<div class='row'>
+								<div class='range-slider col-md-9'>
+									<input type='text' class='js-range-slider-noise'value='' />
+								</div>
+							</div>
+						</div>
+						
+						
 					</div>
 				</div>
 

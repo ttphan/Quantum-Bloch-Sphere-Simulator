@@ -7,6 +7,8 @@ $(document).ready(function() {
 	init();
 	animate();
 	gui();
+	makeNoiseTab();
+	onNoiseSelectionChanged();
 
 	function init() {
 
@@ -246,7 +248,20 @@ $(document).ready(function() {
 
 		first = $theta.data("ionRangeSlider");
 		second = $phi.data("ionRangeSlider");
-	}	
+	}
+	
+	function makeNoiseTab() {
+		// slider:
+		var $R = $(".js-range-slider-noise");
+		$R.ionRangeSlider({
+		    type: "single",
+		    grid: true,
+		    min: 0,
+		    max: 1,
+		    from: 0,
+		    step: 0.01,
+		});	
+	}
 
 	function updateStateGui(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
@@ -272,6 +287,23 @@ $(document).ready(function() {
 		drawArrow()
 	}
 });
+
+function onNoiseSelectionChanged() {
+	var x = document.getElementById("noise-select").value;
+
+	if (x == "D") {
+	  document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";
+	}
+	if (x == "PhX") {
+	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhX.png";
+	}
+	if (x == "PhZ") {
+	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhZ.png";
+	}
+	if (x == "A") {
+	  document.getElementById("noise-equation-img").src = "img/noiseEq_A.png";
+	}
+}
 
 function sliceDecimals(number) {
 	var result;
