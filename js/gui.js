@@ -179,7 +179,7 @@ $(document).ready(function() {
 					})
 					.append($("<h4>State in standard basis: </h4>"))
 					.append($("<div id='state" + i + "Text'></div>")
-					  .append($("<p>&#936 = 1|0> + 0|1></p>"))
+					  .append($("<p>&#936 = (1)|0> + (0)|1></p>"))
 					)
 					.append($("<button></button>")
 						.attr({id: "btn_show_state_" + i})

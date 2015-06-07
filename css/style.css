@@ -18,6 +18,8 @@ body {
 }
 
 .blue {
+	display: table;
+	width: 100%; /* optional */
 	background-color:lightblue;
 	/* Fallback for web browsers that doesn't support RGBa */
 	background: rgb(173, 216, 230);
@@ -68,6 +70,7 @@ div.colspace {
 
 div.spaceRow {
 	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 canvas {
@@ -83,4 +86,12 @@ canvas {
 .tab-content {
     display: table;
     width: 100%; /* optional */
+}
+
+#timeline {
+	padding-bottom: 20px;
+}
+
+#noise-select {
+	margin-bottom: 10px;
 }
