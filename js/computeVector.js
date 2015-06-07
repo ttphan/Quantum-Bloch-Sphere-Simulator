@@ -122,12 +122,13 @@ function isHamiltonianTrace(matrix) {
       return trace(matrix) == 0;
 }
 
-function getPadeApproxExp(matrix, approx) {
-      var denom = identity;
-      var num = identity;
-      for (var i = 0; i < approx; i++) {
-            factor = 1/math.factorial(i+2);
-            addterm = math.multiply(math.pow(matrix,i+1), factor);
+function getPadeApproxExp(matrix) {
+      var approx = 5;
+      var factors = [1,2,9,72,1008,30240];
+      var denom = 0;
+      var num = 0;
+      for (var i = 0; i <= approx; i++) {
+            addterm = math.multiply(math.pow(matrix,i), 1/factors[i]);
             num = math.add(num, addterm);
             if (i % 2 == 0) {
                   denom = math.add(denom,addterm);
@@ -135,12 +136,12 @@ function getPadeApproxExp(matrix, approx) {
                   denom = math.subtract(denom,addterm);
             }
       }
-      return math.multiply(num,math.inv(denom));
+      return math.divide(num,denom);
 }
 
-function getUnitaryAtTime(unitary, time) {
-      var unitary = math.chain(math.complex("-i")).multiply(time).multiply(unitary).done();
-      return getPadeApproxExp(unitary,4);
+function getUnitaryAtTime(hamiltonian, time) {
+      var mat = math.chain(math.complex("-i")).multiply(time).multiply(hamiltonian).done();
+      return  getPadeApproxExp(mat);
 }
 
 function makeMixedState(densMat1, prob1, densMat2, prob2) {
