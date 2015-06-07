@@ -26,6 +26,12 @@ function trace(matrix){
       return math.add(matrix[0][0],matrix[1][1]);
 }
 
+function getStateFromAngle(theta, phi) {
+      var alpha = math.cos(theta/2);
+      var beta = math.multiply(math.sin(theta/2),math.exp(math.complex(0,phi)));
+      return [[alpha],[beta]];
+}
+
 function getEigenvalues(matrix) {
       a = matrix[0][0];
       b = matrix[0][1];
@@ -46,7 +52,7 @@ function conjugateTranspose(matrix) {
 
 function stateToDens(state) {
       //state = [[state[0]],[state[1]]];
-      return math.multiply(state, math.transpose(state));
+      return math.multiply(state, conjugateTranspose(state));
 }
 
 function tensorProduct(state1,state2) {
