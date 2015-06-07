@@ -70,12 +70,14 @@ $(document).ready(function() {
 		
 	function drawArrow() {
 		var colours = ['red', 'green', 'blue', 'yellow'];
-	    var a = new Number($("#input_" + activeTab + "_a").val());
-		var b = new Number($("#input_" + activeTab + "_b").val());
-		var c = new Number($("#input_" + activeTab + "_c").val());
-		var d = new Number($("#input_" + activeTab + "_d").val());
+	    var a = math.complex($("#input_" + activeTab + "_a").val());
+		var b = math.complex($("#input_" + activeTab + "_b").val());
+		var c = math.complex($("#input_" + activeTab + "_c").val());
+		var d = math.complex($("#input_" + activeTab + "_d").val());
 	    var dir = getVector([[a,b],[c,d]]);
 
+	    console.log('Density matrix: ' + a + ' ' + b + ' ' + c + ' ' + d)
+	    console.log('Vector: ' + dir.x + ' ' + dir.y + ' ' + dir.z)
 	    // Switch z and y axis to compensate for computer graphics/physics
 	    // difference quirks.
 	    temp = dir.y;
@@ -121,11 +123,11 @@ $(document).ready(function() {
 		for (var i = 1; i <= 4; i++) {
 			$("#section" + i).append($('<h3>State ' + i + '</h3>'))
 				.append($("<p>Density Matrix: </p>"))
-				.append($("<input type='text' id='input_" + i + "_a' value='1.00' style='width:60px;'>"))
-				.append($("<input type='text' id='input_" + i + "_b' value='0.00' style='width:60px;'>"))
+				.append($("<input type='text' id='input_" + i + "_a' value='1.00' style='width:100px;'>"))
+				.append($("<input type='text' id='input_" + i + "_b' value='0.00' style='width:100px;'>"))
 				.append($("<br/>"))
-				.append($("<input type='text' id='input_" + i + "_c' value='0.00' style='width:60px;'>"))
-				.append($("<input type='text' id='input_" + i + "_d' value='0.00' style='width:60px;'>"))
+				.append($("<input type='text' id='input_" + i + "_c' value='0.00' style='width:100px;'>"))
+				.append($("<input type='text' id='input_" + i + "_d' value='0.00' style='width:100px;'>"))
 				.append($("<br/>"))
 				.append($("<p>State: </p>"))
 				.append($("<div id='state" + i + "Text'></div>")
@@ -160,66 +162,79 @@ $(document).ready(function() {
 	}
 
 	function createSliders(i) {
-		var $range1 = $(".js-range-slider-" + i + "-1"),
-		    $range2 = $(".js-range-slider-" + i + "-2"),
+		var $theta = $(".js-range-slider-" + i + "-1"),
+		    $phi = $(".js-range-slider-" + i + "-2"),
 		    first,
 		    second;
 
-		$range1.ionRangeSlider({
+		$theta.ionRangeSlider({
 		    type: "single",
 		    grid: true,
 		    min: 0,
-		    max: 1.0,
-		    from: 1,
-		    step: 0.001,
+		    max: 180,
+		    from: 90,
+		    step: 0.1,
 		    onChange: function (data) {
-		        second.update({
-		            from: Math.sqrt(1 - Math.pow(data.from, 2))
-		        });
-
 		        updateStateGui(i);
 		    }
 		});
 
-		$range2.ionRangeSlider({
+		$phi.ionRangeSlider({
 		    type: "single",
 		    grid: true,
 		    min: 0,
-		    max: 1.0,
-		    from: 0,
-		    step: 0.001,
+		    max: 360,
+		    from: 90,
+		    step: 0.1,
 		    onChange: function (data) {
-		        first.update({
-		            from: Math.sqrt(1 - Math.pow(data.from, 2))
-		        });
-
 		        updateStateGui(i);
 		    }
 		});
 
-		first = $range1.data("ionRangeSlider");
-		second = $range2.data("ionRangeSlider");
+		first = $theta.data("ionRangeSlider");
+		second = $phi.data("ionRangeSlider");
 	}	
 
 	function updateStateGui(i) {
-		var $range1 = $(".js-range-slider-" + i + "-1"),
-		    $range2 = $(".js-range-slider-" + i + "-2")
+		var $theta = $(".js-range-slider-" + i + "-1"),
+		    $phi = $(".js-range-slider-" + i + "-2")
 
-		var a = new Number($range1.val());
-		var b = new Number($range2.val());
+		var radTheta = parseFloat($theta.val()) / 180 * Math.PI;
+		var radPhi = parseFloat($phi.val()) / 180 * Math.PI;
 
-		$("#state" + i + "Text").html("<p>&#936 = " + a + "|0> + " + b + "|1></p>");
+		var amplitudes = getStateFromAngle(radTheta, radPhi);
 
-		var matrix = stateToDens([[a+0],[b+0]]);
+		var a = amplitudes[0][0];
+		var b = amplitudes[1][0];
+
+		$("#state" + i + "Text").html("<p>&#936 = (" + sliceDecimals(a) + ")|0> + (" + sliceDecimals(b) + ")|1></p>");
+
+		var matrix = stateToDens([[a],[b]]);
 		
-		$("#input_" + i + "_a").val(matrix[0][0].toFixed(2));
-		$("#input_" + i + "_b").val(matrix[0][1].toFixed(2));
-		$("#input_" + i + "_c").val(matrix[1][0].toFixed(2));
-		$("#input_" + i + "_d").val(matrix[1][1].toFixed(2));
+		$("#input_" + i + "_a").val(sliceDecimals(matrix[0][0]));
+		$("#input_" + i + "_b").val(sliceDecimals(matrix[0][1]));
+		$("#input_" + i + "_c").val(sliceDecimals(matrix[1][0]));
+		$("#input_" + i + "_d").val(sliceDecimals(matrix[1][1]));
 
 		drawArrow()
 	}
 });
+
+function sliceDecimals(number) {
+	var result;
+
+	if (typeof number == 'number') {
+		result = math.complex(number.toFixed(2));
+	}
+	else {
+		var re = number.re.toFixed(2);
+		var im = number.im.toFixed(2);
+
+		result = math.complex(parseFloat(re), parseFloat(im));
+	}
+
+	return result;
+}
 
 function buildAxes( length ) {
 	var axes = new THREE.Object3D();
