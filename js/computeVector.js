@@ -64,8 +64,12 @@ function getPhaseShiftGate(shift) {
       return [[1,0],[0,Math.exp(math.multiply(complexi,shift))]];
 }
 
-function applyGate(state,gate) {
+function applyGateToState(state,gate) {
       return math.multiply(gate,state);
+}
+
+function applyGateToDensMat(densMatrix,gate) {
+      return math.chain(gate).multiply(densMatrix).multiply(conjugateTranspose(gate));
 }
 
 function depolNoise(densMatrix, r) {
@@ -129,7 +133,7 @@ function getPadeApproxExp(matrix, approx) {
 }
 
 function getUnitaryAtTime(unitary, time) {
-      var unitary = math.multiply(math.multiply(time,math.complex("-i")),unitary);
+      var unitary = math.chain(math.complex("-i")).multiply(time).multiply(unitary).done();
       return getPadeApproxExp(unitary,4);
 }
 
