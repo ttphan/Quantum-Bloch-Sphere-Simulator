@@ -9,6 +9,7 @@ var statePlus = math.multiply(1/math.sqrt(2),[[1],[1]]);
 var stateMin = math.multiply(1/math.sqrt(2),[[1],[-1]]);
 var stateOne = [[0],[1]];
 var stateZero = [[1],[0]];
+var stateY = [[math.sqrt(0.5)], [math.multiply(math.sqrt(0.5),complexi)]];
 var maxMixed = [[0.5, 0],[0, 0.5]];
 var identity = [[1,0],[0,1]];
 
@@ -20,6 +21,13 @@ function getVector(densMatrix){
 
       var vector = new THREE.Vector3( xCoor, yCoor, zCoor );
       return vector;
+}
+
+function transformAxes(E1, E2) {
+      var transX = getVector(channelNoise(stateToDens(statePlus),E1,E2));
+      var transY = getVector(channelNoise(stateToDens(stateY),E1,E2));;
+      var transZ = getVector(channelNoise(stateToDens(stateZero),E1,E2));;
+      return [transX, transY, transZ];
 }
 
 function trace(matrix){
@@ -55,7 +63,7 @@ function stateToDens(state) {
       return math.multiply(state, conjugateTranspose(state));
 }
 
-function tensorProduct(state1,state2) {
+function tensorProduct(state1, state2) {
       return [math.multiply(state1[0],state2[0]),
             math.multiply(state1[0],state2[1]),
             math.multiply(state1[1],state2[0]),
@@ -70,33 +78,39 @@ function getPhaseShiftGate(shift) {
       return [[1,0],[0,Math.exp(math.multiply(complexi,shift))]];
 }
 
-function applyGateToState(state,gate) {
+function applyGateToState(state, gate) {
       return math.multiply(gate,state);
 }
 
-function applyGateToDensMat(densMatrix,gate) {
+function applyGateToDensMat(densMatrix, gate) {
       return math.chain(gate).multiply(densMatrix).multiply(conjugateTranspose(gate));
+}
+
+function channelNoise(densMatrix, E1, E2) {
+      return math.add(math.chain(E1).multiply(densMatrix).multiply(conjugateTranspose(E1)).done(), 
+            math.chain(E2).multiply(densMatrix).multiply(conjugateTranspose(E2)).done());
 }
 
 function depolNoise(densMatrix, r) {
       return math.add(math.multiply(r,densMatrix), math.multiply((1-r),maxMixed));
 }
 
-function dephaseNoiseX(densMatrix,r) {
-      return math.add(math.multiply(r,densMatrix), 
-            math.chain(1-r).multiply(gateX).multiply(densMatrix).multiply(gateX).done());
+function dephaseNoiseX(densMatrix, r) {
+      var E1 = math.sqrt(r);
+      var E2 = math.multiply(math.sqrt(r-1),gateX);
+      return channelNoise(densMatrix, E1, E2);
 }
 
-function dephaseNoiseZ(densMatrix,r) {
-      return math.add(math.multiply(r,densMatrix), 
-            math.chain(1-r).multiply(gateZ).multiply(densMatrix).multiply(gateZ).done());
+function dephaseNoiseZ(densMatrix, r) {
+      var E1 = math.sqrt(r);
+      var E2 = math.multiply(math.sqrt(r-1),gateZ);
+      return channelNoise(densMatrix, E1, E2);
 }
 
-function ampDampNoise(densMatrix,r) {
-      a0 = math.add(stateToDens(stateZero), math.multiply(math.sqrt(r),stateToDens(stateOne)));
-      a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,math.transpose(stateOne)));
-      return math.add(math.multiply(math.multiply(a0,densMatrix), conjugateTranspose(a0)), 
-            math.multiply(math.multiply(a1,densMatrix), conjugateTranspose(a1)));
+function ampDampNoise(densMatrix, r) {
+      var a0 = math.add(stateToDens(stateZero), math.multiply(math.sqrt(r),stateToDens(stateOne)));
+      var a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,math.transpose(stateOne)));
+      return channelNoise(densMatrix, a0, a1);;
 }
 
 function isPure(densMatrix) {
@@ -149,6 +163,8 @@ function makeMixedState(densMat1, prob1, densMat2, prob2) {
 }
 
 function matrixEquals(mat1, mat2) {
+      mat1=math.complex(mat1);
+      mat2=math.complex(mat2);
       return ((mat1[0][0] == mat2[0][0]) && 
               (mat1[1][0] == mat2[1][0]) && 
               (mat1[0][1] == mat2[0][1]) &&
