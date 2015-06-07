@@ -1,14 +1,5 @@
 var activeTab = 1;
 
-function showState(i) {
-	var a = math.complex($("#input_" + i + "_a").val());
-	var b = math.complex($("#input_" + i + "_b").val());
-	var c = math.complex($("#input_" + i + "_c").val());
-	var d = math.complex($("#input_" + i + "_d").val());
-	var vector = getVector([[a,b],[c,d]]);
-	console.log("x: "+vector.x+" y: "+vector.y+" z: "+vector.z)
-} // showState
-
 function gui() {
 	for (var i = 1; i <= 4; i++) {
 		createSliders(i);

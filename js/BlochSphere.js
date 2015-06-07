@@ -78,12 +78,14 @@ $(document).ready(function() {
 			var d = new Number($("#input_" + activeTab + "_d").val());
 		    var dir = getVector([[a,b],[c,d]]);
 
+		    console.log("x: "+dir.x+" y: "+dir.y+" z: "+dir.z)
+		    
 		    // Switch z and y axis to compensate for computer graphics/physics
 		    // difference quirks.
 		    temp = dir.y;
 		    dir.y = dir.z;
 		    dir.z = temp.im;
-		    //dir.y = -1 * dir.y;
+		    dir.y = -1 * dir.y;
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
 			var length = dir.length();
