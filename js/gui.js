@@ -70,6 +70,7 @@ $(document).ready(function() {
 		
 	function drawArrow() {
 		var colours = ['red', 'green', 'blue', 'yellow'];
+		console.log($("#input_" + activeTab + "_a").val())
 	    var a = math.complex($("#input_" + activeTab + "_a").val());
 		var b = math.complex($("#input_" + activeTab + "_b").val());
 		var c = math.complex($("#input_" + activeTab + "_c").val());
@@ -120,35 +121,89 @@ $(document).ready(function() {
 		
 		for (var i = 1; i <= 4; i++) {
 			$("#section" + i).append($('<h3>State ' + i + '</h3>'))
-				.append($("<p>Density Matrix: </p>"))
-				.append($("<input type='text' id='input_" + i + "_a' value='1.00' style='width:100px;'>"))
-				.append($("<input type='text' id='input_" + i + "_b' value='0.00' style='width:100px;'>"))
-				.append($("<br/>"))
-				.append($("<input type='text' id='input_" + i + "_c' value='0.00' style='width:100px;'>"))
-				.append($("<input type='text' id='input_" + i + "_d' value='0.00' style='width:100px;'>"))
-				.append($("<br/>"))
-				.append($("<p>State: </p>"))
-				.append($("<div id='state" + i + "Text'></div>")
-				  .append($("<p>&#936 = 1|0> + 0|1></p>"))
-				 )
-				.append($("<div class='sliders'></div>")
+					.append($("<div></div>")
+					.addClass("col-md-6")
+					.append($("<h4>Density Matrix: </h4>"))
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_a",
+							value: '1.00',
+							type: 'text'
+						})
+						.css({
+							'width': '80px',
+							'margin': '10px'
+						})
+					)
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_b",
+							value: '0.00',
+							type: 'text'
+						})
+						.css({
+							'width': '80px',
+							'margin': '10px'
+						})
+					)
+					.append($("<br/>"))
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_c",
+							value: '0.00',
+							type: 'text'
+						})
+						.css({
+							'width': '80px',
+							'margin': '10px'
+						})
+					)
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_d",
+							value: '0.00',
+							type: 'text'
+						})
+						.css({
+							'width': '80px',
+							'margin': '10px'
+						})
+					)
+				)
+				.append($("<div></div>")
+					.addClass("col-md-6")
+					.css({
+						'padding-bottom': '30px'
+					})
+					.append($("<h4>State in standard basis: </h4>"))
+					.append($("<div id='state" + i + "Text'></div>")
+					  .append($("<p>&#936 = 1|0> + 0|1></p>"))
+					)
+					.append($("<button></button>")
+						.attr({id: "btn_show_state_" + i})
+						.addClass("btn btn-default btn-md")
+						.text("Show state in Bloch-sphere")
+					)
+				)
+				.append($("<div class='sliders col-md-12'></div>")
 					.append($("<div class='row'></div>")
-						.append($("<div class='range-slider col-md-9'></div>")
+						.append($("<div class='col-md-2'></div>")
+							.append($("<h4>Theta</h4>")
+							)
+						)
+						.append($("<div class='range-slider col-md-10'></div>")
 						    .append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
 						)
 					)
 					.append($("<div class='row'></div>")
-						.append($("<div class='range-slider col-md-9'></div>")
+						.append($("<div class='col-md-2'></div>")
+							.append($("<h4>Phi</h4>")
+							)
+						)
+						.append($("<div class='range-slider col-md-10'></div>")
 						    .append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
 						)
 					)
-				)
-				.append($("<br/>"))	
-				.append($("<button></button>")
-					.attr({id: "btn_show_state_" + i})
-					.addClass("btn btn-default btn-lg")
-					.text("Show state in Bloch-sphere")
-					.css('margin-bottom', '10px')
 				)
 
 			// Event listeners to buttons
@@ -170,7 +225,7 @@ $(document).ready(function() {
 		    grid: true,
 		    min: 0,
 		    max: 180,
-		    from: 90,
+		    from: 0,
 		    step: 0.1,
 		    onChange: function (data) {
 		        updateStateGui(i);
@@ -182,7 +237,7 @@ $(document).ready(function() {
 		    grid: true,
 		    min: 0,
 		    max: 360,
-		    from: 90,
+		    from: 0,
 		    step: 0.1,
 		    onChange: function (data) {
 		        updateStateGui(i);
