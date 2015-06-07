@@ -1,8 +1,11 @@
 $(document).ready(function() {
-	var camera, controls, scene, renderer;
+	var camera_top, controls, scene, renderer_top;
+
+	var camera_bottom, scene_bottom, renderer_bottom;
 
 	var activeTab = 1;
 	var arrows = [null, null, null, null];
+	var transformation = [0.3, 1.5, 0.7];
 
 	init();
 	animate();
@@ -11,22 +14,28 @@ $(document).ready(function() {
 	onNoiseSelectionChanged();
 
 	function init() {
-
-		var c = $('#myCanvas')[0];
+		var c_top = $('#canvas-top')[0];
+		var c_bottom = $('#canvas-bottom')[0];
 
 		// renderer
-		renderer = new THREE.WebGLRenderer({canvas: c});
-		renderer.setSize(c.width, c.height);
-		renderer.autoClear = false;
+		//// Top
+		renderer_top = new THREE.WebGLRenderer({canvas: c_top});
+		renderer_top.setSize(c_top.width, c_top.height);
+		renderer_top.autoClear = false;
+
+		//// Bottom
+		renderer_bottom = new THREE.WebGLRenderer({canvas: c_bottom});
+		renderer_bottom.setSize(c_bottom.width, c_bottom.height);
 
 		// camera
-		camera = new THREE.PerspectiveCamera(45, c.width / c.height, 1, 1000);
-		camera.position.z = 3;
-		camera.position.x = 1;
-		camera.position.y = 1;
-
+		camera_top = new THREE.PerspectiveCamera(45, c_top.width / c_top.height, 1, 1000);
+		camera_bottom = new THREE.PerspectiveCamera(45, c_bottom.width / c_bottom.height, 1, 1000);
+		camera_top.position.z = camera_bottom.position.z = 3;
+		camera_top.position.x = camera_bottom.position.x = 1;
+		camera_top.position.y = camera_bottom.position.y = 1;
+		
 		// Trackball controls
-		controls = new THREE.OrbitControls( camera, c );
+		controls = new THREE.OrbitControls( camera_top, c_top );
 		controls.rotateSpeed = 1.0;
 		controls.noPan = true;
 
@@ -36,17 +45,17 @@ $(document).ready(function() {
 		controls.addEventListener( 'change', render );
 
 		// scene
+		//// Top
 		scene = new THREE.Scene();
 		sceneCircles = new THREE.Scene();
+
+		//// Bottom
+		scene_bottom = new THREE.Scene(); 
 
 		// Bloch sphere object
 		var blochSphere = new THREE.Object3D();
 				
 		// sphere
-		// the first argument of THREE.SphereGeometry is the radius, the second argument is
-		// the segmentsWidth, and the third argument is the segmentsHeight.  Increasing the 
-		// segmentsWidth and segmentsHeight will yield a more perfect circle, but will degrade
-		// rendering performance
 		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
 		var sphereMaterial = new THREE.MeshBasicMaterial( { 
 			color: 0x0099CC, 
@@ -66,10 +75,48 @@ $(document).ready(function() {
 		blochSphere.add( axes );
 
 		scene.add(blochSphere);
+
+		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
+		geometry.applyMatrix( new THREE.Matrix4().makeScale( transformation[0], transformation[1], transformation[2] ) );
+
+		var sphereMaterialNoise = new THREE.MeshBasicMaterial( { 
+			color: 0x0099CC, 
+			transparent: true, 
+			opacity: 0.25 
+		});
+
+		var blochSphere_bottom = new THREE.Object3D();
+
+		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
+		blochSphere_bottom.add(sphere_bottom);
+
+		blochSphere_bottom.add(buildAxes(1.5))
+
+		var circles_bottom = buildCircles(transformation);
+
+		blochSphere_bottom.add(circles_bottom);
+
+		scene_bottom.add(blochSphere_bottom)
+
 		render();
 	}
 		
-		
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+	}
+
+	function render() {
+		renderer_top.setClearColor( 'black', 1);
+		renderer_top.clear();
+		renderer_top.render(sceneCircles, camera_top);
+		renderer_top.clearDepth();
+		renderer_top.render(scene, camera_top);
+
+		renderer_bottom.setClearColor( 'black', 1);
+		renderer_bottom.render(scene_bottom, camera_top);
+	}
+
 	function drawArrow() {
 		var colours = ['red', 'green', 'blue', 'yellow'];
 		console.log($("#input_" + activeTab + "_a").val())
@@ -101,19 +148,6 @@ $(document).ready(function() {
 
 		render();
 	} // drawArrow
-
-	function animate() {
-		requestAnimationFrame( animate );
-		controls.update();
-	}
-
-	function render() {
-		renderer.setClearColor( 0xffffff, 1);
-		renderer.clear();
-		renderer.render(sceneCircles, camera);
-		renderer.clearDepth();
-		renderer.render(scene, camera);
-	}
 
 	function gui() {
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
@@ -354,21 +388,32 @@ function buildAxis( src, dst, colorHex, dashed ) {
 
 }
 
-function buildCircles() {
+function buildCircles(vector) {
 	var circles = new THREE.Object3D();
+	var a, b, c;
+	if (vector !== undefined) {
+		a = vector[0];
+		b = vector[1];
+		c = vector[2];
+	}
 
-	circles.add(buildCircle(1,32,0));
-	circles.add(buildCircle(1,32,'x'));
-	circles.add(buildCircle(1,32,'y'));
+	circles.add(buildCircle(1, 32, 0, [a, b, c]));
+	circles.add(buildCircle(1, 32, 'x', [a, c, b]));
+	circles.add(buildCircle(1, 32, 'y', [c, b, a]));
 
 	return circles;
 }
 
-function buildCircle(radius,segments,rot) {
+function buildCircle(radius,segments,rot, vector) {
 	var circle = new THREE.Object3D();
 
 	var circleGeometry = new THREE.CircleGeometry( radius, segments );
 	var lineGeometry = new THREE.CircleGeometry( radius, segments );
+
+	if (vector !== undefined && vector[0] !== undefined) {
+		circleGeometry.applyMatrix( new THREE.Matrix4().makeScale( vector[0], vector[1], vector[2] ) );
+		lineGeometry.applyMatrix( new THREE.Matrix4().makeScale( vector[0], vector[1], vector[2] ) );
+	}
 
 	var circleMaterial = new THREE.MeshBasicMaterial( { 
 		color: 0xffffff, 
@@ -402,18 +447,3 @@ function buildCircle(radius,segments,rot) {
 
 	return circle;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
