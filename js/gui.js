@@ -1,10 +1,10 @@
 var activeTab = 1;
 
 function showState(i) {
-	var a = new Number(document.getElementById("input_" + i + "_a").value);
-	var b = new Number(document.getElementById("input_" + i + "_b").value);
-	var c = new Number(document.getElementById("input_" + i + "_c").value);
-	var d = new Number(document.getElementById("input_" + i + "_d").value);
+	var a = new Number($("#input_" + i + "_a").val());
+	var b = new Number($("#input_" + i + "_b").val());
+	var c = new Number($("#input_" + i + "_c").val());
+	var d = new Number($("#input_" + i + "_d").val());
 	var vector = getVector([[a,b],[c,d]]);
 	console.log("x: "+vector.x+" y: "+vector.y+" z: "+vector.z)
 } // showState
@@ -70,13 +70,12 @@ function updateStateGui(i) {
 		b = b*-1;
 	}
 
-	var elem = document.getElementById("state" + i + "Text");
-	elem.innerHTML = "<p>&#936 = " + a + "|0> + " + b + "|1></p>";
+	$("#state" + i + "Text").html("<p>&#936 = " + a + "|0> + " + b + "|1></p>");
 
 	var matrix = stateToDens([[a+0],[b+0]]);
 	
-	document.getElementById("input_" + i + "_a").value = matrix[0][0].toFixed(2);
-	document.getElementById("input_" + i + "_b").value = matrix[0][1].toFixed(2);
-	document.getElementById("input_" + i + "_c").value = matrix[1][0].toFixed(2);
-	document.getElementById("input_" + i + "_d").value = matrix[1][1].toFixed(2);
+	$("#input_" + i + "_a").val(matrix[0][0].toFixed(2));
+	$("#input_" + i + "_b").val(matrix[0][1].toFixed(2));
+	$("#input_" + i + "_c").val(matrix[1][0].toFixed(2));
+	$("#input_" + i + "_d").val(matrix[1][1].toFixed(2));
 }

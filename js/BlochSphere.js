@@ -13,7 +13,7 @@ $(document).ready(function() {
 	});
 
 	function init() {
-		var c = document.getElementById('myCanvas');
+		var c = $('#myCanvas')[0];
 
 		// renderer
 		renderer = new THREE.WebGLRenderer({canvas: c});
@@ -72,10 +72,10 @@ $(document).ready(function() {
 		
 		function drawArrow() {
 			var colours = ['red', 'green', 'blue', 'yellow'];
-		    var a = new Number(document.getElementById("input_" + activeTab + "_a").value);
-			var b = new Number(document.getElementById("input_" + activeTab + "_b").value);
-			var c = new Number(document.getElementById("input_" + activeTab + "_c").value);
-			var d = new Number(document.getElementById("input_" + activeTab + "_d").value);
+		    var a = new Number($("#input_" + activeTab + "_a").val());
+			var b = new Number($("#input_" + activeTab + "_b").val());
+			var c = new Number($("#input_" + activeTab + "_c").val());
+			var d = new Number($("#input_" + activeTab + "_d").val());
 		    var dir = getVector([[a,b],[c,d]]);
 
 		    // Switch z and y axis to compensate for computer graphics/physics
