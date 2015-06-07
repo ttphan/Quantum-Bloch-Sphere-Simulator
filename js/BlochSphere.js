@@ -5,7 +5,6 @@ $(document).ready(function() {
 
 	init();
 	animate();
-	gui();
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 	    var tab = $(e.target).attr('id');
@@ -13,6 +12,8 @@ $(document).ready(function() {
 	});
 
 	function init() {
+		gui();
+
 		var c = $('#myCanvas')[0];
 
 		// renderer
@@ -79,13 +80,13 @@ $(document).ready(function() {
 		    var dir = getVector([[a,b],[c,d]]);
 
 		    console.log("x: "+dir.x+" y: "+dir.y+" z: "+dir.z)
-		    
+
 		    // Switch z and y axis to compensate for computer graphics/physics
 		    // difference quirks.
 		    temp = dir.y;
 		    dir.y = dir.z;
 		    dir.z = temp.im;
-		    dir.y = -1 * dir.y;
+		    dir.z = -1 * dir.z;
 			
 			var origin = new THREE.Vector3( 0, 0, 0 );
 			var length = dir.length();

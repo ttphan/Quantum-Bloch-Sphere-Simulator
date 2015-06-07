@@ -2,6 +2,40 @@ var activeTab = 1;
 
 function gui() {
 	for (var i = 1; i <= 4; i++) {
+		$("#section" + i).append($('<h3>State ' + i + '</h3>'))
+			.append($("<p>Density Matrix: </p>"))
+			.append($("<input type='text' id='input_" + i + "_a' value='1.00' style='width:60px;'>"))
+			.append($("<input type='text' id='input_" + i + "_b' value='0.00' style='width:60px;'>"))
+			.append($("<br/>"))
+			.append($("<input type='text' id='input_" + i + "_c' value='0.00' style='width:60px;'>"))
+			.append($("<input type='text' id='input_" + i + "_d' value='0.00' style='width:60px;'>"))
+			.append($("<br/>"))
+			.append($("<button id='btn_show_state_" + i + "'>Show state in Bloch-sphere</button>"))
+			.append($("<br/>"))
+			.append($("<p>State: </p>"))
+			.append($("<div id='state" + i + "Text'></div>")
+			  .append($("<p>&#936 = 1|0> + 0|1></p>"))
+			 )
+			.append($("<br/>"))
+			.append($("<div class='sliders'></div>")
+				.append($("<div class='row'></div>")
+					.append($("<div class='range-slider col-md-8'></div>")
+					    .append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
+					)
+					.append($("<div class='col-md-4'></div>")
+						.append($("<label><input type='checkbox' name='checkbox' value='value' class='check_negative' id='negative_" + i + "_1' onchange='updateStateGui(1)'> Negative values</label>"))
+					)
+				)
+				.append($("<div class='row'></div>")
+					.append($("<div class='range-slider col-md-8'></div>")
+					    .append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
+					)
+					.append($("<div class='col-md-4'></div>")
+						.append($("<label><input type='checkbox' name='checkbox' value='value' class='check_negative' id='negative_" + i + "_2' onchange='updateStateGui(1)'> Negative values</label>"))
+					)
+				)
+			)	
+
 		createSliders(i);
 	}
 }
