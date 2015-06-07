@@ -8,11 +8,6 @@ $(document).ready(function() {
 	animate();
 	gui();
 
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
-	    var tab = $(e.target).attr('id');
-	    activeTab = parseInt(tab.substring(tab.length-1));	
-	});
-
 	function init() {
 
 		var c = $('#myCanvas')[0];
@@ -81,8 +76,6 @@ $(document).ready(function() {
 		var d = new Number($("#input_" + activeTab + "_d").val());
 	    var dir = getVector([[a,b],[c,d]]);
 
-	    console.log("x: "+dir.x+" y: "+dir.y+" z: "+dir.z)
-
 	    // Switch z and y axis to compensate for computer graphics/physics
 	    // difference quirks.
 	    temp = dir.y;
@@ -120,6 +113,11 @@ $(document).ready(function() {
 	}
 
 	function gui() {
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+		    var tab = $(e.target).attr('id');
+		    activeTab = parseInt(tab.substring(tab.length-1));	
+		});
+		
 		for (var i = 1; i <= 4; i++) {
 			$("#section" + i).append($('<h3>State ' + i + '</h3>'))
 				.append($("<p>Density Matrix: </p>"))
@@ -153,7 +151,10 @@ $(document).ready(function() {
 					.css('margin-bottom', '10px')
 				)
 
+			// Event listeners to buttons
 			$("#btn_show_state_" + i).on('click', drawArrow);
+
+			// Initialize sliders
 			createSliders(i);
 		}
 	}
