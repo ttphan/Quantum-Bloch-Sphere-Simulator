@@ -76,13 +76,11 @@ $(document).ready(function() {
 		var d = math.complex($("#input_" + activeTab + "_d").val());
 	    var dir = getVector([[a,b],[c,d]]);
 
-	    console.log('Density matrix: ' + a + ' ' + b + ' ' + c + ' ' + d)
-	    console.log('Vector: ' + dir.x + ' ' + dir.y + ' ' + dir.z)
 	    // Switch z and y axis to compensate for computer graphics/physics
 	    // difference quirks.
 	    temp = dir.y;
 	    dir.y = dir.z;
-	    dir.z = temp.im;
+	    dir.z = temp;
 	    dir.z = -1 * dir.z;
 		
 		var origin = new THREE.Vector3( 0, 0, 0 );
