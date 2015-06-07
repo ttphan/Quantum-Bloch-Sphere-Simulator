@@ -1,10 +1,12 @@
 $(document).ready(function() {
 	var camera, controls, scene, renderer;
 
+	var activeTab = 1;
 	var arrows = [null, null, null, null];
 
 	init();
 	animate();
+	gui();
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 	    var tab = $(e.target).attr('id');
@@ -12,7 +14,6 @@ $(document).ready(function() {
 	});
 
 	function init() {
-		gui();
 
 		var c = $('#myCanvas')[0];
 
@@ -69,46 +70,41 @@ $(document).ready(function() {
 
 		scene.add(blochSphere);
 		render();
-		
-		
-		function drawArrow() {
-			var colours = ['red', 'green', 'blue', 'yellow'];
-		    var a = new Number($("#input_" + activeTab + "_a").val());
-			var b = new Number($("#input_" + activeTab + "_b").val());
-			var c = new Number($("#input_" + activeTab + "_c").val());
-			var d = new Number($("#input_" + activeTab + "_d").val());
-		    var dir = getVector([[a,b],[c,d]]);
-
-		    console.log("x: "+dir.x+" y: "+dir.y+" z: "+dir.z)
-
-		    // Switch z and y axis to compensate for computer graphics/physics
-		    // difference quirks.
-		    temp = dir.y;
-		    dir.y = dir.z;
-		    dir.z = temp.im;
-		    dir.z = -1 * dir.z;
-			
-			var origin = new THREE.Vector3( 0, 0, 0 );
-			var length = dir.length();
-
-			var hex = colours[activeTab - 1];
-			var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
-
-			if (arrows[activeTab-1] != null) {
-				scene.remove(arrows[activeTab-1]);
-			}
-
-			arrows[activeTab-1] = arrow;
-			scene.add( arrow );
-
-			render();
-		} // drawArrow
-
-		for (var i = 1; i <= 4; i++) {
-			var button = $("#btn_show_state_" + i)[0];
-			button.addEventListener( 'click', drawArrow);
-		}
 	}
+		
+		
+	function drawArrow() {
+		var colours = ['red', 'green', 'blue', 'yellow'];
+	    var a = new Number($("#input_" + activeTab + "_a").val());
+		var b = new Number($("#input_" + activeTab + "_b").val());
+		var c = new Number($("#input_" + activeTab + "_c").val());
+		var d = new Number($("#input_" + activeTab + "_d").val());
+	    var dir = getVector([[a,b],[c,d]]);
+
+	    console.log("x: "+dir.x+" y: "+dir.y+" z: "+dir.z)
+
+	    // Switch z and y axis to compensate for computer graphics/physics
+	    // difference quirks.
+	    temp = dir.y;
+	    dir.y = dir.z;
+	    dir.z = temp.im;
+	    dir.z = -1 * dir.z;
+		
+		var origin = new THREE.Vector3( 0, 0, 0 );
+		var length = dir.length();
+
+		var hex = colours[activeTab - 1];
+		var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
+
+		if (arrows[activeTab-1] != null) {
+			scene.remove(arrows[activeTab-1]);
+		}
+
+		arrows[activeTab-1] = arrow;
+		scene.add( arrow );
+
+		render();
+	} // drawArrow
 
 	function animate() {
 		requestAnimationFrame( animate );
@@ -122,19 +118,119 @@ $(document).ready(function() {
 		renderer.clearDepth();
 		renderer.render(scene, camera);
 	}
+
+	function gui() {
+		for (var i = 1; i <= 4; i++) {
+			$("#section" + i).append($('<h3>State ' + i + '</h3>'))
+				.append($("<p>Density Matrix: </p>"))
+				.append($("<input type='text' id='input_" + i + "_a' value='1.00' style='width:60px;'>"))
+				.append($("<input type='text' id='input_" + i + "_b' value='0.00' style='width:60px;'>"))
+				.append($("<br/>"))
+				.append($("<input type='text' id='input_" + i + "_c' value='0.00' style='width:60px;'>"))
+				.append($("<input type='text' id='input_" + i + "_d' value='0.00' style='width:60px;'>"))
+				.append($("<br/>"))
+				.append($("<p>State: </p>"))
+				.append($("<div id='state" + i + "Text'></div>")
+				  .append($("<p>&#936 = 1|0> + 0|1></p>"))
+				 )
+				.append($("<div class='sliders'></div>")
+					.append($("<div class='row'></div>")
+						.append($("<div class='range-slider col-md-9'></div>")
+						    .append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
+						)
+					)
+					.append($("<div class='row'></div>")
+						.append($("<div class='range-slider col-md-9'></div>")
+						    .append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
+						)
+					)
+				)
+				.append($("<br/>"))	
+				.append($("<button></button>")
+					.attr({id: "btn_show_state_" + i})
+					.addClass("btn btn-default btn-lg")
+					.text("Show state in Bloch-sphere")
+					.css('margin-bottom', '10px')
+				)
+
+			$("#btn_show_state_" + i).on('click', drawArrow);
+			createSliders(i);
+		}
+	}
+
+	function createSliders(i) {
+		var $range1 = $(".js-range-slider-" + i + "-1"),
+		    $range2 = $(".js-range-slider-" + i + "-2"),
+		    first,
+		    second;
+
+		$range1.ionRangeSlider({
+		    type: "single",
+		    grid: true,
+		    min: 0,
+		    max: 1.0,
+		    from: 1,
+		    step: 0.001,
+		    onChange: function (data) {
+		        second.update({
+		            from: Math.sqrt(1 - Math.pow(data.from, 2))
+		        });
+
+		        updateStateGui(i);
+		    }
+		});
+
+		$range2.ionRangeSlider({
+		    type: "single",
+		    grid: true,
+		    min: 0,
+		    max: 1.0,
+		    from: 0,
+		    step: 0.001,
+		    onChange: function (data) {
+		        first.update({
+		            from: Math.sqrt(1 - Math.pow(data.from, 2))
+		        });
+
+		        updateStateGui(i);
+		    }
+		});
+
+		first = $range1.data("ionRangeSlider");
+		second = $range2.data("ionRangeSlider");
+	}	
+
+	function updateStateGui(i) {
+		var $range1 = $(".js-range-slider-" + i + "-1"),
+		    $range2 = $(".js-range-slider-" + i + "-2")
+
+		var a = new Number($range1.val());
+		var b = new Number($range2.val());
+
+		$("#state" + i + "Text").html("<p>&#936 = " + a + "|0> + " + b + "|1></p>");
+
+		var matrix = stateToDens([[a+0],[b+0]]);
+		
+		$("#input_" + i + "_a").val(matrix[0][0].toFixed(2));
+		$("#input_" + i + "_b").val(matrix[0][1].toFixed(2));
+		$("#input_" + i + "_c").val(matrix[1][0].toFixed(2));
+		$("#input_" + i + "_d").val(matrix[1][1].toFixed(2));
+
+		drawArrow()
+	}
 });
 
 function buildAxes( length ) {
-		var axes = new THREE.Object3D();
+	var axes = new THREE.Object3D();
 
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, true ) ); // +Z
-		axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, false ) ); // -Z
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, true ) ); // +Z
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, false ) ); // -Z
 
-		return axes;
+	return axes;
 }
 
 function buildAxis( src, dst, colorHex, dashed ) {
@@ -156,7 +252,6 @@ function buildAxis( src, dst, colorHex, dashed ) {
 	return axis;
 
 }
-
 
 function buildCircles() {
 	var circles = new THREE.Object3D();
@@ -203,8 +298,8 @@ function buildCircle(radius,segments,rot) {
 
 	circle.add(base);
 	circle.add(line);
-	return circle;
 
+	return circle;
 }
 
 
