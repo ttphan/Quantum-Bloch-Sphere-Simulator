@@ -79,3 +79,8 @@ canvas {
     position: relative;
     height: 60px;
 }
+
+.tab-content {
+    display: table;
+    width: 100%; /* optional */
+}
