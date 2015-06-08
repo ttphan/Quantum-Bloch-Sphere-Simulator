@@ -22,12 +22,11 @@ $(document).ready(function() {
 	var sphereSegments = [30, 30];
 	var circleSegments = 32;
 
-
 	init();
 	animate();
 	gui();
-	makeNoiseTab();
-	onNoiseSelectionChanged();
+	//makeNoiseTab();
+	//onNoiseSelectionChanged();
 	updateBottomBlochSphere( );
 
 
@@ -148,7 +147,7 @@ $(document).ready(function() {
 	
 	// draws bottom Bloch sphere at location center, with given axis lengths
 	function updateBottomBlochSphere( ) {
-		console.log(1)
+
 		var tmp = computeTransformedBlochSphere();
 		var axes = tmp[0];
 		var center = tmp[1];
@@ -164,8 +163,6 @@ $(document).ready(function() {
 		axes[1] = axes[2];
 		axes[2] = tempHans;
 		
-		console.log("axes: x="+axes[0]+" y="+axes[1]+" z="+axes[2]);
-	
 		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
 
@@ -405,7 +402,7 @@ $(document).ready(function() {
 			$("#section" + i)//.append($('<h3>State ' + i + '</h3>'))
 					.append($("<div></div>")
 					.addClass("col-md-6")
-					.append($("<h4 id='densityMatText'>Density Matrix: </h4>"))
+					.append($("<h4 class='indentText'>Density Matrix: </h4>"))
 					.append($("<input>")
 						.attr({
 							id: "input_" + i + "_a",
@@ -525,6 +522,7 @@ $(document).ready(function() {
 
 		makeNoiseTab();	
 		addEventMixedSliders();	
+		addUnitaryTab();
 	}
 
 	function createSliders(i) {
@@ -593,6 +591,28 @@ $(document).ready(function() {
 		});	
 
 		onNoiseSelectionChanged();
+	}
+
+	function makeUnitaryTab() {
+		// slider:
+		var $t = $(".js-range-slider-unitary");
+		$t.ionRangeSlider({
+		    type: "single",
+		    grid: true,
+		    min: 0,
+		    max: 1,
+		    from: 0,
+		    step: 0.01,
+			onChange: function (data) {
+		       //updateStatesUnitary();
+		    },
+			prettify: function (num) {
+			  return sliceDecimals(1-num);
+			}
+		});	
+
+		onUnitarySelectionChanged();
+
 	}
 
 	function updateStateGui(i) {
@@ -688,8 +708,6 @@ function mixedValidityCheck() {
 		total += $(this).data("ionRangeSlider").result.from;
 	});
 
-	console.log(total);
-
 	if (+total.toFixed(2) != 1) {
 		return false
 	}
@@ -781,6 +799,35 @@ function onNoiseSelectionChanged() {
 	if (x == "user") { // user defined function
 	  ; // make slider disabled or smth!
 	}
+}
+
+function onUnitarySelectionChanged() {
+	// var x = document.getElementById("noise-select").value;
+	// var r = 1 - parseFloat(document.getElementById("noise_slider").value);
+	// var s_r = Math.sqrt(r);
+	// var s_emr = Math.sqrt(1-r);
+	
+	// //console.log("r = " + r);
+	
+	// if (x == "D") { // depolarizing
+	//   document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";
+	//   setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
+	// }
+	// if (x == "PhX") { // dephase x
+	//   document.getElementById("noise-equation-img").src = "img/noiseEq_PhX.png";
+	//   setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
+	// }
+	// if (x == "PhZ") { // dephase y
+	//   document.getElementById("noise-equation-img").src = "img/noiseEq_PhZ.png";
+	//   setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
+	// }
+	// if (x == "A") { // amplitude damping
+	//   document.getElementById("noise-equation-img").src = "img/noiseEq_A.png";
+	//   setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
+	// }
+	// if (x == "user") { // user defined function
+	//   ; // make slider disabled or smth!
+	// }
 }
 
 

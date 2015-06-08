@@ -38,26 +38,35 @@
 						<ul class="nav nav-tabs">
 							<li class="active">
 								<a data-toggle="tab" href="#section1" id='tab1'>
-									<img src="img/blok1.png" style="width:20px;height:20px;"/>
-									<img src="img/psi1.png" style="width:33px;height:25px;"/>
+									<div class="tabTop">
+										<img src="img/blok1.png" style="width:20px;height:20px;"/>
+										<h3> &#936&#x2081 </h3>			
+									</div>					
+									<!--<img src="img/psi1.png" style="width:33px;height:25px;"/>-->
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#section2" id='tab2'>
-									<img src="img/blok2.png" style="width:20px;height:20px;"/>
-									<img src="img/psi2.png" style="width:33px;height:25px;"/>
+									<div class="tabTop">
+										<img src="img/blok2.png" style="width:20px;height:20px;"/>
+										<h3> &#936&#x2082 </h3>			
+									</div>
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#section3" id='tab3'>
-									<img src="img/blok3.png" style="width:20px;height:20px;"/>
-									<img src="img/psi3.png" style="width:33px;height:25px;"/>
+									<div class="tabTop">
+										<img src="img/blok3.png" style="width:20px;height:20px;"/>
+										<h3> &#936&#x2083 </h3>			
+									</div>
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#section4" id='tab4'>
-									<img src="img/blok4.png" style="width:20px;height:20px;"/>
-									<img src="img/psi4.png" style="width:33px;height:25px;"/>
+									<div class="tabTop">
+										<img src="img/blok4.png" style="width:20px;height:20px;"/>
+										<h3> &#936&#x2084 </h3>			
+									</div>
 								</a>
 							</li>
 						</ul>
@@ -80,44 +89,43 @@
 						<ul class="nav nav-tabs">
 							<li class="active">
 								<a data-toggle="tab" href="#bottom-section1" id='bottom-tab1'>
-									<h4>Add noise</h4>
+									<h3>Add Noise</h3>
 								</a>
 							</li>
 							<li>
 								<a data-toggle="tab" href="#bottom-section2" id='bottom-tab2'>
-									<h4>Create a mixed state</h4>
+									<h3>Mixed State</h3>
+								</a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#bottom-section3" id='bottom-tab3'>
+									<h3>Unitary Transformation</h3>
 								</a>
 							</li>
 						</ul>
 						<div class="tab-content">
 							<div id="bottom-section1" class="tab-pane fade in active">
-								<h3>Add noise</h3>
-								
-								<div style="height:40px">
-									<img src="img/noiseEq_D.png" id="noise-equation-img"/>
-								</div>
-								<br/>
-								
-								Noise type: 
-								<select id="noise-select" onchange="onNoiseSelectionChanged();">
-									<option value="D">Depolarizing</option>
-									<option value="PhX">Dephase X</option>
-									<option value="PhZ">Dephase Z</option>
-									<option value="A">Amplitude damping</option>
-									<option value="user">User defined transformation</option>
-								</select>
-								
-								<div class='sliders' id="noise_slider_div">
-									<div class='row'>
-										<div class='range-slider col-md-9'>
-											<input id="noise_slider" type='text' class='js-range-slider-noise'value='' onchange="onNoiseSelectionChanged();"/>
-										</div>
+														
+								<div class="row">
+									<div class="col-md-6">
+										<h4 class="indentText"> Noise type: </h4> 
+										<select id="noise-select" onchange="onNoiseSelectionChanged();">
+											<option value="D">Depolarizing</option>
+											<option value="PhX">Dephase X</option>
+											<option value="PhZ">Dephase Z</option>
+											<option value="A">Amplitude damping</option>
+											<option value="user">User defined transformation</option>
+										</select>
+									</div>
+
+									<div class="col-md-6">
+										<img src="img/noiseEq_D.png" id="noise-equation-img" width="200px"/>
 									</div>
 								</div>
 								
 								<div class='row'>
 									<div class="col-md-6">
-									  <h4>Noise matrix E<sub>1</sub></h4>
+									  <h4 class="indentText">Noise matrix E<sub>1</sub></h4>
 									  <input id="input_noise_E1_a" type="text" style="width:80px; margin:10px;"></input>
 									  <input id="input_noise_E1_b" type="text" style="width:80px; margin:10px;"></input>
 									  <br/>
@@ -126,7 +134,7 @@
 									</div>
 									
 									<div class="col-md-6">
-									  <h4>Noise matrix E<sub>2</sub></h4>
+									  <h4 class="indentText">Noise matrix E<sub>2</sub></h4>
 									  <input id="input_noise_E2_a" type="text" style="width:80px; margin:10px;"></input>
 									  <input id="input_noise_E2_b" type="text" style="width:80px; margin:10px;"></input>
 									  <br/>
@@ -134,7 +142,23 @@
 									  <input id="input_noise_E2_d" type="text" style="width:80px; margin:10px;"></input>
 									</div>
 								</div>
+
+								<div class='col-md-12'>
+									<div class='spaceRow row'>
+										<div class="col-md-1 smallPadding greekAngles">
+											<h5>r</h5>
+										</div>
+										<div class="col-md-1 smallPadding">
+											<input id="noise_r" class="inputAngles" type="text" value="0.00">
+										</div>
+
+										<div class='range-slider col-md-10'>
+											<input id="noise_slider" type='text' class='js-range-slider-noise'value='' onchange="onNoiseSelectionChanged();"/>
+										</div>
+									</div>
+								</div>
 							</div>
+
 							<div id="bottom-section2" class="tab-pane fade">
 								<h4 id="mixedStateFunction">Wave function: &#936&#x2098 = <span class='state-1'>0</span>&#x00B7&#936&#x2081 + <span class='state-2'>0</span>&#x00B7&#936&#x2082 + <span class='state-3'>0</span>&#x00B7&#936&#x2083 + <span class='state-4'>0</span>&#x00B7&#936&#x2084</h4>
 
@@ -198,6 +222,71 @@
 									<button id='btn_compute_mixed' class='btn btn-default btn-md'>Compute mixed state</button>
 								</div>
 							</div>
+
+
+							<div id="bottom-section3" class="tab-pane fade">
+
+								<div class="row">
+									<div class="col-md-6">
+										<h4 class="indentText"> Choose unitary: </h4> 
+										<select id="gate-select" onchange="">
+											<option value="X">Pauli-X gate, Bit-flip</option>
+											<option value="Y">Pauli-Y gate, Bit-Phase-flip</option>
+											<option value="Z">Pauli-Z gate, Phase-flip</option>
+											<option value="H">H-gate: Hadamard</option>
+											<option value="R">Phase Shift</option>
+											<option value="hamil">Evolving State</option>
+											<option value="user">User defined unitary</option>								
+										</select>
+									</div>
+
+									<div class="col-md-6">
+										<h4 class="indentText"> Apply on state: </h4> 
+										<select id="state-select" onchange="">
+											<option value="psi1"> &#936&#x2081 </option>
+											<option value="psi2"> &#936&#x2082</option>
+											<option value="psi3"> &#936&#x2083</option>
+											<option value="psi4"> &#936&#x2084</option>
+											<option value="psiAll"> All States</option>							
+										</select>
+									</div>
+								</div>
+								
+								<div class='row'>
+									<div class="col-md-6">
+									  <h4 class="indentText">Unitary</h4>
+									  <input id="input_gate_a" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_gate_b" type="text" style="width:80px; margin:10px;"></input>
+									  <br/>
+									  <input id="input_gate_c" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_gate_d" type="text" style="width:80px; margin:10px;"></input>
+									</div>
+									
+									<div class="col-md-6">
+									  <h4 class="indentText">Hamiltonian</h4>
+									  <input id="input_hamil_a" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_hamil_b" type="text" style="width:80px; margin:10px;"></input>
+									  <br/>
+									  <input id="input_hamil_c" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_hamil_d" type="text" style="width:80px; margin:10px;"></input>
+									</div>
+								</div>
+
+								<div class='col-md-12'>
+									<div class='spaceRow row'>
+										<div class="col-md-1 smallPadding greekAngles">
+											<h5>t</h5>
+										</div>
+										<div class="col-md-1 smallPadding">
+											<input id="time_t" class="inputAngles" type="text" value="0.00">
+										</div>
+
+										<div class='range-slider col-md-10'>
+											<input id="time_slider" type='text' class='js-range-slider-unitary'value='' onchange=""/>
+										</div>
+									</div>
+								</div>
+							</div> 
 						</div>
 					</div>
 				</div>

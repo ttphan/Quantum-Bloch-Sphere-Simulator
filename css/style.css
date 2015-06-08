@@ -7,14 +7,52 @@ body {
 	color:#2E2E2E;
 }
 
-h1 {
+h1, h2, h4, h5 {
 	font-family: Georgia, serif;
-	color: gray;
+	color: #424242;
+}
+
+h1, h2 {
 	vertical-align: middle;
 	text-align: center;
-	font-size: 20pt;
 	margin-top: 10px;
 }
+
+
+h4, h5 {
+	text-align: left;
+	vertical-align: middle;
+}
+
+h5 {
+	text-align: center;
+}
+
+h1 {
+	font-family: Arial, sans-serif;
+	font-size: 20pt;
+}
+
+h3 {
+	font-family: Arial, sans-serif;
+	font-size: 15pt;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	color: #0B4C5F;
+}
+
+h2 {
+	font-size: 15pt;
+}
+
+/*h2 {
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	text-align: left;
+	margin: 10px;
+	padding: 0px;
+}*/
+
 
 .checkboxes h4 {
 	margin-top: 10px;
@@ -79,25 +117,6 @@ h1 {
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 }
 
-h2 {
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	text-align: left;
-	margin: 10px;
-	padding: 0px;
-}
-
-h4, h5 {
-	color: gray;
-	font-family: Georgia, serif;
-	text-align: left;
-	vertical-align: middle;
-}
-
-h5 {
-	text-align: center;
-}
-
 .inputAngles {
 	margin-left: 0px;
 	width: 40px;
@@ -109,7 +128,7 @@ h5 {
 	font-family: georgia, serif;
 }
 
-#densityMatText {
+h4.indentText {
 	margin-left: 8px;
 }
 
@@ -168,4 +187,40 @@ canvas {
 
 #noise-select {
 	margin-bottom: 10px;
+}
+
+#noise-equation-img {
+	margin-top: 35px;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid white;
+}
+
+.tabTop {
+	overflow: auto;
+}
+
+.tabTop img {
+	float: left;
+}
+
+.tabTop h3 {
+	float: left;
+	position: relative;
+	margin: 0px;
+	margin-left: 5px;
+}
+
+.tab-pane select {
+	margin-left: 8px;
+}
+
+#titleblock {
+	background-color: #0B4C5F;
+	border: 0px;
+}
+
+#titleblock h1 {
+	color: #D8D8D8;
 }
