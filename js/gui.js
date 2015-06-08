@@ -131,8 +131,6 @@ $(document).ready(function() {
 	}
 
 	function drawArrow() {
-		//var colours = ['red', 'green', 'blue', 'yellow'];
-		//console.log($("#input_" + activeTab + "_a").val())
 	    var a = math.complex($("#input_" + activeTab + "_a").val());
 		var b = math.complex($("#input_" + activeTab + "_b").val());
 		var c = math.complex($("#input_" + activeTab + "_c").val());
@@ -438,21 +436,60 @@ function addEventMixedSliders() {
 				})
 			},
 			onFinish: function(data) {
-				var total = 0;
-
-				sliders.each(function() {
-					total += $(this).data("ionRangeSlider").result.from;
-				});
-
-				if (total != 1 && !slider.options.from_fixed) {
-					slider.update({from: data.from + (1 - total)})
-				}
-
-				updateMixedGui();
+				var old_value = data.from;
+				finalizeMixed(slider)
 			}
 
 		})
 	})
+}
+
+function computeMixed() {
+	if (mixedValidityCheck()) {
+		errorModal('Ok!', 'Nothing wrong here!');
+	}
+	else {
+		errorModal('Error: Invalid probabilities', 'Make sure the probabilities add up to 1!')
+	}
+}
+
+function mixedValidityCheck() {
+	var sliders = $('[class^="js-range-slider-mixed"]');
+	var total = 0;
+
+	sliders.each(function() {
+		total += $(this).data("ionRangeSlider").result.from;
+	});
+
+	console.log(total);
+
+	if (+total.toFixed(2) != 1) {
+		return false
+	}
+
+	return true
+}
+
+function errorModal(title, body) {
+	$('#errorModal .modal-title').text(title);
+	$('#errorModal .modal-body').text(body);
+	$('#errorModal').modal();
+}
+
+function finalizeMixed(slider) {
+	var sliders = $('[class^="js-range-slider-mixed"]');
+	var total = 0;
+	var old_value = slider.result.from;
+
+	sliders.each(function() {
+		total += $(this).data("ionRangeSlider").result.from;
+	});
+
+	if (+total.toFixed(2) != 1 && !slider.options.from_fixed) {
+		slider.update({from: old_value + (1 - total)})
+	}
+
+	updateMixedGui();
 }
 
 function updateMixedGui() {
@@ -476,6 +513,12 @@ function checkActive(checkbox) {
 	$('#check-lock-' + checkId).prop('checked', false);
 	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from: 0, from_fixed: !checkbox.checked})
 	$('#check-lock-' + checkId).prop('disabled', !checkbox.checked);
+
+	var sliders = $('[class^="js-range-slider-mixed"]');
+
+	sliders.each(function() {
+		finalizeMixed($(this).data("ionRangeSlider"));
+	})
 }
 
 function checkLock(checkbox) {
