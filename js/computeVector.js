@@ -10,6 +10,7 @@ var stateMin = math.multiply(1/math.sqrt(2),[[1],[-1]]);
 var stateOne = [[0],[1]];
 var stateZero = [[1],[0]];
 var stateY = [[math.sqrt(0.5)], [math.multiply(math.sqrt(0.5),complexi)]];
+var stateY_min = [[math.sqrt(0.5)], [math.multiply(math.sqrt(0.5),math.complex('-i'))]];
 var maxMixed = [[0.5, 0],[0, 0.5]];
 var identity = [[1,0],[0,1]];
 
@@ -25,10 +26,51 @@ function getVector(densMatrix){
 
 function transformAxes(E1, E2) {
       var transX = getVector(channelNoise(stateToDens(statePlus),E1,E2));
-      var transY = getVector(channelNoise(stateToDens(stateY),E1,E2));;
-      var transZ = getVector(channelNoise(stateToDens(stateZero),E1,E2));;
+      var transY = getVector(channelNoise(stateToDens(stateY),E1,E2));
+      var transZ = getVector(channelNoise(stateToDens(stateZero),E1,E2));
       return [transX, transY, transZ];
 }
+
+// uses two noise matrices to compute new shape of Bloch sphere,
+// returns two vectors, first is scaling of each axis, second is position of new center
+function computeNewBlochSphere(E1, E2) {
+	console.log("computeNewBlochSphere");
+
+    // compute new positions of +/x,y,z
+    var newX_p = getVector(channelNoise(stateToDens(statePlus),E1,E2));
+    var newY_p = getVector(channelNoise(stateToDens(stateY),E1,E2));
+    var newZ_p = getVector(channelNoise(stateToDens(stateZero),E1,E2));
+	var newX_m = getVector(channelNoise(stateToDens(stateMin),E1,E2));
+    var newY_m = getVector(channelNoise(stateToDens(stateY_min),E1,E2));
+    var newZ_m = getVector(channelNoise(stateToDens(stateOne),E1,E2));
+	
+	console.log("len X_p: " + newX_p.length());
+	console.log("len X_m: " + newX_m.length());
+	console.log("len Y_p: " + newY_p.length());
+	console.log("len Y_m: " + newY_m.length());
+	console.log("len Z_p: " + newZ_p.length());
+	console.log("len Z_m: " + newZ_m.length());
+	
+	// now compute center of ellipsoid in three different ways,
+	// and check whether they give the same result
+	var center_X = (newX_p.add(newX_m)).divideScalar(2);
+	var center_Y = (newY_p.add(newY_m)).divideScalar(2);
+	var center_Z = (newZ_p.add(newZ_m)).divideScalar(2);
+	
+	console.log("|center_x|: " + center_X.length());
+	console.log("|center_y|: " + center_Y.length());
+	console.log("|center_z|: " + center_Z.length());
+	
+	// checks:
+	var dif_XY = center_X.distanceTo(center_Y);
+	var dif_XZ = center_X.distanceTo(center_Z);
+	var dif_YZ = center_Y.distanceTo(center_Z);
+	
+	console.log("diffs:");
+	console.log("dif_XY: " + dif_XY);
+	console.log("dif_XZ: " + dif_XZ);
+	console.log("dif_YZ: " + dif_YZ);
+} // computeNewBlochSphere
 
 function trace(matrix){
       return math.add(matrix[0][0],matrix[1][1]);
