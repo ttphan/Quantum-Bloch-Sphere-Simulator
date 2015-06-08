@@ -1,19 +1,25 @@
 // Complex i
 var complexi = math.complex('i');
 
-// 
+// Pauli matrices & gates
 var gateX = [[0,1],[1,0]];
 var gateY = [[0,math.complex('-i')],[math.complex('i'),0]];
 var gateZ = [[1,0],[0,-1]];
+
+// More gates
 var gateH = math.multiply(1/math.sqrt(2),[[1,1],[1,-1]]);
 var gateSWAP = [[1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]];
 var gateCNOT = [[1,0,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,0]];
+
+// Standard states
 var statePlus = math.multiply(1/math.sqrt(2),[[1],[1]]);
 var stateMin = math.multiply(1/math.sqrt(2),[[1],[-1]]);
 var stateOne = [[0],[1]];
 var stateZero = [[1],[0]];
 var stateY = [[math.sqrt(0.5)], [math.multiply(math.sqrt(0.5),complexi)]];
 var stateY_min = [[math.sqrt(0.5)], [math.multiply(math.sqrt(0.5),math.complex('-i'))]];
+
+// Standard density matrices
 var maxMixed = [[0.5, 0],[0, 0.5]];
 var identity = [[1,0],[0,1]];
 
@@ -39,13 +45,24 @@ function getRealValue(num) {
       return math.complex(num).re;
 }
 
-function transformAxes(E1, E2) {
-      var transX = getVector(channelNoise(stateToDens(statePlus),E1,E2));
-      var transY = getVector(channelNoise(stateToDens(stateY),E1,E2));
-      var transZ = getVector(channelNoise(stateToDens(stateZero),E1,E2));
-      return [transX, transY, transZ];
-}
+/*function transformAxes(E1, E2) {
+      var newX_p = getVector(channelNoise(stateToDens(statePlus),E1,E2));
+      var newY_p = getVector(channelNoise(stateToDens(stateY),E1,E2));
+      var newZ_p = getVector(channelNoise(stateToDens(stateZero),E1,E2));
+      var newX_m = getVector(channelNoise(stateToDens(stateMin),E1,E2));
+      var newY_m = getVector(channelNoise(stateToDens(stateY_min),E1,E2));
+      var newZ_m = getVector(channelNoise(stateToDens(stateOne),E1,E2));
 
+      var center_X = math.chain(newX_p).add(newX_m).multiply(0.5);
+      var center_Y = math.chain(newY_p).add(newY_m).multiply(0.5);
+      var center_Z = math.chain(newZ_p).add(newZ_m).multiply(0.5);
+
+      var axisLength_X = math.chain(newX_p).subtract(newX_m).multiply(0.5);
+      var axisLength_Y = math.chain(newY_p).subtract(newY_m).multiply(0.5);
+      var axisLength_Z = math.chain(newZ_p).subtract(newZ_m).multiply(0.5);
+
+      return [transX, transY, transZ];
+}*/
 
 // uses two noise matrices to compute new shape of Bloch sphere,
 // returns two vectors, first is scaling of each axis, second is position of new center
@@ -53,12 +70,12 @@ function computeNewBlochSphere(E1, E2) {
 	// console.log("computeNewBlochSphere");
 
     // compute new positions of +/x,y,z
-    var newX_p = getVector(channelNoise(stateToDens(statePlus),E1,E2));
-    var newY_p = getVector(channelNoise(stateToDens(stateY),E1,E2));
-    var newZ_p = getVector(channelNoise(stateToDens(stateZero),E1,E2));
-	var newX_m = getVector(channelNoise(stateToDens(stateMin),E1,E2));
-    var newY_m = getVector(channelNoise(stateToDens(stateY_min),E1,E2));
-    var newZ_m = getVector(channelNoise(stateToDens(stateOne),E1,E2));
+      var newX_p = getVector(channelNoise(stateToDens(statePlus),E1,E2));
+      var newY_p = getVector(channelNoise(stateToDens(stateY),E1,E2));
+      var newZ_p = getVector(channelNoise(stateToDens(stateZero),E1,E2));
+      var newX_m = getVector(channelNoise(stateToDens(stateMin),E1,E2));
+      var newY_m = getVector(channelNoise(stateToDens(stateY_min),E1,E2));
+      var newZ_m = getVector(channelNoise(stateToDens(stateOne),E1,E2));
 	
 	// console.log("len X_p: " + newX_p.length());
 	// console.log("len X_m: " + newX_m.length());
@@ -217,20 +234,25 @@ function isPure(densMatrix) {
 
 // Check if density matrix is valid: trace should be 1
 function isValidTrace(densMatrix) {
-      return trace(densMatrix).toFixed(2) == 1;
+      tr = math.complex(trace(densMatrix));
+      if (tr.im >= 0.001) {
+            return false;
+      }
+      return (tr.re).toFixed(2) == 1;
 }
 
 // Check if density matrix is valid: must be hermitian
 function isValidHermitian(densMatrix) {
-      densMatrix = math.round(densMatrix);
       return matrixEquals(densMatrix, conjugateTranspose(densMatrix));
 }
 
 // Check if density matrix is valid: eigenvalues should be 0<lambda<1
 function isValidEigenvalues(densMatrix) {
       eigval = getEigenvalues(densMatrix);
-      console.log(eigval);
-      return ((eigval[0] <= 1) && (eigval[0] >= 0) && (eigval[1] <= 1) && (eigval[1] >= 0));
+      if (eigval[0].im >= 0.001 || eigval[1].im >= 0.001) {
+            return false;
+      }
+      return ((eigval[0].re <= 1) && (eigval[0].re >= 0) && (eigval[1].re <= 1) && (eigval[1].re >= 0));
 }
 
 // Check if noise matrices are valid: sum_j(EjEj')=identity
@@ -280,8 +302,12 @@ function makeMixedState(densMat1, prob1, densMat2, prob2, densMat3, prob3, densM
 function matrixEquals(mat1, mat2) {
       mat1 = math.round(math.complex(mat1),2);
       mat2 = math.round(math.complex(mat2),2);
-      return ((mat1[0][0] == mat2[0][0]) && 
-              (mat1[1][0] == mat2[1][0]) && 
-              (mat1[0][1] == mat2[0][1]) &&
-              (mat1[1][1] == mat2[1][1]));
+      return ((mat1[0][0].im == mat2[0][0].im) && 
+              (mat1[1][0].im == mat2[1][0].im) && 
+              (mat1[0][1].im == mat2[0][1].im) &&
+              (mat1[1][1].im == mat2[1][1].im) &&
+              (mat1[0][0].re == mat2[0][0].re) && 
+              (mat1[1][0].re == mat2[1][0].re) && 
+              (mat1[0][1].re == mat2[0][1].re) &&
+              (mat1[1][1].re == mat2[1][1].re));
 }
