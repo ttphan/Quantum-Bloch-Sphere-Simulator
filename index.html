@@ -132,8 +132,8 @@
 								<div class='row'>
 									<div class='range-slider'>
 										<div class='col-md-6 checkboxes'>
-											<div class='col-md-2 state-1'>
-												<h4>&#936&#x2098</h4>
+											<div class='col-md-2'>
+												<h4 class="state-1">&#936&#x2098</h4>
 											</div>
 											<div class='col-md-10'>
 												<label><input type="checkbox" id="check-active-1" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
@@ -146,8 +146,8 @@
 									</div>
 									<div class='range-slider'>
 										<div class='col-md-6 checkboxes'>
-											<div class='col-md-2 state-2'>
-												<h4>&#936&#x2098</h4>
+											<div class='col-md-2'>
+												<h4 class="state-2">&#936&#x2098</h4>
 											</div>
 											<div class='col-md-10'>
 												<label><input type="checkbox" id="check-active-2" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
@@ -160,8 +160,8 @@
 									</div>
 									<div class='range-slider'>
 										<div class='col-md-6 checkboxes'>
-											<div class='col-md-2 state-3'>
-												<h4>&#936&#x2098</h4>
+											<div class='col-md-2'>
+												<h4 class="state-3">&#936&#x2098</h4>
 											</div>
 											<div class='col-md-10'>
 												<label><input type="checkbox" id="check-active-3" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
@@ -174,8 +174,8 @@
 									</div>
 									<div class='range-slider'>
 										<div class='col-md-6 checkboxes'>
-											<div class='col-md-2 state-4'>
-												<h4>&#936&#x2098</h4>
+											<div class='col-md-2'>
+												<h4 class="state-4">&#936&#x2098</h4>
 											</div>
 											<div class='col-md-10'>
 												<label><input type="checkbox" id="check-active-4" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
@@ -186,6 +186,7 @@
 											<input type='text' class='js-range-slider-mixed-4'value='' />
 										</div>
 									</div>
+									<button id='btn_compute_mixed' class='btn btn-default btn-md' onclick='computeMixed()'>Compute mixed state</button>
 								</div>
 							</div>
 						</div>
@@ -205,5 +206,23 @@
 		</div>
 
 		</center>
+
+		<!-- Modal -->
+		<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalTitle" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="errorModalTitle">Error</h4>
+		      </div>
+		      <div class="modal-body">
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 	</body>
 </html>      

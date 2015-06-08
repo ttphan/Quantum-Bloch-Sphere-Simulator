@@ -24,6 +24,10 @@ h1 {
 	margin-left: 5px;
 }
 
+#bottom-section2 h4 {
+	margin-left: 10px;
+}
+
 #app {
 	vertical-align: middle;
 	width: 900px;
@@ -44,6 +48,10 @@ h1 {
 
 .state-4 {
 	color: gold;
+}
+
+#computeMixed {
+	margin: 10px;
 }
 
 .blue {
