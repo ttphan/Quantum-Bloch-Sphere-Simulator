@@ -16,14 +16,34 @@ h1 {
 	margin-top: 10px;
 }
 
-.sliders input[type=checkbox] {
-	margin-top: 20px;
+.checkboxes h4 {
+	margin-top: 10px;
+}
+
+.checkboxes input {
+	margin-left: 5px;
 }
 
 #app {
 	vertical-align: middle;
 	width: 900px;
 	height: 600px;
+}
+
+.state-1 {
+	color: red;
+}
+
+.state-2 {
+	color: green;
+}
+
+.state-3 {
+	color: blue;
+}
+
+.state-4 {
+	color: gold;
 }
 
 .blue {
@@ -100,7 +120,8 @@ div.blocks {
 	padding: 0px;
 }
 
-div.sphere {
+
+div#sphere, div#sphere-noise {
 	padding: 10px;
 }
 
@@ -133,9 +154,9 @@ canvas {
     width: 100%; /* optional */
 }
 
-#timeline {
-	padding-bottom: 20px;
-}
+/*#bottom-input, #bottom-section-1 {
+	padding: 35px;
+}*/
 
 #noise-select {
 	margin-bottom: 10px;

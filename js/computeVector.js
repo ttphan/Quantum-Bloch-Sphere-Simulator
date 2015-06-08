@@ -105,7 +105,6 @@ function computeNewBlochSphere(E1, E2) {
 	console.log("dif_YZ: " + dif_YZ);
 } // computeNewBlochSphere
 
-
 // Returns trace of 2x2 matrix
 function trace(matrix){
       return math.add(matrix[0][0],matrix[1][1]);
