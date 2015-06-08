@@ -314,11 +314,7 @@ $(document).ready(function() {
 	} // drawTransformedArrows
 
 	function drawArrow() {
-	    var a = math.complex($("#input_" + activeTab + "_a").val());
-		var b = math.complex($("#input_" + activeTab + "_b").val());
-		var c = math.complex($("#input_" + activeTab + "_c").val());
-		var d = math.complex($("#input_" + activeTab + "_d").val());
-	    var dir = getVector([[a,b],[c,d]]);
+	    var dir = getVector(getDensityMatrix(activeTab));
 
 	    // Switch z and y axis to compensate for computer graphics/physics
 	    // difference quirks.
@@ -346,11 +342,7 @@ $(document).ready(function() {
 	} // drawArrow
 
 	function ifValidDrawArrow() {
-		var a = math.complex($("#input_" + activeTab + "_a").val());
-		var b = math.complex($("#input_" + activeTab + "_b").val());
-		var c = math.complex($("#input_" + activeTab + "_c").val());
-		var d = math.complex($("#input_" + activeTab + "_d").val());
-	    var mat = [[a,b],[c,d]];
+	    var mat = getDensityMatrix(activeTab)
 
 		if (!isValidTrace(mat) || !isValidHermitian(mat)) {// || !isValidEigenvalues(mat)) {
 			alert("This density matrix does not represent a valid state!");
@@ -365,8 +357,46 @@ $(document).ready(function() {
 		updateStateGui(activeTab);
 	}
 
+	function computeMixed() {
+		if (mixedValidityCheck()) {
+			var states = [];
+			var sliders = $('[class^="js-range-slider-mixed"]');
+
+			sliders.each(function(i) {
+				p = $(this).data("ionRangeSlider").result.from;
+				states[i] = math.multiply(p, getDensityMatrix(i+1));
+			});
+
+			var mixedState = math.add(states[0], states[1]);
+			mixedState = math.add(mixedState, states[2]);
+			mixedState = math.add(mixedState, states[3]);
+
+			var dir = getVector(mixedState);
+			
+		    // Switch z and y axis to compensate for computer graphics/physics
+		    // difference quirks.
+		    temp = dir.y;
+		    dir.y = dir.z;
+		    dir.z = temp;
+		    dir.z = -1 * dir.z;
+			
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var length = dir.length();
+
+			var hex = '#551A8B';
+			var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
+
+			scene.add( arrow );
+
+			render();
+		}
+		else {
+			errorModal('Error: Invalid probabilities', 'Make sure the probabilities add up to 1!');
+		}
+	}
+
 	function gui() {
-		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+		$('a[id^="tab"]').on('shown.bs.tab', function(e){
 		    var tab = $(e.target).attr('id');
 		    activeTab = parseInt(tab.substring(tab.length-1));	
 		});
@@ -483,6 +513,7 @@ $(document).ready(function() {
 			$("#noise-select").on('change', updateBottomBlochSphere);
 
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
+			$("#btn_compute_mixed").on('click', computeMixed);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
 			$("#angle_" + i + "_1").on('change', updateTopSlider);
 
@@ -640,13 +671,13 @@ function addEventMixedSliders() {
 	})
 }
 
-function computeMixed() {
-	if (mixedValidityCheck()) {
-		errorModal('Ok!', 'Nothing wrong here!');
-	}
-	else {
-		errorModal('Error: Invalid probabilities', 'Make sure the probabilities add up to 1!')
-	}
+function getDensityMatrix(i) {
+	var a = math.complex($("#input_" + i + "_a").val());
+	var b = math.complex($("#input_" + i + "_b").val());
+	var c = math.complex($("#input_" + i + "_c").val());
+	var d = math.complex($("#input_" + i + "_d").val());
+
+	return [[a,b],[c,d]];
 }
 
 function mixedValidityCheck() {
