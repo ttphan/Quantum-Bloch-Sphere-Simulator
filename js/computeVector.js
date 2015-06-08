@@ -46,7 +46,6 @@ function transformAxes(E1, E2) {
       return [transX, transY, transZ];
 }
 
-<<<<<<< HEAD
 // uses two noise matrices to compute new shape of Bloch sphere,
 // returns two vectors, first is scaling of each axis, second is position of new center
 function computeNewBlochSphere(E1, E2) {
@@ -88,9 +87,7 @@ function computeNewBlochSphere(E1, E2) {
 	console.log("dif_YZ: " + dif_YZ);
 } // computeNewBlochSphere
 
-=======
 // Returns trace of 2x2 matrix
->>>>>>> origin/master
 function trace(matrix){
       return math.add(matrix[0][0],matrix[1][1]);
 }
