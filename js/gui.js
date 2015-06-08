@@ -306,6 +306,14 @@ $(document).ready(function() {
 	 * @return {[[scaleX, scaleY, scaleZ], center_X]}
 	 */
 	function computeTransformedBlochSphere() {
+	  var E1 = getE1();
+	  var E2 = getE2();
+	
+	  // we check whether E1 and E2 are defined by user.
+	  // if so, we check for validity
+	  if ($("#noise-select").val() == "user" && !isValidNoiseMatrices(E1, E2)) {
+		errorModal('Error: Invalid noise matrix!', "Sums of product of matrices and their complex conjugates don't add up to the identity!" );
+	  } // if
 	  return computeNewBlochSphere(getE1(), getE2());
 	} // computeTransformedBlochSphere
 	
@@ -403,18 +411,8 @@ $(document).ready(function() {
 	 */
 	function drawTransformedArrows() {			
 		// first get noise matrices E1 and E2
-		var E1 = [[0,0],[0,0]];
-		var E2 = [[0,0],[0,0]];
-	  
-		E1[0][0] = parseFloat($("#input_noise_E1_a").val());
-		E1[0][1] = parseFloat($("#input_noise_E1_b").val());
-		E1[1][0] = parseFloat($("#input_noise_E1_c").val());
-		E1[1][1] = parseFloat($("#input_noise_E1_d").val());
-		  
-		E2[0][0] = parseFloat($("#input_noise_E2_a").val());
-		E2[0][1] = parseFloat($("#input_noise_E2_b").val());
-		E2[1][0] = parseFloat($("#input_noise_E2_c").val());
-		E2[1][1] = parseFloat($("#input_noise_E2_d").val());
+		var E1 = getE1();
+		var E2 = getE2();
 			  
 		// get density matrices of all active arrows
 		for (var i = 1; i <= arrows.length; i++) {
