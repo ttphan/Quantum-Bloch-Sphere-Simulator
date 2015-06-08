@@ -148,7 +148,6 @@ $(document).ready(function() {
 	
 	// draws bottom Bloch sphere at location center, with given axis lengths
 	function updateBottomBlochSphere( ) {
-		console.log(1)
 		var tmp = computeTransformedBlochSphere();
 		var axes = tmp[0];
 		var center = tmp[1];
@@ -164,7 +163,6 @@ $(document).ready(function() {
 		axes[1] = axes[2];
 		axes[2] = tempHans;
 		
-		console.log("axes: x="+axes[0]+" y="+axes[1]+" z="+axes[2]);
 	
 		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
@@ -243,7 +241,6 @@ $(document).ready(function() {
 		// get density matrices of all active arrows
 		for (var i = 1; i <= 4; i++) {
 		    if (arrows[i-1] != null) {
-			    //console.log("start adding arrow " + i);
 				var a = math.complex($("#input_" + i + "_a").val());
 				var b = math.complex($("#input_" + i + "_b").val());
 				var c = math.complex($("#input_" + i + "_c").val());
@@ -309,7 +306,6 @@ $(document).ready(function() {
 
 			} // if
 		} // for
-		//console.log("render");
 		render();
 	} // drawTransformedArrows
 
@@ -688,7 +684,6 @@ function mixedValidityCheck() {
 		total += $(this).data("ionRangeSlider").result.from;
 	});
 
-	console.log(total);
 
 	if (+total.toFixed(2) != 1) {
 		return false
@@ -760,7 +755,6 @@ function onNoiseSelectionChanged() {
 	var s_r = Math.sqrt(r);
 	var s_emr = Math.sqrt(1-r);
 	
-	//console.log("r = " + r);
 	
 	if (x == "D") { // depolarizing
 	  document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";

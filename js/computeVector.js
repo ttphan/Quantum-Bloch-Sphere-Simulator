@@ -67,7 +67,6 @@ function getRealValue(num) {
 // uses two noise matrices to compute new shape of Bloch sphere,
 // returns two vectors, first is scaling of each axis, second is position of new center
 function computeNewBlochSphere(E1, E2) {
-	// console.log("computeNewBlochSphere");
 
     // compute new positions of +/x,y,z
       var newX_p = getVector(channelNoise(stateToDens(statePlus),E1,E2));
@@ -77,14 +76,7 @@ function computeNewBlochSphere(E1, E2) {
       var newY_m = getVector(channelNoise(stateToDens(stateY_min),E1,E2));
       var newZ_m = getVector(channelNoise(stateToDens(stateOne),E1,E2));
 	
-	// console.log("len X_p: " + newX_p.length());
-	// console.log("len X_m: " + newX_m.length());
-	// console.log("len Y_p: " + newY_p.length());
-	// console.log("len Y_m: " + newY_m.length());
-	// console.log("len Z_p: " + newZ_p.length());
-	// console.log("len Z_m: " + newZ_m.length());
 	
-	// console.log("newX_p.x: " + newX_p.x + " newX_p.y: " + newX_p.y + " newX_p.z: " + newX_p.z);
 	
 	// now compute center of ellipsoid in three different ways,
 	// and check whether they give the same result
@@ -92,35 +84,22 @@ function computeNewBlochSphere(E1, E2) {
 	var center_Y = (newY_p.clone().add(newY_m)).divideScalar(2);
 	var center_Z = (newZ_p.clone().add(newZ_m)).divideScalar(2);
 	
-	console.log("|center_x|: " + center_X.length());
-	console.log("|center_y|: " + center_Y.length());
-	console.log("|center_z|: " + center_Z.length());
 	
 	// checks:
 	var dif_XY = center_X.distanceTo(center_Y);
 	var dif_XZ = center_X.distanceTo(center_Z);
 	var dif_YZ = center_Y.distanceTo(center_Z);
 	
-	// console.log("diffs:");
-	// console.log("dif_XY: " + dif_XY);
-	// console.log("dif_XZ: " + dif_XZ);
-	// console.log("dif_YZ: " + dif_YZ);
 	
-	// console.log("newX_p.x: " + newX_p.x + " newX_p.y: " + newX_p.y + " newX_p.z: " + newX_p.z);
-	// console.log("center_X.x: " + center_X.x + " center_X.y: " + center_X.y + " center_X.z: " + center_X.z);
 	
 	var newXAxis = newX_p.clone().sub(center_X);
 	var newYAxis = newY_p.clone().sub(center_Y);
 	var newZAxis = newZ_p.clone().sub(center_Z);
-	// console.log("x.x: " + newXAxis.x + " x.y: " + newXAxis.y + " x.z: " + newXAxis.z);
-	// console.log("y.x: " + newYAxis.x + " y.y: " + newYAxis.y + " y.z: " + newYAxis.z);
-	// console.log("z.x: " + newZAxis.x + " z.y: " + newZAxis.y + " z.z: " + newZAxis.z);
 	
 	var scaleX = newXAxis.x;
 	var scaleY = newYAxis.y;
 	var scaleZ = newZAxis.z;
 	
-    console.log("|center_x| nog een keer: " + center_X.length());
 	return [[scaleX, scaleY, scaleZ], center_X];
 } // computeNewBlochSphere
 
