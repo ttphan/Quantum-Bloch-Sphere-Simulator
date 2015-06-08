@@ -130,20 +130,7 @@ $(document).ready(function() {
 	}
 	
 	function computeTransformedBlochSphere() {
-	  var E1 = [[0,0],[0,0]];
-	  var E2 = [[0,0],[0,0]];
-	  
-	  E1[0][0] = parseFloat($("#input_noise_E1_a").val());
-	  E1[0][1] = parseFloat($("#input_noise_E1_b").val());
-	  E1[1][0] = parseFloat($("#input_noise_E1_c").val());
-	  E1[1][1] = parseFloat($("#input_noise_E1_d").val());
-	  
-	  E2[0][0] = parseFloat($("#input_noise_E2_a").val());
-	  E2[0][1] = parseFloat($("#input_noise_E2_b").val());
-	  E2[1][0] = parseFloat($("#input_noise_E2_c").val());
-	  E2[1][1] = parseFloat($("#input_noise_E2_d").val());
-      
-	  return computeNewBlochSphere(E1, E2);
+	  return computeNewBlochSphere(getE1(), getE2());
 	} // computeTransformedBlochSphere
 	
 	// draws bottom Bloch sphere at location center, with given axis lengths
@@ -219,6 +206,25 @@ $(document).ready(function() {
 		renderer_bottom.render(scene_bottom, camera_top);
 	}
 	
+	// returns E1, gathers info from input fields
+	function getE1() {
+	  var E1 = [[0,0],[0,0]];
+	  E1[0][0] = parseFloat($("#input_noise_E1_a").val());
+	  E1[0][1] = parseFloat($("#input_noise_E1_b").val());
+	  E1[1][0] = parseFloat($("#input_noise_E1_c").val());
+	  E1[1][1] = parseFloat($("#input_noise_E1_d").val());
+	  return E1
+	} // getE1
+	
+	// returns E2, gathers info from input fields
+	function getE2() {
+	  var E2 = [[0,0],[0,0]];
+	  E2[0][0] = parseFloat($("#input_noise_E2_a").val());
+	  E2[0][1] = parseFloat($("#input_noise_E2_b").val());
+	  E2[1][0] = parseFloat($("#input_noise_E2_c").val());
+	  E2[1][1] = parseFloat($("#input_noise_E2_d").val());
+	  return E2
+	} // getE2
 	
 	// draws all arrows transformed in bottom Bloch sphere
 	function drawTransformedArrows() {
@@ -507,12 +513,13 @@ $(document).ready(function() {
 
 
 			$("#noise-select").on('change', updateBottomBlochSphere);
+			$("#noise-update_button").on('click', updateBottomBlochSphere);
 
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
 			$("#btn_compute_mixed").on('click', computeMixed);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
 			$("#angle_" + i + "_1").on('change', updateTopSlider);
-
+			
 
 			
 			// Initialize sliders
@@ -773,8 +780,11 @@ function onNoiseSelectionChanged() {
 	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
 	}
 	if (x == "user") { // user defined function
-	  ; // make slider disabled or smth!
-	}
+	  document.getElementById("noise-update_button").style.visibility = "visible";
+	} // if
+	else {
+	  document.getElementById("noise-update_button").style.visibility = "hidden";
+	} // else
 }
 
 
