@@ -24,12 +24,13 @@
 	<body>
 			
 		<center>
-		<h1 id="titel">
-			Quantum Bloch-sphere Simulator 
-		</h1>
-		
 		
 		<div id = "app" class="blue">
+			<div id="titleblock" class="col-md-12 colspace alpha60 spaceRow blocks"> 
+				<h1 id="titel">
+					Quantum Bloch-sphere Simulator 
+				</h1>
+			</div>
 			<div id="inputfields" class="col-md-7 colspace container">
 				<div class="row spaceRow">	
 					<div class="blocks alpha60">
@@ -114,11 +115,11 @@
 
 			</div>
 			<div class="col-md-5 colspace">
-				<div id="sphere" class="blocks spaceRow alpha60">
-					<canvas id="canvas-top" width="300" height="300"></canvas>
+				<div id="sphere" class="blocks spaceRow alpha60 sphere">
+					<canvas id="canvas-top" class="canvasSphere" width="300" height="300"></canvas>
 				</div>
-				<div id="sphere-noise" class="blocks spaceRow alpha60">
-					<canvas id="canvas-bottom" width="300" height="300"></canvas>
+				<div id="sphere-noise" class="blocks spaceRow alpha60 sphere">
+					<canvas id="canvas-bottom" class="canvasSphere" width="300" height="300"></canvas>
 				</div>
 			</div>
 

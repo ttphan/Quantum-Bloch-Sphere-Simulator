@@ -3,8 +3,17 @@ body {
 	background-color: #F5F5F5;
 	background-image: url("../pic/bg.jpg");
 	background-size:cover;
-	font-family: "Arial", sans-serif;
-	color:black;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#2E2E2E;
+}
+
+h1 {
+	font-family: Georgia, serif;
+	color: gray;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 20pt;
+	margin-top: 10px;
 }
 
 .sliders input[type=checkbox] {
@@ -50,12 +59,48 @@ h2 {
 	padding: 0px;
 }
 
+h4, h5 {
+	color: gray;
+	font-family: Georgia, serif;
+	text-align: left;
+	vertical-align: middle;
+}
+
+h5 {
+	text-align: center;
+}
+
+.inputAngles {
+	margin-left: 0px;
+	width: 40px;
+	margin-top: 14px;
+
+}
+
+#state1Text {
+	font-family: georgia, serif;
+}
+
+#densityMatText {
+	margin-left: 8px;
+}
+
+div.greekAngles {
+	margin-top: 10px;
+}
+
+div.smallPadding {
+	padding-left: 1px;
+	padding-right: 1px;
+	vertical-align: middle;
+}
+
 div.blocks {
 	border: 1px solid white;
 	padding: 0px;
 }
 
-div#sphere {
+div.sphere {
 	padding: 10px;
 }
 

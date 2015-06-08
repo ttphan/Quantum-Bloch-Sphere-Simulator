@@ -7,6 +7,12 @@ $(document).ready(function() {
 	var arrows = [null, null, null, null];
 	var transformation = [0.7, 0.2, 0.2];
 
+	// Color values
+	var sphereColor = 0x00BFFF;
+	var axesColors = [0xffffff,0xffffff,0xffffff];
+	var circleColors = [0xffffff, 0xD8D8D8];
+	var tabColors = ['red', 'green', 'blue', 'yellow'];
+
 	init();
 	animate();
 	gui();
@@ -62,7 +68,7 @@ $(document).ready(function() {
 		// sphere
 		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
 		var sphereMaterial = new THREE.MeshBasicMaterial( { 
-			color: 0x0099CC, 
+			color: sphereColor, 
 			transparent: true, 
 			opacity: 0.25 
 		});
@@ -71,11 +77,11 @@ $(document).ready(function() {
 		blochSphere.add(sphere);
 
 		// circle
-		var circles = buildCircles();
+		var circles = buildCircles(circleColors);
 		sceneCircles.add(circles);
 
 		// Add axes
-		var axes = buildAxes( 1.5 );
+		var axes = buildAxes( 1.5, axesColors );
 		blochSphere.add( axes );
 
 		scene.add(blochSphere);
@@ -84,7 +90,7 @@ $(document).ready(function() {
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( transformation[0], transformation[1], transformation[2] ) );
 
 		var sphereMaterialNoise = new THREE.MeshBasicMaterial( { 
-			color: 0x0099CC, 
+			color: sphereColor, 
 			transparent: true, 
 			opacity: 0.25 
 		});
@@ -95,9 +101,9 @@ $(document).ready(function() {
 		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
 		blochSphere_bottom.add(sphere_bottom);
 
-		blochSphere_bottom.add(buildAxes(1.5))
+		blochSphere_bottom.add(buildAxes(1.5, axesColors))
 
-		var circles_bottom = buildCircles(transformation);
+		var circles_bottom = buildCircles(circleColors, transformation);
 		sceneCircles_bottom.add(circles_bottom)
 
 		blochSphere_bottom.add(circles_bottom);
@@ -113,13 +119,13 @@ $(document).ready(function() {
 	}
 
 	function render() {
-		renderer_top.setClearColor( 'black', 1);
+		renderer_top.setClearColor( 0x424242, 1);
 		renderer_top.clear();
 		renderer_top.render(sceneCircles, camera_top);
 		renderer_top.clearDepth();
 		renderer_top.render(scene, camera_top);
 
-		renderer_bottom.setClearColor( 'black', 1);
+		renderer_bottom.setClearColor( 0x424242, 1);
 		renderer_bottom.clear();
 		renderer_bottom.render(sceneCircles_bottom, camera_top);
 		renderer_bottom.clearDepth();
@@ -127,8 +133,8 @@ $(document).ready(function() {
 	}
 
 	function drawArrow() {
-		var colours = ['red', 'green', 'blue', 'yellow'];
-		console.log($("#input_" + activeTab + "_a").val())
+		//var colours = ['red', 'green', 'blue', 'yellow'];
+		//console.log($("#input_" + activeTab + "_a").val())
 	    var a = math.complex($("#input_" + activeTab + "_a").val());
 		var b = math.complex($("#input_" + activeTab + "_b").val());
 		var c = math.complex($("#input_" + activeTab + "_c").val());
@@ -145,7 +151,7 @@ $(document).ready(function() {
 		var origin = new THREE.Vector3( 0, 0, 0 );
 		var length = dir.length();
 
-		var hex = colours[activeTab - 1];
+		var hex = tabColors[activeTab - 1];
 		var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
 
 		if (arrows[activeTab-1] != null) {
@@ -158,6 +164,26 @@ $(document).ready(function() {
 		render();
 	} // drawArrow
 
+	function ifValidDrawArrow() {
+		var a = math.complex($("#input_" + activeTab + "_a").val());
+		var b = math.complex($("#input_" + activeTab + "_b").val());
+		var c = math.complex($("#input_" + activeTab + "_c").val());
+		var d = math.complex($("#input_" + activeTab + "_d").val());
+	    var mat = [[a,b],[c,d]];
+
+		if (!isValidTrace(mat) || !isValidHermitian(mat)) {// || !isValidEigenvalues(mat)) {
+			alert("This density matrix does not represent a valid state!");
+		} else {
+			drawArrow();
+		}
+	}
+
+	function updateTopSlider() {
+		var textId = this.id.slice(-1);
+		$('.js-range-slider-1-' + textId).data("ionRangeSlider").update({from: this.value});
+		updateStateGui(activeTab);
+	}
+
 	function gui() {
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 		    var tab = $(e.target).attr('id');
@@ -165,10 +191,10 @@ $(document).ready(function() {
 		});
 		
 		for (var i = 1; i <= 4; i++) {
-			$("#section" + i).append($('<h3>State ' + i + '</h3>'))
+			$("#section" + i)//.append($('<h3>State ' + i + '</h3>'))
 					.append($("<div></div>")
 					.addClass("col-md-6")
-					.append($("<h4>Density Matrix: </h4>"))
+					.append($("<h4 id='densityMatText'>Density Matrix: </h4>"))
 					.append($("<input>")
 						.attr({
 							id: "input_" + i + "_a",
@@ -176,7 +202,7 @@ $(document).ready(function() {
 							type: 'text'
 						})
 						.css({
-							'width': '80px',
+							'width': '90px',
 							'margin': '10px'
 						})
 					)
@@ -187,7 +213,7 @@ $(document).ready(function() {
 							type: 'text'
 						})
 						.css({
-							'width': '80px',
+							'width': '90px',
 							'margin': '10px'
 						})
 					)
@@ -199,7 +225,7 @@ $(document).ready(function() {
 							type: 'text'
 						})
 						.css({
-							'width': '80px',
+							'width': '90px',
 							'margin': '10px'
 						})
 					)
@@ -210,7 +236,7 @@ $(document).ready(function() {
 							type: 'text'
 						})
 						.css({
-							'width': '80px',
+							'width': '90px',
 							'margin': '10px'
 						})
 					)
@@ -232,8 +258,18 @@ $(document).ready(function() {
 				)
 				.append($("<div class='sliders col-md-12'></div>")
 					.append($("<div class='row'></div>")
-						.append($("<div class='col-md-2'></div>")
-							.append($("<h4>Theta</h4>")
+						.append($("<div class='col-md-1 smallPadding greekAngles'></div>")
+							.append($("<h5>&#x3B8</h5>")
+							)
+						)
+						.append($("<div class='col-md-1 smallPadding'></div>")
+							.append($("<input class='inputAngles'>")
+								.attr({
+									id: "angle_" + i + "_1",
+									value: '0.00',
+									type: 'text',
+
+								})
 							)
 						)
 						.append($("<div class='range-slider col-md-10'></div>")
@@ -241,8 +277,17 @@ $(document).ready(function() {
 						)
 					)
 					.append($("<div class='row'></div>")
-						.append($("<div class='col-md-2'></div>")
-							.append($("<h4>Phi</h4>")
+						.append($("<div class='col-md-1 smallPadding greekAngles'></div>")
+							.append($("<h5>&#x3C6</h5>")
+							)
+						)
+						.append($("<div class='col-md-1 smallPadding'></div>")
+							.append($("<input class='inputAngles'>")
+								.attr({
+									id: "angle_" + i + "_2",
+									value: '0.00',
+									type: 'text',
+								})
 							)
 						)
 						.append($("<div class='range-slider col-md-10'></div>")
@@ -252,8 +297,11 @@ $(document).ready(function() {
 				)
 
 			// Event listeners to buttons
-			$("#btn_show_state_" + i).on('click', drawArrow);
+			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
+			$("#angle_" + i + "_2").on('change', updateTopSlider);
+			$("#angle_" + i + "_1").on('change', updateTopSlider);
 
+			
 			// Initialize sliders
 			createSliders(i);
 		}
@@ -273,6 +321,7 @@ $(document).ready(function() {
 		    from: 0,
 		    step: 0.1,
 		    onChange: function (data) {
+		    	$("#angle_" + i + "_1").val(data.from);
 		        updateStateGui(i);
 		    }
 		});
@@ -285,6 +334,7 @@ $(document).ready(function() {
 		    from: 0,
 		    step: 0.1,
 		    onChange: function (data) {
+		    	$("#angle_" + i + "_2").val(data.from);
 		        updateStateGui(i);
 		    }
 		});
@@ -327,7 +377,7 @@ $(document).ready(function() {
 		$("#input_" + i + "_c").val(sliceDecimals(matrix[1][0]));
 		$("#input_" + i + "_d").val(sliceDecimals(matrix[1][1]));
 
-		drawArrow()
+		drawArrow();
 	}
 });
 
@@ -364,15 +414,15 @@ function sliceDecimals(number) {
 	return result;
 }
 
-function buildAxes( length ) {
+function buildAxes( length, colors ) {
 	var axes = new THREE.Object3D();
 
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, true ) ); // +Z
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, false ) ); // -Z
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), colors[0], false ) ); // +X
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), colors[0], true) ); // -X
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), colors[1], false ) ); // +Y
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), colors[1], true ) ); // -Y
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), colors[2], true ) ); // +Z
+	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), colors[2], false ) ); // -Z
 
 	return axes;
 }
@@ -397,7 +447,7 @@ function buildAxis( src, dst, colorHex, dashed ) {
 
 }
 
-function buildCircles(vector) {
+function buildCircles(colors, vector) {
 	var circles = new THREE.Object3D();
 	var a, b, c;
 	if (vector !== undefined) {
@@ -406,14 +456,14 @@ function buildCircles(vector) {
 		c = vector[2];
 	}
 
-	circles.add(buildCircle(1, 32, 0, [a, b, c]));
-	circles.add(buildCircle(1, 32, 'x', [a, c, b]));
-	circles.add(buildCircle(1, 32, 'y', [c, b, a]));
+	circles.add(buildCircle(1, 32, 0, [a, b, c], colors));
+	circles.add(buildCircle(1, 32, 'x', [a, c, b], colors));
+	circles.add(buildCircle(1, 32, 'y', [c, b, a], colors));
 
 	return circles;
 }
 
-function buildCircle(radius,segments,rot, vector) {
+function buildCircle(radius,segments,rot, vector, colors) {
 	var circle = new THREE.Object3D();
 
 	var circleGeometry = new THREE.CircleGeometry( radius, segments );
@@ -425,7 +475,7 @@ function buildCircle(radius,segments,rot, vector) {
 	}
 	
 	var lineMaterial = new THREE.LineDashedMaterial( {
-		color: 'gray', 
+		color: colors[1], 
 		transparent: true,
 		opacity: 0.5,
 		depthWrite: false, 
@@ -441,7 +491,7 @@ function buildCircle(radius,segments,rot, vector) {
 
 	if (rot ==='x') {
 		var circleMaterial = new THREE.MeshBasicMaterial( { 
-			color: 0xffffff, 
+			color: colors[0], 
 			transparent: true, 
 			side: THREE.DoubleSide,
 			opacity: 0.3,
