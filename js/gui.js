@@ -6,12 +6,17 @@ $(document).ready(function() {
 	var activeTab = 1;
 	var arrows = [null, null, null, null];
 	var transformation = [0.7, 0.2, 0.2];
+	
+	var blochSphere_bottom; // the bottom Bloch sphere
+	var transformed_arrows = [null, null, null, null];
+	var transformed_balletjes = [null, null, null, null];
 
 	init();
 	animate();
 	gui();
 	makeNoiseTab();
 	onNoiseSelectionChanged();
+	updateBottomBlochSphere( );
 
 	function init() {
 		var c_top = $('#canvas-top')[0];
@@ -76,10 +81,12 @@ $(document).ready(function() {
 
 		// Add axes
 		var axes = buildAxes( 1.5 );
-		blochSphere.add( axes );
+		scene.add( axes );
 
 		scene.add(blochSphere);
-
+		
+		
+		/////////////////////// BOTTOM /////////////////////////////////
 		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( transformation[0], transformation[1], transformation[2] ) );
 
@@ -89,13 +96,13 @@ $(document).ready(function() {
 			opacity: 0.25 
 		});
 
-		/////////////////////// BOTTOM /////////////////////////////////
-		var blochSphere_bottom = new THREE.Object3D();
+		
+		blochSphere_bottom = new THREE.Object3D();
 
 		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
 		blochSphere_bottom.add(sphere_bottom);
 
-		blochSphere_bottom.add(buildAxes(1.5))
+		scene_bottom.add(buildAxes(1.5))
 
 		var circles_bottom = buildCircles(transformation);
 		sceneCircles_bottom.add(circles_bottom)
@@ -103,9 +110,82 @@ $(document).ready(function() {
 		blochSphere_bottom.add(circles_bottom);
 
 		scene_bottom.add(blochSphere_bottom)
+		
 
 		render();
+
 	}
+	
+	function computeTransformedBlochSphere() {
+	  var E1 = [[0,0],[0,0]];
+	  var E2 = [[0,0],[0,0]];
+	  
+	  E1[0][0] = parseFloat(document.getElementById("input_noise_E1_a").value);
+	  E1[0][1] = parseFloat(document.getElementById("input_noise_E1_b").value);
+	  E1[1][0] = parseFloat(document.getElementById("input_noise_E1_c").value);
+	  E1[1][1] = parseFloat(document.getElementById("input_noise_E1_d").value);
+	  
+	  E2[0][0] = parseFloat(document.getElementById("input_noise_E2_a").value);
+	  E2[0][1] = parseFloat(document.getElementById("input_noise_E2_b").value);
+	  E2[1][0] = parseFloat(document.getElementById("input_noise_E2_c").value);
+	  E2[1][1] = parseFloat(document.getElementById("input_noise_E2_d").value);
+      
+	  return computeNewBlochSphere(E1, E2);
+	} // computeTransformedBlochSphere
+	
+	// draws bottom Bloch sphere at location center, with given axis lengths
+	function updateBottomBlochSphere( ) {
+		console.log(1)
+		var tmp = computeTransformedBlochSphere();
+		var axes = tmp[0];
+		var center = tmp[1];
+		
+		// Switch z and y axis to compensate for computer graphics/physics
+		// difference quirks.
+		var tempHans = center.y;
+		center.y = center.z;
+		center.z = tempHans;
+		center.z = -1 * center.z;
+		
+		var tempHans = axes[1];
+		axes[1] = axes[2];
+		axes[2] = tempHans;
+		
+		console.log("axes: x="+axes[0]+" y="+axes[1]+" z="+axes[2]);
+	
+		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
+		geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
+
+		var sphereMaterialNoise = new THREE.MeshBasicMaterial( { 
+			color: 0x0099CC, 
+			transparent: true, 
+			opacity: 0.25 
+		});
+
+		
+		var newblochSphere_bottom = new THREE.Object3D();
+
+		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
+		newblochSphere_bottom.add(sphere_bottom);
+
+		//newblochSphere_bottom.add(buildAxes(1.5));
+
+		var circles_bottom = buildCircles(axes);
+		sceneCircles_bottom.add(circles_bottom)
+
+		newblochSphere_bottom.add(circles_bottom);
+		
+		newblochSphere_bottom.translateX(center.x);
+		newblochSphere_bottom.translateY(center.y);
+		newblochSphere_bottom.translateZ(center.z);
+
+		// replace bottom Bloch sphere:
+		scene_bottom.remove(blochSphere_bottom);
+		blochSphere_bottom = newblochSphere_bottom;
+		scene_bottom.add(newblochSphere_bottom);
+		
+		drawTransformedArrows();
+	} // updateBottomBlochSphere
 		
 	function animate() {
 		requestAnimationFrame( animate );
@@ -118,13 +198,105 @@ $(document).ready(function() {
 		renderer_top.render(sceneCircles, camera_top);
 		renderer_top.clearDepth();
 		renderer_top.render(scene, camera_top);
-
+		
 		renderer_bottom.setClearColor( 'black', 1);
 		renderer_bottom.clear();
 		renderer_bottom.render(sceneCircles_bottom, camera_top);
 		renderer_bottom.clearDepth();
 		renderer_bottom.render(scene_bottom, camera_top);
 	}
+	
+	
+	// draws all arrows transformed in bottom Bloch sphere
+	function drawTransformedArrows() {
+		var colours = ['red', 'green', 'blue', 'yellow'];
+			
+		// first get noise matrices E1 and E2
+		var E1 = [[0,0],[0,0]];
+		var E2 = [[0,0],[0,0]];
+	  
+		E1[0][0] = parseFloat(document.getElementById("input_noise_E1_a").value);
+		E1[0][1] = parseFloat(document.getElementById("input_noise_E1_b").value);
+		E1[1][0] = parseFloat(document.getElementById("input_noise_E1_c").value);
+		E1[1][1] = parseFloat(document.getElementById("input_noise_E1_d").value);
+		  
+		E2[0][0] = parseFloat(document.getElementById("input_noise_E2_a").value);
+		E2[0][1] = parseFloat(document.getElementById("input_noise_E2_b").value);
+		E2[1][0] = parseFloat(document.getElementById("input_noise_E2_c").value);
+		E2[1][1] = parseFloat(document.getElementById("input_noise_E2_d").value);
+			  
+		// get density matrices of all active arrows
+		for (var i = 1; i <= 4; i++) {
+		    if (arrows[i-1] != null) {
+			    //console.log("start adding arrow " + i);
+				var a = math.complex($("#input_" + i + "_a").val());
+				var b = math.complex($("#input_" + i + "_b").val());
+				var c = math.complex($("#input_" + i + "_c").val());
+				var d = math.complex($("#input_" + i + "_d").val());
+				
+				var transformed_densityMat = channelNoise([[a,b],[c,d]],E1,E2);
+				var dir = getVector(transformed_densityMat);
+				//var dir = getVector([[a,b],[c,d]]);
+				
+				// Switch z and y axis to compensate for computer graphics/physics
+				// difference quirks.
+				var tempHans = dir.y;
+				dir.y = dir.z;
+				dir.z = tempHans;
+				dir.z = -1 * dir.z;
+				
+				var origin = computeNewBlochSphere(E1, E2)[1];
+				tempHans = origin.y;
+				origin.y = origin.z;
+				origin.z = tempHans;
+				origin.z = -1 * origin.z;
+				
+				var length = dir.length();
+
+				var hex = colours[i-1];
+				
+				//
+				// creating the fcking line:
+				//
+				var geometry = new THREE.Geometry();
+				
+				//geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
+				
+				geometry.vertices.push(origin); // start
+				geometry.vertices.push(dir); // end
+				
+				var material = new THREE.LineBasicMaterial({color: hex});
+				var arrow = new THREE.Line(geometry, material);
+				//arrow.name = "homo";
+				
+				if (transformed_arrows[i-1] != null) {
+					scene_bottom.remove(transformed_arrows[i-1]);
+				} // if
+
+				transformed_arrows[i-1] = arrow;
+				scene_bottom.add(arrow);
+				
+				// Also add sphere at end of arrow:
+				var geometry2 = new THREE.SphereGeometry( 0.05, 16, 12 );
+				//geometry2.applyMatrix( new THREE.Matrix4().makeTranslation(dir.x, dir.y, dir.z));
+				var sphereMaterial = new THREE.MeshBasicMaterial({color: hex});
+				var balletje = new THREE.Mesh(geometry2, sphereMaterial);
+				balletje.translateX(dir.x);
+				balletje.translateY(dir.y);
+				balletje.translateZ(dir.z);
+				
+				if (transformed_balletjes[i-1] != null) {
+					scene_bottom.remove(transformed_balletjes[i-1]);
+				} // if
+
+				transformed_balletjes[i-1] = balletje;	
+				scene_bottom.add(balletje);
+
+			} // if
+		} // for
+		//console.log("render");
+		render();
+	} // drawTransformedArrows
 
 	function drawArrow() {
 		var colours = ['red', 'green', 'blue', 'yellow'];
@@ -155,7 +327,9 @@ $(document).ready(function() {
 		arrows[activeTab-1] = arrow;
 		scene.add( arrow );
 
-		render();
+		
+		drawTransformedArrows();
+
 	} // drawArrow
 
 	function gui() {
@@ -253,6 +427,7 @@ $(document).ready(function() {
 
 			// Event listeners to buttons
 			$("#btn_show_state_" + i).on('click', drawArrow);
+			$("#noise-select").on('change', updateBottomBlochSphere);
 
 			// Initialize sliders
 			createSliders(i);
@@ -303,7 +478,14 @@ $(document).ready(function() {
 		    max: 1,
 		    from: 0,
 		    step: 0.01,
+			onChange: function (data) {
+		       updateBottomBlochSphere();
+		    },
+			prettify: function (num) {
+			  return sliceDecimals(1-num);
+			}
 		});	
+		
 	}
 
 	function updateStateGui(i) {
@@ -331,22 +513,50 @@ $(document).ready(function() {
 	}
 });
 
+
+
+
 function onNoiseSelectionChanged() {
 	var x = document.getElementById("noise-select").value;
-
-	if (x == "D") {
+	var r = 1 - parseFloat(document.getElementById("noise_slider").value);
+	var s_r = Math.sqrt(r);
+	var s_emr = Math.sqrt(1-r);
+	
+	//console.log("r = " + r);
+	
+	if (x == "D") { // depolarizing
 	  document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";
+	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
 	}
-	if (x == "PhX") {
+	if (x == "PhX") { // dephase x
 	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhX.png";
+	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
 	}
-	if (x == "PhZ") {
+	if (x == "PhZ") { // dephase y
 	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhZ.png";
+	  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
 	}
-	if (x == "A") {
+	if (x == "A") { // amplitude damping
 	  document.getElementById("noise-equation-img").src = "img/noiseEq_A.png";
+	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
+	}
+	if (x == "user") { // user defined function
+	  ; // make slider disabled or smth!
 	}
 }
+
+
+function setNoiseMatrices(E1, E2) {
+    document.getElementById("input_noise_E1_a").value = sliceDecimals(E1[0][0]);
+	document.getElementById("input_noise_E1_b").value = sliceDecimals(E1[0][1]);
+	document.getElementById("input_noise_E1_c").value = sliceDecimals(E1[1][0]);
+	document.getElementById("input_noise_E1_d").value = sliceDecimals(E1[1][1]);
+	
+    document.getElementById("input_noise_E2_a").value = sliceDecimals(E2[0][0]);
+	document.getElementById("input_noise_E2_b").value = sliceDecimals(E2[0][1]);
+	document.getElementById("input_noise_E2_c").value = sliceDecimals(E2[1][0]);
+	document.getElementById("input_noise_E2_d").value = sliceDecimals(E2[1][1]);
+} // setNoiseMatrices
 
 function sliceDecimals(number) {
 	var result;

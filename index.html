@@ -74,6 +74,8 @@
 				
 				<div class="row spaceRow">
 					<div id="timeline" class="blocks alpha60">
+					
+						
 						<h3>Add noise</h3>
 						
 						<div style="height:40px">
@@ -87,24 +89,34 @@
 							<option value="PhX">Dephase X</option>
 							<option value="PhZ">Dephase Z</option>
 							<option value="A">Amplitude damping</option>
+							<option value="user">User defined transformation</option>
 						</select>
-						<br/>
-						Apply to: 
-						<select>
-							<option value="all">All qubits</option>
-							<option value="1">&#936&#x2081</option>
-							<option value="2">&#936&#x2082</option>
-							<option value="3">&#936&#x2083</option>
-							<option value="4">&#936&#x2084</option>
-						</select>
-						<br/>
 						
-						
-						<div class='sliders'>
+						<div class='sliders' id="noise_slider_div">
 							<div class='row'>
 								<div class='range-slider col-md-9'>
-									<input type='text' class='js-range-slider-noise'value='' />
+									<input id="noise_slider" type='text' class='js-range-slider-noise'value='' onchange="onNoiseSelectionChanged();"/>
 								</div>
+							</div>
+						</div>
+						
+						<div class='row'>
+							<div class="col-md-6">
+							  <h4>Noise matrix E<sub>1</sub></h4>
+							  <input id="input_noise_E1_a" type="text" style="width:80px; margin:10px;"></input>
+							  <input id="input_noise_E1_b" type="text" style="width:80px; margin:10px;"></input>
+							  <br/>
+							  <input id="input_noise_E1_c" type="text" style="width:80px; margin:10px;"></input>
+							  <input id="input_noise_E1_d" type="text" style="width:80px; margin:10px;"></input>
+							</div>
+							
+							<div class="col-md-6">
+							  <h4>Noise matrix E<sub>2</sub></h4>
+							  <input id="input_noise_E2_a" type="text" style="width:80px; margin:10px;"></input>
+							  <input id="input_noise_E2_b" type="text" style="width:80px; margin:10px;"></input>
+							  <br/>
+							  <input id="input_noise_E2_c" type="text" style="width:80px; margin:10px;"></input>
+							  <input id="input_noise_E2_d" type="text" style="width:80px; margin:10px;"></input>
 							</div>
 						</div>
 						
