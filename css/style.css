@@ -7,8 +7,11 @@ body {
 	color:black;
 }
 
-#bottom-section2 input[type=checkbox] {
-	margin-top: 20px;
+.checkboxes h4 {
+	margin-top: 10px;
+}
+
+.checkboxes input {
 	margin-left: 5px;
 }
 
@@ -16,6 +19,22 @@ body {
 	vertical-align: middle;
 	width: 900px;
 	height: 600px;
+}
+
+.state-1 {
+	color: red;
+}
+
+.state-2 {
+	color: green;
+}
+
+.state-3 {
+	color: blue;
+}
+
+.state-4 {
+	color: gold;
 }
 
 .blue {

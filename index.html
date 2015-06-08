@@ -88,7 +88,7 @@
 							</li>
 						</ul>
 						<div class="tab-content">
-							<div id="bottom-section1" class="tab-pane fade">
+							<div id="bottom-section1" class="tab-pane fade in active">
 								<h3>Add noise</h3>
 								
 								<div style="height:40px">
@@ -124,43 +124,63 @@
 								</div>				
 							</div>
 
-							<div id="bottom-section2" class="tab-pane fade in active">
-								<h3>Create a mixed state</h3>
+							<div id="bottom-section2" class="tab-pane fade">
+								<h4 id="mixedStateFunction">Wave function: &#936&#x2098 = <span class='state-1'>0</span>&#x00B7&#936&#x2081 + <span class='state-2'>0</span>&#x00B7&#936&#x2082 + <span class='state-3'>0</span>&#x00B7&#936&#x2083 + <span class='state-4'>0</span>&#x00B7&#936&#x2084</h4>
 
 								<div class='row'>
 									<div class='range-slider'>
-										<div class='col-md-5'>
-											<label><input type="checkbox" id="check-active-1" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
-											<label><input type="checkbox" id="check-lock-1" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										<div class='col-md-6 checkboxes'>
+											<div class='col-md-2 state-1'>
+												<h4>&#936&#x2098</h4>
+											</div>
+											<div class='col-md-10'>
+												<label><input type="checkbox" id="check-active-1" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+												<label><input type="checkbox" id="check-lock-1" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock probability </label>
+											</div>
 										</div>
-										<div class='col-md-7'>
+										<div class='col-md-6'>
 											<input type='text' class='js-range-slider-mixed-1'value='' />
 										</div>
 									</div>
 									<div class='range-slider'>
-										<div class='col-md-5'>
-											<label><input type="checkbox" id="check-active-2" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
-											<label><input type="checkbox" id="check-lock-2" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										<div class='col-md-6 checkboxes'>
+											<div class='col-md-2 state-2'>
+												<h4>&#936&#x2098</h4>
+											</div>
+											<div class='col-md-10'>
+												<label><input type="checkbox" id="check-active-2" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+												<label><input type="checkbox" id="check-lock-2" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock probability </label>
+											</div>
 										</div>
-										<div class='col-md-7'>
+										<div class='col-md-6'>
 											<input type='text' class='js-range-slider-mixed-2'value='' />
 										</div>
 									</div>
 									<div class='range-slider'>
-										<div class='col-md-5'>
-											<label><input type="checkbox" id="check-active-3" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
-											<label><input type="checkbox" id="check-lock-3" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										<div class='col-md-6 checkboxes'>
+											<div class='col-md-2 state-3'>
+												<h4>&#936&#x2098</h4>
+											</div>
+											<div class='col-md-10'>
+												<label><input type="checkbox" id="check-active-3" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+												<label><input type="checkbox" id="check-lock-3" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock probability </label>
+											</div>
 										</div>
-										<div class='col-md-7'>
+										<div class='col-md-6'>
 											<input type='text' class='js-range-slider-mixed-3'value='' />
 										</div>
 									</div>
 									<div class='range-slider'>
-										<div class='col-md-5'>
-											<label><input type="checkbox" id="check-active-4" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
-											<label><input type="checkbox" id="check-lock-4" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										<div class='col-md-6 checkboxes'>
+											<div class='col-md-2 state-4'>
+												<h4>&#936&#x2098</h4>
+											</div>
+											<div class='col-md-10'>
+												<label><input type="checkbox" id="check-active-4" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+												<label><input type="checkbox" id="check-lock-4" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock probability </label>
+											</div>
 										</div>
-										<div class='col-md-7'>
+										<div class='col-md-6'>
 											<input type='text' class='js-range-slider-mixed-4'value='' />
 										</div>
 									</div>

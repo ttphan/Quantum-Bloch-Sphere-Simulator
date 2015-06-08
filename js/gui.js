@@ -397,10 +397,28 @@ function addEventMixedSliders() {
 				if (total != 1 && !slider.options.from_fixed) {
 					slider.update({from: data.from + (1 - total)})
 				}
+
+				updateMixedGui();
 			}
 
 		})
 	})
+}
+
+function updateMixedGui() {
+	var sliders = $('[class^="js-range-slider-mixed"]')
+	var states = [];
+	
+	sliders.each(function(i) {
+		states[i] = $(this).data("ionRangeSlider").result.from;
+	})
+
+	$('#mixedStateFunction').html("Wave function: &#936&#x2098 = <span class='state-1'>" + states[0] + 
+		"</span>&#x00B7&#936&#x2081 + <span class='state-2'>" + states[1] + 
+		"</span>&#x00B7&#936&#x2082 + <span class='state-3'>" + states[2] + 
+		"</span>&#x00B7&#936&#x2083 + <span class='state-4'>" + states[3] + 
+		"</span>&#x00B7&#936&#x2084"
+	);
 }
 
 function checkActive(checkbox) {
