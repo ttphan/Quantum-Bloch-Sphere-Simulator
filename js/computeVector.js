@@ -1,4 +1,7 @@
+// Complex i
 var complexi = math.complex('i');
+
+// 
 var gateX = [[0,1],[1,0]];
 var gateY = [[0,math.complex('-i')],[math.complex('i'),0]];
 var gateZ = [[1,0],[0,-1]];
@@ -13,33 +16,50 @@ var stateY = [[math.sqrt(0.5)], [math.multiply(math.sqrt(0.5),complexi)]];
 var maxMixed = [[0.5, 0],[0, 0.5]];
 var identity = [[1,0],[0,1]];
 
+// Computes vector representation of density matrix in Bloch Sphere
+// Returns three.vector with x,y,z coordinates
 function getVector(densMatrix){
-      //var densMatrix = [[a,b],[c,d]];
+
+      // Compute projections of state onto all axes
       var xCoor = trace(math.multiply(densMatrix,gateX));
       var yCoor = trace(math.multiply(densMatrix,gateY));
       var zCoor = trace(math.multiply(densMatrix,gateZ));
+
+      xCoor = getRealValue(xCoor);
+      yCoor = getRealValue(yCoor);
+      zCoor = getRealValue(zCoor);
 
       var vector = new THREE.Vector3( xCoor, yCoor, zCoor );
       return vector;
 }
 
+// returns real part of complex number
+function getRealValue(num) {
+      return math.complex(num).re;
+}
+
 function transformAxes(E1, E2) {
       var transX = getVector(channelNoise(stateToDens(statePlus),E1,E2));
-      var transY = getVector(channelNoise(stateToDens(stateY),E1,E2));;
-      var transZ = getVector(channelNoise(stateToDens(stateZero),E1,E2));;
+      var transY = getVector(channelNoise(stateToDens(stateY),E1,E2));
+      var transZ = getVector(channelNoise(stateToDens(stateZero),E1,E2));
       return [transX, transY, transZ];
 }
 
+// Returns trace of 2x2 matrix
 function trace(matrix){
       return math.add(matrix[0][0],matrix[1][1]);
 }
 
+// Computes state of qubit from polar coordinates in BlochSphere
+// Returns vector with alpha and beta for qubit in normal basis
 function getStateFromAngle(theta, phi) {
       var alpha = math.cos(theta/2);
       var beta = math.multiply(math.sin(theta/2),math.exp(math.complex(0,phi)));
       return [[alpha],[beta]];
 }
 
+// Computes eigenvalues of 2x2 matrix
+// Returns array of the 2 eigenvalues of 2x2 matrix
 function getEigenvalues(matrix) {
       a = matrix[0][0];
       b = matrix[0][1];
@@ -54,15 +74,17 @@ function getEigenvalues(matrix) {
       return [lambda1, lambda2];
 }
 
+// Returns conjugate transpose of matrix
 function conjugateTranspose(matrix) {
       return math.conj(math.transpose(matrix));
 }
 
+// Returns density matrix from qubit state
 function stateToDens(state) {
-      //state = [[state[0]],[state[1]]];
       return math.multiply(state, conjugateTranspose(state));
 }
 
+// Returns tensorProduct of two states
 function tensorProduct(state1, state2) {
       return [math.multiply(state1[0],state2[0]),
             math.multiply(state1[0],state2[1]),
@@ -70,72 +92,97 @@ function tensorProduct(state1, state2) {
             math.multiply(state1[1],state2[1])]
 }
 
+// Returns controlled version of specified gate
 function controlledGate(gate) {
       return [[1,0,0,0],[0,1,0,0],[0,0,gate[0][0],gate[0][1]],[0,0,gate[1][0],gate[1][1]]];
 }
 
+// Returns phase shift gate with given angle shift
 function getPhaseShiftGate(shift) {
       return [[1,0],[0,Math.exp(math.multiply(complexi,shift))]];
 }
 
+// Applies gate to state
+// Returns resulting state
 function applyGateToState(state, gate) {
       return math.multiply(gate,state);
 }
 
+// Applies gate to density matrix of state
+// Returns resulting density matrix
 function applyGateToDensMat(densMatrix, gate) {
       return math.chain(gate).multiply(densMatrix).multiply(conjugateTranspose(gate));
 }
 
+// Computes the transformation of the density matrix of a state when applying noise matrices E1 and E2
+// Returns resulting density matrix
 function channelNoise(densMatrix, E1, E2) {
       return math.add(math.chain(E1).multiply(densMatrix).multiply(conjugateTranspose(E1)).done(), 
             math.chain(E2).multiply(densMatrix).multiply(conjugateTranspose(E2)).done());
 }
 
+// Applies depolarization noise to density matrix
 function depolNoise(densMatrix, r) {
       return math.add(math.multiply(r,densMatrix), math.multiply((1-r),maxMixed));
 }
 
+// Applies dephasing noise (prob=r) for bitflip (x-gate) to density matrix
 function dephaseNoiseX(densMatrix, r) {
       var E1 = math.sqrt(r);
       var E2 = math.multiply(math.sqrt(r-1),gateX);
       return channelNoise(densMatrix, E1, E2);
 }
 
+// Applies dephasing noise (prob=r) for phase flip (z-gate) to density matrix
 function dephaseNoiseZ(densMatrix, r) {
       var E1 = math.sqrt(r);
       var E2 = math.multiply(math.sqrt(r-1),gateZ);
       return channelNoise(densMatrix, E1, E2);
 }
 
+// Applies amplitude damping noise (prob=r) to density matrix
 function ampDampNoise(densMatrix, r) {
       var a0 = math.add(stateToDens(stateZero), math.multiply(math.sqrt(r),stateToDens(stateOne)));
       var a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,math.transpose(stateOne)));
       return channelNoise(densMatrix, a0, a1);;
 }
 
+// Check if density matrix is pure
 function isPure(densMatrix) {
       return math.round(trace(math.multiply(densMatrix, math.transpose(densMatrix)))) == 1;
 }
 
+// Check if density matrix is valid: trace should be 1
 function isValidTrace(densMatrix) {
       return trace(densMatrix).toFixed(2) == 1;
 }
 
+// Check if density matrix is valid: must be hermitian
 function isValidHermitian(densMatrix) {
       densMatrix = math.round(densMatrix);
       return matrixEquals(densMatrix, conjugateTranspose(densMatrix));
 }
 
+// Check if density matrix is valid: eigenvalues should be 0<lambda<1
 function isValidEigenvalues(densMatrix) {
       eigval = getEigenvalues(densMatrix);
       console.log(eigval);
       return ((eigval[0] <= 1) && (eigval[0] >= 0) && (eigval[1] <= 1) && (eigval[1] >= 0));
 }
 
-function isHamiltonianTrace(matrix) {
-      return trace(matrix) == 0;
+// Check if noise matrices are valid: sum_j(EjEj')=identity
+function isValidNoiseMatrices(E1, E2) {
+      var mat = math.add(math.multiply(E1,conjugateTranspose(E1)), math.multiply(E2,conjugateTranspose(E2)));
+      return matrixEquals(mat, identity);
 }
 
+// Check if matrix is hamiltonian: trace==0
+function isHamiltonianTrace(matrix) {
+      return trace(matrix).toFixed(2) == 0;
+}
+
+// Computes pade approximation for the exponent of a matrix
+// Returns resulting matrix
 function getPadeApproxExp(matrix) {
       var approx = 5;
       var factors = [1,2,9,72,1008,30240];
@@ -153,18 +200,23 @@ function getPadeApproxExp(matrix) {
       return math.divide(num,denom);
 }
 
+// Computes unitary at given time for given hamiltonian
+// Returns pade approximation of resulting unitary
 function getUnitaryAtTime(hamiltonian, time) {
       var mat = math.chain(math.complex("-i")).multiply(time).multiply(hamiltonian).done();
       return  getPadeApproxExp(mat);
 }
 
-function makeMixedState(densMat1, prob1, densMat2, prob2) {
-      return math.add(math.multiply(densMat1,prob1),math.multiply(densMat2,prob2));
+// Computes mixed state from four states with probabilities
+function makeMixedState(densMat1, prob1, densMat2, prob2, densMat3, prob3, densMat4, prob4) {
+      return math.chain(math.multiply(densMat1,prob1)).add(math.multiply(densMat2,prob2))
+                  .add(math.multiply(densMat3,prob3)).add(math.multiply(densMat2,prob2)).done();
 }
 
+// Returns matrix1 == matrix2
 function matrixEquals(mat1, mat2) {
-      mat1=math.complex(mat1);
-      mat2=math.complex(mat2);
+      mat1 = math.round(math.complex(mat1),2);
+      mat2 = math.round(math.complex(mat2),2);
       return ((mat1[0][0] == mat2[0][0]) && 
               (mat1[1][0] == mat2[1][0]) && 
               (mat1[0][1] == mat2[0][1]) &&
