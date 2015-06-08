@@ -7,8 +7,9 @@ body {
 	color:black;
 }
 
-.sliders input[type=checkbox] {
+#bottom-section2 input[type=checkbox] {
 	margin-top: 20px;
+	margin-left: 5px;
 }
 
 #app {
@@ -55,7 +56,7 @@ div.blocks {
 	padding: 0px;
 }
 
-div#sphere {
+div#sphere, div#sphere-noise {
 	padding: 10px;
 }
 
@@ -88,9 +89,9 @@ canvas {
     width: 100%; /* optional */
 }
 
-#timeline {
-	padding-bottom: 20px;
-}
+/*#bottom-input, #bottom-section-1 {
+	padding: 35px;
+}*/
 
 #noise-select {
 	margin-bottom: 10px;

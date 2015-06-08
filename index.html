@@ -73,42 +73,100 @@
 				</div>
 				
 				<div class="row spaceRow">
-					<div id="timeline" class="blocks alpha60">
-						<h3>Add noise</h3>
-						
-						<div style="height:40px">
-							<img src="img/noiseEq_D.png" id="noise-equation-img"/>
-						</div>
-						<br/>
-						
-						Noise type: 
-						<select id="noise-select" onchange="onNoiseSelectionChanged();">
-							<option value="D">Depolarizing</option>
-							<option value="PhX">Dephase X</option>
-							<option value="PhZ">Dephase Z</option>
-							<option value="A">Amplitude damping</option>
-						</select>
-						<br/>
-						Apply to: 
-						<select>
-							<option value="all">All qubits</option>
-							<option value="1">&#936&#x2081</option>
-							<option value="2">&#936&#x2082</option>
-							<option value="3">&#936&#x2083</option>
-							<option value="4">&#936&#x2084</option>
-						</select>
-						<br/>
-						
-						
-						<div class='sliders'>
-							<div class='row'>
-								<div class='range-slider col-md-9'>
-									<input type='text' class='js-range-slider-noise'value='' />
+
+					<div class="blocks alpha60">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle="tab" href="#bottom-section1" id='bottom-tab1'>
+									<h4>Add noise</h4>
+								</a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#bottom-section2" id='bottom-tab2'>
+									<h4>Create a mixed state</h4>
+								</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div id="bottom-section1" class="tab-pane fade">
+								<h3>Add noise</h3>
+								
+								<div style="height:40px">
+									<img src="img/noiseEq_D.png" id="noise-equation-img"/>
+								</div>
+								<br/>
+								
+								Noise type: 
+								<select id="noise-select" onchange="onNoiseSelectionChanged();">
+									<option value="D">Depolarizing</option>
+									<option value="PhX">Dephase X</option>
+									<option value="PhZ">Dephase Z</option>
+									<option value="A">Amplitude damping</option>
+								</select>
+								<br/>
+								Apply to: 
+								<select>
+									<option value="all">All qubits</option>
+									<option value="1">&#936&#x2081</option>
+									<option value="2">&#936&#x2082</option>
+									<option value="3">&#936&#x2083</option>
+									<option value="4">&#936&#x2084</option>
+								</select>
+								<br/>
+								
+								
+								<div class='sliders'>
+									<div class='row'>
+										<div class='range-slider col-md-9'>
+											<input type='text' class='js-range-slider-noise'value='' />
+										</div>
+									</div>
+								</div>				
+							</div>
+
+							<div id="bottom-section2" class="tab-pane fade in active">
+								<h3>Create a mixed state</h3>
+
+								<div class='row'>
+									<div class='range-slider'>
+										<div class='col-md-5'>
+											<label><input type="checkbox" id="check-active-1" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+											<label><input type="checkbox" id="check-lock-1" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										</div>
+										<div class='col-md-7'>
+											<input type='text' class='js-range-slider-mixed-1'value='' />
+										</div>
+									</div>
+									<div class='range-slider'>
+										<div class='col-md-5'>
+											<label><input type="checkbox" id="check-active-2" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+											<label><input type="checkbox" id="check-lock-2" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										</div>
+										<div class='col-md-7'>
+											<input type='text' class='js-range-slider-mixed-2'value='' />
+										</div>
+									</div>
+									<div class='range-slider'>
+										<div class='col-md-5'>
+											<label><input type="checkbox" id="check-active-3" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+											<label><input type="checkbox" id="check-lock-3" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										</div>
+										<div class='col-md-7'>
+											<input type='text' class='js-range-slider-mixed-3'value='' />
+										</div>
+									</div>
+									<div class='range-slider'>
+										<div class='col-md-5'>
+											<label><input type="checkbox" id="check-active-4" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
+											<label><input type="checkbox" id="check-lock-4" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock chance </label>
+										</div>
+										<div class='col-md-7'>
+											<input type='text' class='js-range-slider-mixed-4'value='' />
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-						
-						
 					</div>
 				</div>
 

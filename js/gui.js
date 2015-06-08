@@ -5,13 +5,11 @@ $(document).ready(function() {
 
 	var activeTab = 1;
 	var arrows = [null, null, null, null];
-	var transformation = [0.7, 0.2, 0.2];
+	var transformation = [0.7, 1.3, 0.2];
 
 	init();
 	animate();
 	gui();
-	makeNoiseTab();
-	onNoiseSelectionChanged();
 
 	function init() {
 		var c_top = $('#canvas-top')[0];
@@ -220,7 +218,7 @@ $(document).ready(function() {
 					.css({
 						'padding-bottom': '30px'
 					})
-					.append($("<h4>State in standard basis: </h4>"))
+					.append($("<h4>Wave function: </h4>"))
 					.append($("<div id='state" + i + "Text'></div>")
 					  .append($("<p>&#936 = (1)|0> + (0)|1></p>"))
 					)
@@ -257,11 +255,15 @@ $(document).ready(function() {
 			// Initialize sliders
 			createSliders(i);
 		}
+
+		makeNoiseTab();	
+		addEventMixedSliders();	
 	}
 
 	function createSliders(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
 		    $phi = $(".js-range-slider-" + i + "-2"),
+		    $mixed = $(".js-range-slider-mixed-" + i),
 		    first,
 		    second;
 
@@ -289,10 +291,20 @@ $(document).ready(function() {
 		    }
 		});
 
+		$mixed.ionRangeSlider({
+		    type: "single",
+		    grid: true,
+		    min: 0,
+		    max: 1,
+		    from: 0,
+		    step: 0.01,
+		    from_fixed: true
+		});
+
 		first = $theta.data("ionRangeSlider");
 		second = $phi.data("ionRangeSlider");
 	}
-	
+
 	function makeNoiseTab() {
 		// slider:
 		var $R = $(".js-range-slider-noise");
@@ -304,6 +316,8 @@ $(document).ready(function() {
 		    from: 0,
 		    step: 0.01,
 		});	
+
+		onNoiseSelectionChanged();
 	}
 
 	function updateStateGui(i) {
@@ -330,6 +344,76 @@ $(document).ready(function() {
 		drawArrow()
 	}
 });
+
+function addEventMixedSliders() {
+	var sliders = $('[class^="js-range-slider-mixed"]');
+
+	sliders.each(function(index) {
+		var slider = $(this).data("ionRangeSlider");
+		var self = $(this);
+
+		slider.update({
+			onChange: function(data) {
+				var slidersActive = $("input[id^='check-active']:checked").length;
+				var delta = -1;
+
+				var otherSliders = $('[class^="js-range-slider-mixed"]');
+				otherSliders = otherSliders.not(self[0])
+
+				sliders.not(self[0]).each(function() {
+					if( $(this).data("ionRangeSlider").options.from_fixed ) {
+						otherSliders = otherSliders.not($(this));
+					}
+				})
+
+				sliders.each(function() {
+					delta += $(this).data("ionRangeSlider").result.from;
+				})
+
+				otherSliders.each(function() {
+					var otherSlider = $(this).data("ionRangeSlider");
+					var old_value = otherSlider.result.from;
+					var new_value = old_value - delta/(otherSliders.length)
+
+					if (new_value < 0 || data.from == 1) {
+						new_value = 0
+					}
+					if (new_value > 1) {
+						new_value = 1
+					}
+
+					otherSlider.update({
+						from: new_value
+					})
+				})
+			},
+			onFinish: function(data) {
+				var total = 0;
+
+				sliders.each(function() {
+					total += $(this).data("ionRangeSlider").result.from;
+				});
+
+				if (total != 1 && !slider.options.from_fixed) {
+					slider.update({from: data.from + (1 - total)})
+				}
+			}
+
+		})
+	})
+}
+
+function checkActive(checkbox) {
+	var checkId = checkbox.id.slice(-1);
+	$('#check-lock-' + checkId).prop('checked', false);
+	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from: 0, from_fixed: !checkbox.checked})
+	$('#check-lock-' + checkId).prop('disabled', !checkbox.checked);
+}
+
+function checkLock(checkbox) {
+	var checkId = checkbox.id.slice(-1);
+	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from_fixed: checkbox.checked})
+}
 
 function onNoiseSelectionChanged() {
 	var x = document.getElementById("noise-select").value;
