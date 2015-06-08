@@ -9,9 +9,13 @@ $(document).ready(function() {
 
 	// Color values
 	var sphereColor = 0x00BFFF;
-	var axesColors = [0xffffff,0xffffff,0xffffff];
+	var axesColors = [0xFA5858,0x01DF3A,0x2E64FE];
 	var circleColors = [0xffffff, 0xD8D8D8];
 	var tabColors = ['red', 'green', 'blue', 'yellow'];
+
+	// Geometry detail
+	var sphereSegments = [30, 30];
+	var circleSegments = 32;
 
 	init();
 	animate();
@@ -526,7 +530,34 @@ function buildAxes( length, colors ) {
 	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), colors[2], true ) ); // +Z
 	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), colors[2], false ) ); // -Z
 
+	sizeXYZ = 0.1;
+	sizeStates = 0.1;
+	axes.add( buildAxisLabel( 'x', new THREE.Vector3( 1.1*length, 0, 0 ), colors[0], sizeXYZ) ); // +X
+	axes.add( buildAxisLabel( '|+>', new THREE.Vector3( 1.01, 0.02, 0 ), 'white', sizeStates ) ); //|+>
+	axes.add( buildAxisLabel( '|->', new THREE.Vector3( -1.2, 0.02, 0 ), 'white', sizeStates) ); //|->
+	axes.add( buildAxisLabel( 'z', new THREE.Vector3( 0, 1.1*length, 0 ), colors[1], sizeXYZ) ); // +Z
+	axes.add( buildAxisLabel( '|0>', new THREE.Vector3( 0.01, 1.1, 0 ), 'white', sizeStates ) ); //|+>
+	axes.add( buildAxisLabel( '|1>', new THREE.Vector3( 0.01, -1.15, 0 ), 'white', sizeStates) ); //|->
+	axes.add( buildAxisLabel( 'y', new THREE.Vector3( 0, 0, -1.1*length ), colors[2], sizeXYZ ) ); // +Y
 	return axes;
+}
+
+function buildAxisLabel (text, pos, color, size) {
+	var  textGeo = new THREE.TextGeometry(text, {
+        size: size,
+        height: 0.01,
+        curveSegments: 50,
+        font: "helvetiker",
+        style: "normal"
+    });
+
+	var  textMaterial = new THREE.MeshBasicMaterial({ color: color });
+	var  text = new THREE.Mesh(textGeo , textMaterial);
+	text.position.x = pos.x;
+	text.position.y = pos.y;
+	text.position.z = pos.z;
+	//text.rotation = camera_top.rotation;
+	return text;
 }
 
 function buildAxis( src, dst, colorHex, dashed ) {
@@ -534,9 +565,9 @@ function buildAxis( src, dst, colorHex, dashed ) {
 		mat; 
 
 	if(dashed) {
-		mat = new THREE.LineDashedMaterial({ linewidth: 3, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
+		mat = new THREE.LineDashedMaterial({ linewidth: 4, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
 	} else {
-		mat = new THREE.LineBasicMaterial({ linewidth: 3, color: colorHex, depthTest: false });
+		mat = new THREE.LineBasicMaterial({ linewidth: 4, color: colorHex, depthTest: false });
 	}
 
 	geom.vertices.push( src.clone() );
