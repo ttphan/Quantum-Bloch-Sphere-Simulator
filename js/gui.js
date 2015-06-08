@@ -133,15 +133,15 @@ $(document).ready(function() {
 	  var E1 = [[0,0],[0,0]];
 	  var E2 = [[0,0],[0,0]];
 	  
-	  E1[0][0] = parseFloat(document.getElementById("input_noise_E1_a").value);
-	  E1[0][1] = parseFloat(document.getElementById("input_noise_E1_b").value);
-	  E1[1][0] = parseFloat(document.getElementById("input_noise_E1_c").value);
-	  E1[1][1] = parseFloat(document.getElementById("input_noise_E1_d").value);
+	  E1[0][0] = parseFloat($("#input_noise_E1_a").val());
+	  E1[0][1] = parseFloat($("#input_noise_E1_b").val());
+	  E1[1][0] = parseFloat($("#input_noise_E1_c").val());
+	  E1[1][1] = parseFloat($("#input_noise_E1_d").val());
 	  
-	  E2[0][0] = parseFloat(document.getElementById("input_noise_E2_a").value);
-	  E2[0][1] = parseFloat(document.getElementById("input_noise_E2_b").value);
-	  E2[1][0] = parseFloat(document.getElementById("input_noise_E2_c").value);
-	  E2[1][1] = parseFloat(document.getElementById("input_noise_E2_d").value);
+	  E2[0][0] = parseFloat($("#input_noise_E2_a").val());
+	  E2[0][1] = parseFloat($("#input_noise_E2_b").val());
+	  E2[1][0] = parseFloat($("#input_noise_E2_c").val());
+	  E2[1][1] = parseFloat($("#input_noise_E2_d").val());
       
 	  return computeNewBlochSphere(E1, E2);
 	} // computeTransformedBlochSphere
@@ -228,15 +228,15 @@ $(document).ready(function() {
 		var E1 = [[0,0],[0,0]];
 		var E2 = [[0,0],[0,0]];
 	  
-		E1[0][0] = parseFloat(document.getElementById("input_noise_E1_a").value);
-		E1[0][1] = parseFloat(document.getElementById("input_noise_E1_b").value);
-		E1[1][0] = parseFloat(document.getElementById("input_noise_E1_c").value);
-		E1[1][1] = parseFloat(document.getElementById("input_noise_E1_d").value);
+		E1[0][0] = parseFloat($("#input_noise_E1_a").val());
+		E1[0][1] = parseFloat($("#input_noise_E1_b").val());
+		E1[1][0] = parseFloat($("#input_noise_E1_c").val());
+		E1[1][1] = parseFloat($("#input_noise_E1_d").val());
 		  
-		E2[0][0] = parseFloat(document.getElementById("input_noise_E2_a").value);
-		E2[0][1] = parseFloat(document.getElementById("input_noise_E2_b").value);
-		E2[1][0] = parseFloat(document.getElementById("input_noise_E2_c").value);
-		E2[1][1] = parseFloat(document.getElementById("input_noise_E2_d").value);
+		E2[0][0] = parseFloat($("#input_noise_E2_a").val());
+		E2[0][1] = parseFloat($("#input_noise_E2_b").val());
+		E2[1][0] = parseFloat($("#input_noise_E2_c").val());
+		E2[1][1] = parseFloat($("#input_noise_E2_d").val());
 			  
 		// get density matrices of all active arrows
 		for (var i = 1; i <= 4; i++) {
@@ -750,26 +750,26 @@ function checkLock(checkbox) {
 
 
 function onNoiseSelectionChanged() {
-	var x = document.getElementById("noise-select").value;
-	var r = 1 - parseFloat(document.getElementById("noise_slider").value);
+	var x = $("#noise-select").val();
+	var r = 1 - parseFloat($("#noise_slider").val());
 	var s_r = Math.sqrt(r);
 	var s_emr = Math.sqrt(1-r);
 	
 	
 	if (x == "D") { // depolarizing
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
 	}
 	if (x == "PhX") { // dephase x
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhX.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
 	}
 	if (x == "PhZ") { // dephase y
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhZ.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
 	}
 	if (x == "A") { // amplitude damping
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_A.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
 	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
 	}
 	if (x == "user") { // user defined function
@@ -779,15 +779,15 @@ function onNoiseSelectionChanged() {
 
 
 function setNoiseMatrices(E1, E2) {
-    document.getElementById("input_noise_E1_a").value = sliceDecimals(E1[0][0]);
-	document.getElementById("input_noise_E1_b").value = sliceDecimals(E1[0][1]);
-	document.getElementById("input_noise_E1_c").value = sliceDecimals(E1[1][0]);
-	document.getElementById("input_noise_E1_d").value = sliceDecimals(E1[1][1]);
+    $("#input_noise_E1_a").val(sliceDecimals(E1[0][0]));
+	$("#input_noise_E1_b").val(sliceDecimals(E1[0][1]));
+	$("#input_noise_E1_c").val(sliceDecimals(E1[1][0]));
+	$("#input_noise_E1_d").val(sliceDecimals(E1[1][1]));
 	
-    document.getElementById("input_noise_E2_a").value = sliceDecimals(E2[0][0]);
-	document.getElementById("input_noise_E2_b").value = sliceDecimals(E2[0][1]);
-	document.getElementById("input_noise_E2_c").value = sliceDecimals(E2[1][0]);
-	document.getElementById("input_noise_E2_d").value = sliceDecimals(E2[1][1]);
+    $("#input_noise_E2_a").val(sliceDecimals(E2[0][0]));
+	$("#input_noise_E2_b").val(sliceDecimals(E2[0][1]));
+	$("#input_noise_E2_c").val(sliceDecimals(E2[1][0]));
+	$("#input_noise_E2_d").val(sliceDecimals(E2[1][1]));
 } // setNoiseMatrices
 
 function sliceDecimals(number) {
