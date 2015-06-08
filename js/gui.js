@@ -5,7 +5,7 @@ $(document).ready(function() {
 
 	var activeTab = 1;
 	var arrows = [null, null, null, null];
-	var transformation = [0.3, 1.5, 0.7];
+	var transformation = [0.7, 0.2, 0.2];
 
 	init();
 	animate();
@@ -26,6 +26,7 @@ $(document).ready(function() {
 		//// Bottom
 		renderer_bottom = new THREE.WebGLRenderer({canvas: c_bottom});
 		renderer_bottom.setSize(c_bottom.width, c_bottom.height);
+		renderer_bottom.autoClear = false;
 
 		// camera
 		camera_top = new THREE.PerspectiveCamera(45, c_top.width / c_top.height, 1, 1000);
@@ -51,7 +52,10 @@ $(document).ready(function() {
 
 		//// Bottom
 		scene_bottom = new THREE.Scene(); 
+		sceneCircles_bottom = new THREE.Scene();
 
+
+		////////////////////// TOP ////////////////////////////////
 		// Bloch sphere object
 		var blochSphere = new THREE.Object3D();
 				
@@ -85,6 +89,7 @@ $(document).ready(function() {
 			opacity: 0.25 
 		});
 
+		/////////////////////// BOTTOM /////////////////////////////////
 		var blochSphere_bottom = new THREE.Object3D();
 
 		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
@@ -93,6 +98,7 @@ $(document).ready(function() {
 		blochSphere_bottom.add(buildAxes(1.5))
 
 		var circles_bottom = buildCircles(transformation);
+		sceneCircles_bottom.add(circles_bottom)
 
 		blochSphere_bottom.add(circles_bottom);
 
@@ -114,6 +120,9 @@ $(document).ready(function() {
 		renderer_top.render(scene, camera_top);
 
 		renderer_bottom.setClearColor( 'black', 1);
+		renderer_bottom.clear();
+		renderer_bottom.render(sceneCircles_bottom, camera_top);
+		renderer_bottom.clearDepth();
 		renderer_bottom.render(scene_bottom, camera_top);
 	}
 
@@ -414,15 +423,7 @@ function buildCircle(radius,segments,rot, vector) {
 		circleGeometry.applyMatrix( new THREE.Matrix4().makeScale( vector[0], vector[1], vector[2] ) );
 		lineGeometry.applyMatrix( new THREE.Matrix4().makeScale( vector[0], vector[1], vector[2] ) );
 	}
-
-	var circleMaterial = new THREE.MeshBasicMaterial( { 
-		color: 0xffffff, 
-		transparent: true, 
-		side: THREE.DoubleSide,
-		opacity: 0.3,
-		depthWrite: false, 
-		depthTest: false
-	});
+	
 	var lineMaterial = new THREE.LineDashedMaterial( {
 		color: 'gray', 
 		transparent: true,
@@ -435,14 +436,26 @@ function buildCircle(radius,segments,rot, vector) {
 	});
 
 	lineGeometry.computeLineDistances();
-
-	var base =  new THREE.Mesh(circleGeometry, circleMaterial);
+	
 	var line = new THREE.Line(lineGeometry,lineMaterial);
 
-	if (rot ==='x') {	circle.rotation.x = Math.PI/2; }
-	else if (rot ==='y') {circle.rotation.y = Math.PI/2; }
+	if (rot ==='x') {
+		var circleMaterial = new THREE.MeshBasicMaterial( { 
+			color: 0xffffff, 
+			transparent: true, 
+			side: THREE.DoubleSide,
+			opacity: 0.3,
+			depthWrite: false, 
+			depthTest: false
+		});
+		var base =  new THREE.Mesh(circleGeometry, circleMaterial);
+		circle.rotation.x = Math.PI/2; 
+		circle.add(base);
+	}
+	else if (rot ==='y') {
+		circle.rotation.y = Math.PI/2; 
+	}
 
-	circle.add(base);
 	circle.add(line);
 
 	return circle;
