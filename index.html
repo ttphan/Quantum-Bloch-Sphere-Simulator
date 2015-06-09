@@ -155,11 +155,11 @@
 											<h5>r</h5>
 										</div>
 										<div class="col-md-1 smallPadding">
-											<input id="noise_r" class="inputAngles" type="text" value="1.0" onchange="updateNoiseSlider(this)">
+											<input id="noise_r" class="inputAngles" type="text" value="1.0">
 										</div>
 
 										<div class='range-slider col-md-10'>
-											<input id="noise_slider" type='text' class='js-range-slider-noise'value='' onchange="onNoiseSelectionChanged();"/>
+											<input id="noise_slider" type='text' class='js-range-slider-noise'value=''/>
 										</div>
 									</div>
 								</div>
@@ -237,7 +237,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<h4 class="indentText"> Choose unitary: </h4> 
-										<select id="gate-select" onchange="onUnitarySelectionChanged()">
+										<select id="gate-select">
 											<option value="X">Pauli-X gate</option>
 											<option value="Y">Pauli-Y gate</option>
 											<option value="Z">Pauli-Z gate</option>
@@ -247,8 +247,8 @@
 											<option value="user">User defined unitary</option>				
 
 										</select>
-										<div id="angle-for-uni" class="col-md-12 invisible" invisible>
-											Phase: <input id="angle_input" type="text" value="0" style="width:80px; margin:10px;" onchange="onUnitarySelectionChanged()"></input>
+										<div id="angle-for-uni" class="col-md-12" invisible>
+											Phase: <input id="angle_input" type="text" value="0" style="width:80px; margin:10px;"></input>
 										</div>
 
 
@@ -256,15 +256,6 @@
 
 									<div class="col-md-6">
 										<button class="btn btn-default btn-md buttonMargin " id="gate-update_button">Show transformed state</button>
-
-<!-- 										<h4 class="indentText"> Apply on state: </h4> 
-										<select id="state-select" onchange="onUnitarySelectionChanged()">
-											<option value="psi1"> &#936&#x2081 </option>
-											<option value="psi2"> &#936&#x2082</option>
-											<option value="psi3"> &#936&#x2083</option>
-											<option value="psi4"> &#936&#x2084</option>
-											<option value="psiAll"> All States</option>							
-										</select> -->
 									</div>
 								</div>
 								
@@ -298,7 +289,7 @@
 										</div>
 
 										<div class='range-slider col-md-10'>
-											<input id="time_slider" type='text' class='js-range-slider-unitary'value='' onchange="onUnitarySelectionChanged()"/>
+											<input id="time_slider" type='text' class='js-range-slider-unitary'value=''/>
 										</div>
 									</div>
 								</div>
