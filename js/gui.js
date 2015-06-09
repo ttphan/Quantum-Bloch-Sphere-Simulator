@@ -284,7 +284,6 @@ $(document).ready(function() {
 			$("#noise-select").on('click', updateBottomBlochSphere);
 			$("#gate-update_button").on('click', onUnitarySelectionChanged);
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
-			$("#btn_compute_mixed").on('click', computeMixed);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
 			$("#angle_" + i + "_1").on('change', updateTopSlider);
 			
@@ -292,6 +291,7 @@ $(document).ready(function() {
 			createSliders(i);
 		}
 
+		$("#btn_compute_mixed").on('click', computeMixed);
 		makeNoiseTab();	
 		addEventMixedSliders();	
 	}
@@ -373,6 +373,49 @@ $(document).ready(function() {
 		
 		drawTransformedArrows();
 	} // updateBottomBlochSphere
+
+	/**
+	 * #resetBlochSphere
+	 *
+	 * Resets the bottom Bloch-sphere and transformation matrix
+	 */
+	function resetBlochSphere() {
+		// Bloch sphere object
+		var newBlochSphere = new THREE.Object3D();
+				
+		// sphere
+		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
+		var sphereMaterial = new THREE.MeshBasicMaterial( { 
+			color: sphereColor, 
+			transparent: true, 
+			opacity: 0.25 
+		});
+
+		var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+		newBlochSphere.add(sphere);
+
+		// circle
+		var circles = buildCircles(circleColors);
+		newBlochSphere.add(circles)
+
+		scene_bottom.remove(blochSphere_bottom)
+
+		blochSphere_bottom = newBlochSphere;
+		scene_bottom.add(newBlochSphere);
+
+		$("#noise_slider").data("ionRangeSlider").update({from: 0})
+		$("#input_noise_E1_a").val(1);
+		$("#input_noise_E1_b").val(0);
+		$("#input_noise_E1_c").val(0);
+		$("#input_noise_E1_d").val(1);
+
+		$("#input_noise_E2_a").val(0);
+		$("#input_noise_E2_b").val(0);
+		$("#input_noise_E2_c").val(0);
+		$("#input_noise_E2_d").val(0);
+
+		render();
+	}
 
 	/**
 	 * #getE1
