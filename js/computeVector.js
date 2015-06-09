@@ -244,7 +244,7 @@ function applyGateToState(state, gate) {
  * @return {density matrix after gate}
  */
 function applyGateToDensMat(densMatrix, gate) {
-      return math.chain(gate).multiply(densMatrix).multiply(conjugateTranspose(gate));
+      return math.chain(gate).multiply(densMatrix).multiply(conjugateTranspose(gate)).done();
 }
 
 /**

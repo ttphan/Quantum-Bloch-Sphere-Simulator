@@ -502,8 +502,6 @@ $(document).ready(function() {
 				    transformed_densityMat = applyGateToDensMat([[a,b],[c,d]], unitary);
 				}
 
-				//var transformed_densityMat = applyGateToDensMat([[a,b],[c,d]], unitary);
-
 				var dir = getVector(transformed_densityMat);
 				
 				// Switch z and y axis to compensate for computer graphics/physics
