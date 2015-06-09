@@ -414,6 +414,8 @@ $(document).ready(function() {
 		$("#input_noise_E2_c").val(0);
 		$("#input_noise_E2_d").val(0);
 
+		drawTransformedArrows();
+
 		render();
 	}
 
@@ -760,7 +762,7 @@ $(document).ready(function() {
 
 		makeNoiseTab();	
 		addEventMixedSliders();	
-		makeUnitaryTab();
+		onUnitarySelectionChanged();
 	}
 
 
@@ -842,30 +844,6 @@ $(document).ready(function() {
 
 		onNoiseSelectionChanged();
 	}
-
-
-	function makeUnitaryTab() {
-		// slider:
-		var $t = $(".js-range-slider-unitary");
-		$t.ionRangeSlider({
-		    type: "single",
-		    grid: true,
-		    min: 0,
-		    max: 100,
-		    from: 0,
-		    step: 0.01,
-			onChange: function (data) {
-		       //updateStatesUnitary();
-		    },
-			prettify: function (num) {
-			  return sliceDecimals(num);
-			}
-		});	
-
-		onUnitarySelectionChanged();
-
-	}
-
 
 	/**
 	 * #updateStateGui
@@ -1153,22 +1131,52 @@ function onUnitarySelectionChanged() {
 
 	var gate = $("#gate-select").val();
 	var state = $("#state-select").val();
-	// var r = 1 - parseFloat(document.getElementById("noise_slider").value);
-	// var s_r = Math.sqrt(r);
-	// var s_emr = Math.sqrt(1-r);
 	
-	if (gate == "X") { // // Pauli-X
-	  	setUnitaryMatrix(gateX);
+	if (gate == "hamil") { // user defined function
+	  	$("#hamiltonian").removeClass("invisible");
+	  	$("#timeslider").removeClass("invisible");
+	  	var time = parseFloat($("#time_slider").val());
+	  	var hamiltonian = getHamiltonian();
+	  	setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
+		
+		$(".js-range-slider-unitary").ionRangeSlider({
+		    type: "single",
+		    grid: true,
+		    min: 0,
+		    max: 100,
+		    from: 0,
+		    step: 0.01,
+			onChange: function (data) {
+		       //updateStatesUnitary();
+		    },
+			prettify: function (num) {
+			  return sliceDecimals(num);
+			}
+		});	
 	}
-	if (gate == "Y") { // // Pauli-Y
-	  	setUnitaryMatrix(gateY);
+	else {	
+		// Destroy unitary slider if it exists
+		var unitarySlider = $(".js-range-slider-unitary").data("ionRangeSlider");
+		unitarySlider && unitarySlider.destroy();
+
+		$("#hamiltonian").addClass("invisible");
+		$("#timeslider").addClass("invisible");	
+
+
+		if (gate == "X") { // // Pauli-X
+		  	setUnitaryMatrix(gateX);
+		}
+		else if (gate == "Y") { // // Pauli-Y
+		  	setUnitaryMatrix(gateY);
+		}
+		else if (gate == "Z") { // Pauli-Z
+		  	setUnitaryMatrix(gateZ);
+		}
+		else if (gate == "H") { // Hadamard
+		  	setUnitaryMatrix(gateH);
+		}
 	}
-	if (gate == "Z") { // Pauli-Z
-	  	setUnitaryMatrix(gateZ);
-	}
-	if (gate == "H") { // Hadamard
-	  	setUnitaryMatrix(gateH);
-	}
+
 	if (gate == "user") { // Hadamard	  	
 		$("#gate-update_button").removeClass("invisible");
 	  	$('#input_gate_a').prop('disabled', false);
@@ -1181,19 +1189,6 @@ function onUnitarySelectionChanged() {
 		$('#input_gate_c').prop('disabled', true);
 		$('#input_gate_d').prop('disabled', true);
 	}	
-
-	if (gate == "hamil") { // user defined function
-	  	$("#hamiltonian").removeClass("invisible");
-	  	$("#timeslider").removeClass("invisible");
-	  	var time = parseFloat($("#time_slider").val());
-	  	var hamiltonian = getHamiltonian();
-	  	setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
-	} // if
-	else {
-		$("#hamiltonian").addClass("invisible");
-	  	$("#timeslider").addClass("invisible");		
-
-	} // else
 }
 
 /**
