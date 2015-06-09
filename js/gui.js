@@ -285,8 +285,6 @@ $(document).ready(function() {
 				)
 
 			// Event listeners to buttons
-			$("#noise-select").on('click', updateBottomBlochSphere);
-			$("#gate-update_button").on('click', updateTransArrowsBlochSphere);
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
 			$("#angle_" + i + "_1").on('change', updateTopSlider);
@@ -294,7 +292,8 @@ $(document).ready(function() {
 			// Initialize sliders
 			createSliders(i);
 		}
-
+		$("#noise-select").on('click', updateBottomBlochSphere);
+		$("#gate-update_button").on('click', updateTransArrowsBlochSphere);
 		$("#btn_compute_mixed").on('click', computeMixed);
 		makeNoiseTab();	
 		addEventMixedSliders();	
@@ -640,144 +639,6 @@ $(document).ready(function() {
 			errorModal('Error: Invalid probabilities', 'Make sure the probabilities of the mixed state wave function add up to 1!');
 		}
 	}
-
-	function gui() {
-		$('a[id^="tab"]').on('shown.bs.tab', function(e){
-		    var tab = $(e.target).attr('id');
-		    activeTab = parseInt(tab.substring(tab.length-1));	
-		});
-
-		$('#bottom-tab3').on('shown.bs.tab', function(e){
-		    resetBlochSphere();
-		});		
-		
-		for (var i = 1; i <= 4; i++) {
-			$("#section" + i)//.append($('<h3>State ' + i + '</h3>'))
-					.append($("<div></div>")
-					.addClass("col-md-6")
-					.append($("<h4 class='indentText'>Density Matrix: </h4>"))
-					.append($("<input>")
-						.attr({
-							id: "input_" + i + "_a",
-							value: '1.00',
-							type: 'text'
-						})
-						.css({
-							'width': '90px',
-							'margin': '10px'
-						})
-					)
-					.append($("<input>")
-						.attr({
-							id: "input_" + i + "_b",
-							value: '0.00',
-							type: 'text'
-						})
-						.css({
-							'width': '90px',
-							'margin': '10px'
-						})
-					)
-					.append($("<br/>"))
-					.append($("<input>")
-						.attr({
-							id: "input_" + i + "_c",
-							value: '0.00',
-							type: 'text'
-						})
-						.css({
-							'width': '90px',
-							'margin': '10px'
-						})
-					)
-					.append($("<input>")
-						.attr({
-							id: "input_" + i + "_d",
-							value: '0.00',
-							type: 'text'
-						})
-						.css({
-							'width': '90px',
-							'margin': '10px'
-						})
-					)
-				)
-				.append($("<div></div>")
-					.addClass("col-md-6")
-					.css({
-						'padding-bottom': '30px'
-					})
-					.append($("<h4>Wave function: </h4>"))
-					.append($("<div id='state" + i + "Text'></div>")
-					  .append($("<p>&#936 = (1)|0> + (0)|1></p>"))
-					)
-					.append($("<button></button>")
-						.attr({id: "btn_show_state_" + i})
-						.addClass("btn btn-default btn-md")
-						.text("Show state in Bloch-sphere")
-					)
-				)
-				.append($("<div class='sliders col-md-12'></div>")
-					.append($("<div class='row'></div>")
-						.append($("<div class='col-md-1 smallPadding greekAngles'></div>")
-							.append($("<h5>&#x3B8</h5>")
-							)
-						)
-						.append($("<div class='col-md-1 smallPadding'></div>")
-							.append($("<input class='inputAngles'>")
-								.attr({
-									id: "angle_" + i + "_1",
-									value: '0.00',
-									type: 'text',
-
-								})
-							)
-						)
-						.append($("<div class='range-slider col-md-10'></div>")
-						    .append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
-						)
-					)
-					.append($("<div class='row'></div>")
-						.append($("<div class='col-md-1 smallPadding greekAngles'></div>")
-							.append($("<h5>&#x3C6</h5>")
-							)
-						)
-						.append($("<div class='col-md-1 smallPadding'></div>")
-							.append($("<input class='inputAngles'>")
-								.attr({
-									id: "angle_" + i + "_2",
-									value: '0.00',
-									type: 'text',
-								})
-							)
-						)
-						.append($("<div class='range-slider col-md-10'></div>")
-						    .append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
-						)
-					)
-				)
-
-			// Event listeners to buttons
-
-
-			$("#noise-select").on('change', updateBottomBlochSphere);
-
-			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
-			$("#btn_compute_mixed").on('click', computeMixed);
-			$("#angle_" + i + "_2").on('change', updateTopSlider);
-			$("#angle_" + i + "_1").on('change', updateTopSlider);
-
-
-			
-			// Initialize sliders
-			createSliders(i);
-		}
-
-		makeNoiseTab();	
-		addEventMixedSliders();	
-		onUnitarySelectionChanged();
-	}
-
 
 	/**
 	 * #createSliders
@@ -1142,6 +1003,7 @@ function onNoiseSelectionChanged() {
 
 function onUnitarySelectionChanged() {
 	$("#time_t").val($("#time_slider").val());
+	$("#angle-for-uni").addClass('invisible');
 
 	var gate = $("#gate-select").val();
 	var state = $("#state-select").val();
@@ -1188,6 +1050,11 @@ function onUnitarySelectionChanged() {
 		}
 		else if (gate == "H") { // Hadamard
 		  	setUnitaryMatrix(gateH);
+		}
+		else if (gate == "R") {
+			var gateR = makePhaseGate(parseFloat($("#angle_input").val()));
+			setUnitaryMatrix(gateR);
+			$("#angle-for-uni").removeClass("invisible");
 		}
 	}
 	if (gate == "user") { // Hadamard	  	
