@@ -1230,9 +1230,9 @@ function buildAxis( src, dst, colorHex, dashed ) {
 		mat; 
 
 	if(dashed) {
-		mat = new THREE.LineDashedMaterial({ linewidth: 4, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
+		mat = new THREE.LineDashedMaterial({ linewidth: 1, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
 	} else {
-		mat = new THREE.LineBasicMaterial({ linewidth: 4, color: colorHex, depthTest: false });
+		mat = new THREE.LineBasicMaterial({ linewidth: 1, color: colorHex, depthTest: false });
 	}
 
 	geom.vertices.push( src.clone() );
