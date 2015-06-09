@@ -293,6 +293,7 @@ $(document).ready(function() {
 			createSliders(i);
 		}
 		$("#noise-select").on('click', onNoiseSelectionChanged);
+		$("#noise-select").on('click', updateBottomBlochSphere);
 		$("#gate-update_button").on('click', drawTransformedArrows);
 		$("#btn_compute_mixed").on('click', computeMixed);
 		$("#gate-select").on('change', drawTransformedArrows);
@@ -933,7 +934,6 @@ $(document).ready(function() {
 			$('#input_gate_d').prop('disabled', true);
 		}	
 	}
-
 	/**
 	 * #updateNoiseSlider
 	 *
