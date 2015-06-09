@@ -1192,20 +1192,7 @@ function onUnitarySelectionChanged() {
 		  	setUnitaryMatrix(gateH);
 		}
 	}
-<<<<<<< Updated upstream
-
 	if (gate == "user") { // Hadamard	  	
-=======
-	if (gate == "R") { // Phase
-		$("#angle-for-uni").removeClass("invisible");
-		var angle = parseFloat($("#angle_input").val());
-		setUnitaryMatrix([[1,0],[0,math.exp(math.multiply(complexi,angle))]]);		
-	} else {
-		$("#angle-for-uni").addClass("invisible");		
-	}
-
-	if (gate == "user") { // user	  	
->>>>>>> Stashed changes
 		$("#gate-update_button").removeClass("invisible");
 	  	$('#input_gate_a').prop('disabled', false);
 	  	$('#input_gate_b').prop('disabled', false);
@@ -1217,22 +1204,6 @@ function onUnitarySelectionChanged() {
 		$('#input_gate_c').prop('disabled', true);
 		$('#input_gate_d').prop('disabled', true);
 	}	
-<<<<<<< Updated upstream
-=======
-
-	if (gate == "hamil") { // hamiltonian
-	  	$("#hamiltonian").removeClass("invisible");
-	  	$("#timeslider").removeClass("invisible");
-	  	var time = parseFloat($("#time_slider").val());
-	  	var hamiltonian = getHamiltonian();
-	  	setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
-	} // if
-	else {
-		$("#hamiltonian").addClass("invisible");
-	  	$("#timeslider").addClass("invisible");		
-
-	} // else
->>>>>>> Stashed changes
 }
 
 /**
