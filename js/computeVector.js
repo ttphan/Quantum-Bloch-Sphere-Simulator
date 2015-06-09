@@ -502,3 +502,15 @@ function matrixEquals(mat1, mat2) {
               (mat1[0][1].re == mat2[0][1].re) &&
               (mat1[1][1].re == mat2[1][1].re));
 }
+
+/**
+ * #makePhaseGate
+ *
+ * Returns phaseGate, with phase phi
+ * 
+ * @param  {angle}
+ * @return {matrix}
+ */
+function makePhaseGate(phi) {
+      return [[1,0],[0, math.exp(math.multiply(complexi, phi))]];
+}
