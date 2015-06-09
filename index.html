@@ -116,7 +116,7 @@
 											<option value="A">Amplitude damping</option>
 											<option value="user">User defined transformation</option>
 										</select>
-										<button class="btn btn-default btn-md" id="noise-update_button">Show transformed state</button>
+										<button class="btn btn-default btn-md buttonMargin" id="noise-update_button">Show transformed state</button>
 									</div>
 
 									<div class="col-md-6">
@@ -151,7 +151,7 @@
 											<h5>r</h5>
 										</div>
 										<div class="col-md-1 smallPadding">
-											<input id="noise_r" class="inputAngles" type="text" value="0.00">
+											<input id="noise_r" class="inputAngles" type="text" value="1.0" onchange="updateNoiseSlider(this)">
 										</div>
 
 										<div class='range-slider col-md-10'>
@@ -222,7 +222,7 @@
 										</div>
 									</div>
 									<div class='col-md-12'>
-										<button id='btn_compute_mixed' class='btn btn-default btn-md'>Compute mixed state</button>
+										<button id='btn_compute_mixed' class='btn btn-default btn-md buttonMargin'>Compute mixed state</button>
 									</div>
 								</div>
 							</div>
@@ -233,7 +233,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<h4 class="indentText"> Choose unitary: </h4> 
-										<select id="gate-select" onchange="">
+										<select id="gate-select" onchange="onUnitarySelectionChanged()">
 											<option value="X">Pauli-X gate, Bit-flip</option>
 											<option value="Y">Pauli-Y gate, Bit-Phase-flip</option>
 											<option value="Z">Pauli-Z gate, Phase-flip</option>
@@ -242,11 +242,13 @@
 											<option value="hamil">Evolving State</option>
 											<option value="user">User defined unitary</option>								
 										</select>
+										<button class="btn btn-default btn-md buttonMargin " id="gate-update_button">Show transformed state</button>
+
 									</div>
 
 									<div class="col-md-6">
 										<h4 class="indentText"> Apply on state: </h4> 
-										<select id="state-select" onchange="">
+										<select id="state-select" onchange="onUnitarySelectionChanged()">
 											<option value="psi1"> &#936&#x2081 </option>
 											<option value="psi2"> &#936&#x2082</option>
 											<option value="psi3"> &#936&#x2083</option>
@@ -259,14 +261,14 @@
 								<div class='row'>
 									<div class="col-md-6">
 									  <h4 class="indentText">Unitary</h4>
-									  <input id="input_gate_a" type="text" style="width:80px; margin:10px;"></input>
-									  <input id="input_gate_b" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_gate_a" type="text" style="width:80px; margin:10px;" disabled></input>
+									  <input id="input_gate_b" type="text" style="width:80px; margin:10px;" disabled></input>
 									  <br/>
-									  <input id="input_gate_c" type="text" style="width:80px; margin:10px;"></input>
-									  <input id="input_gate_d" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_gate_c" type="text" style="width:80px; margin:10px;" disabled></input>
+									  <input id="input_gate_d" type="text" style="width:80px; margin:10px;" disabled></input>
 									</div>
 									
-									<div class="col-md-6">
+									<div id="hamiltonian" class="col-md-6">
 									  <h4 class="indentText">Hamiltonian</h4>
 									  <input id="input_hamil_a" type="text" style="width:80px; margin:10px;"></input>
 									  <input id="input_hamil_b" type="text" style="width:80px; margin:10px;"></input>
@@ -276,7 +278,7 @@
 									</div>
 								</div>
 
-								<div class='col-md-12'>
+								<div id='timeslider' class='col-md-12'>
 									<div class='spaceRow row'>
 										<div class="col-md-1 smallPadding greekAngles">
 											<h5>t</h5>
@@ -286,7 +288,7 @@
 										</div>
 
 										<div class='range-slider col-md-10'>
-											<input id="time_slider" type='text' class='js-range-slider-unitary'value='' onchange=""/>
+											<input id="time_slider" type='text' class='js-range-slider-unitary'value='' onchange="onUnitarySelectionChanged()"/>
 										</div>
 									</div>
 								</div>

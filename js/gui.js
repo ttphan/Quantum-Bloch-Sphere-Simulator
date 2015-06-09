@@ -19,6 +19,7 @@ $(document).ready(function() {
 	var axesColors = [0xFA5858,0x01DF3A,0x2E64FE];
 	var circleColors = [0xffffff, 0xD8D8D8];
 	var tabColors = ['red', 'green', 'blue', 'yellow', 'white'];
+	var canvasColor = 0x2E2E2E;
 
 	// Geometry detail
 	var sphereSegments = [30, 30];
@@ -148,14 +149,14 @@ $(document).ready(function() {
 	 * THREE.js render, renders both top and bottom canvases
 	 */
 	function render() {
-		renderer_top.setClearColor( 0x424242, 1);
+		renderer_top.setClearColor( canvasColor, 1);
 		renderer_top.clear();
 		renderer_top.render(sceneCircles, camera_top);
 		renderer_top.clearDepth();
 		renderer_top.render(scene, camera_top);
 
 
-		renderer_bottom.setClearColor( 0x424242, 1);
+		renderer_bottom.setClearColor( canvasColor, 1);
 		renderer_bottom.clear();
 		renderer_bottom.render(sceneCircles_bottom, camera_top);
 		renderer_bottom.clearDepth();
@@ -280,8 +281,8 @@ $(document).ready(function() {
 				)
 
 			// Event listeners to buttons
-			$("#noise-select").on('change', updateBottomBlochSphere);
-
+			$("#noise-select").on('click', updateBottomBlochSphere);
+			$("#gate-update_button").on('click', onUnitarySelectionChanged);
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
 			$("#btn_compute_mixed").on('click', computeMixed);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
@@ -403,7 +404,8 @@ $(document).ready(function() {
 	  E2[1][1] = parseFloat($("#input_noise_E2_d").val());
 	  return E2
 	} // getE2
-	
+
+
 	/**
 	 * #drawTransformedArrows
 	 * 
@@ -558,6 +560,7 @@ $(document).ready(function() {
 		$('.js-range-slider-1-' + textId).data("ionRangeSlider").update({from: this.value});
 		updateStateGui(activeTab);
 	}
+
 
 	/**
 	 * #computeMixed
@@ -805,14 +808,14 @@ $(document).ready(function() {
 		    type: "single",
 		    grid: true,
 		    min: 0,
-		    max: 1,
+		    max: 100,
 		    from: 0,
 		    step: 0.01,
 			onChange: function (data) {
 		       //updateStatesUnitary();
 		    },
 			prettify: function (num) {
-			  return sliceDecimals(1-num);
+			  return sliceDecimals(num);
 			}
 		});	
 
@@ -854,6 +857,7 @@ $(document).ready(function() {
 			computeMixed();
 		}
 	}
+
 
 	/**
 	 * #addEventMixedSliders
@@ -912,6 +916,16 @@ $(document).ready(function() {
 		})
 	}
 });
+
+/**
+ * #updateNoiseSlider
+ *
+ * Updates the slider in the noise tab
+ */
+function updateNoiseSlider(element) {
+	$('.js-range-slider-noise').data("ionRangeSlider").update({from: 1-element.value});
+	onNoiseSelectionChanged();
+}	
 
 /**
  * #getDensityMatrix
@@ -1042,6 +1056,8 @@ function checkLock(checkbox) {
  * Handles the noise selection dropdown events
  */
 function onNoiseSelectionChanged() {
+	$("#noise_r").val(1 - $("#noise_slider").val());
+
 	var x = $("#noise-select").val();
 	var r = 1 - parseFloat($("#noise_slider").val());
 	var s_r = Math.sqrt(r);
@@ -1065,42 +1081,121 @@ function onNoiseSelectionChanged() {
 	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
 	}
 	if (x == "user") { // user defined function
-	  document.getElementById("noise-update_button").style.visibility = "visible";
+	  $("#noise-update_button").removeClass("invisible");
+	  $('#input_noise_E1_a').prop('disabled', false);
+	  $('#input_noise_E1_b').prop('disabled', false);
+	  $('#input_noise_E1_c').prop('disabled', false);
+	  $('#input_noise_E1_d').prop('disabled', false);
+	  $('#input_noise_E2_a').prop('disabled', false);
+	  $('#input_noise_E2_b').prop('disabled', false);
+	  $('#input_noise_E2_c').prop('disabled', false);
+	  $('#input_noise_E2_d').prop('disabled', false);
 	} // if
 	else {
-	  document.getElementById("noise-update_button").style.visibility = "hidden";
+	  $("#noise-update_button").addClass("invisible");
+	  $('#input_noise_E1_a').prop('disabled', true);
+	  $('#input_noise_E1_b').prop('disabled', true);
+	  $('#input_noise_E1_c').prop('disabled', true);
+	  $('#input_noise_E1_d').prop('disabled', true);
+	  $('#input_noise_E2_a').prop('disabled', true);
+	  $('#input_noise_E2_b').prop('disabled', true);
+	  $('#input_noise_E2_c').prop('disabled', true);
+	  $('#input_noise_E2_d').prop('disabled', true);
 	} // else
 }
 
 
 function onUnitarySelectionChanged() {
-	// var x = document.getElementById("noise-select").value;
+	$("#time_t").val($("#time_slider").val());
+
+	var gate = $("#gate-select").val();
+	var state = $("#state-select").val();
 	// var r = 1 - parseFloat(document.getElementById("noise_slider").value);
 	// var s_r = Math.sqrt(r);
 	// var s_emr = Math.sqrt(1-r);
 	
-	// //console.log("r = " + r);
-	
-	// if (x == "D") { // depolarizing
-	//   document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";
-	//   setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
-	// }
-	// if (x == "PhX") { // dephase x
-	//   document.getElementById("noise-equation-img").src = "img/noiseEq_PhX.png";
-	//   setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
-	// }
-	// if (x == "PhZ") { // dephase y
-	//   document.getElementById("noise-equation-img").src = "img/noiseEq_PhZ.png";
-	//   setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
-	// }
-	// if (x == "A") { // amplitude damping
-	//   document.getElementById("noise-equation-img").src = "img/noiseEq_A.png";
-	//   setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
-	// }
-	// if (x == "user") { // user defined function
-	//   ; // make slider disabled or smth!
-	// }
+	if (gate == "X") { // // Pauli-X
+	  	setUnitaryMatrix(gateX);
+	}
+	if (gate == "Y") { // // Pauli-Y
+	  	setUnitaryMatrix(gateY);
+	}
+	if (gate == "Z") { // Pauli-Z
+	  	setUnitaryMatrix(gateZ);
+	}
+	if (gate == "H") { // Hadamard
+	  	setUnitaryMatrix(gateH);
+	}
+	if (gate == "user") { // Hadamard	  	
+		$("#gate-update_button").removeClass("invisible");
+	  	$('#input_gate_a').prop('disabled', false);
+	  	$('#input_gate_b').prop('disabled', false);
+	  	$('#input_gate_c').prop('disabled', false);
+	  	$('#input_gate_d').prop('disabled', false);
+	} else {
+		$('#input_gate_a').prop('disabled', true);
+		$('#input_gate_b').prop('disabled', true);
+		$('#input_gate_c').prop('disabled', true);
+		$('#input_gate_d').prop('disabled', true);
+	}	
+
+	if (gate == "hamil") { // user defined function
+	  	$("#hamiltonian").removeClass("invisible");
+	  	$("#timeslider").removeClass("invisible");
+	  	var time = parseFloat($("#time_slider").val());
+	  	var hamiltonian = getHamiltonian();
+	  	setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
+	} // if
+	else {
+		$("#hamiltonian").addClass("invisible");
+	  	$("#timeslider").addClass("invisible");		
+
+	} // else
 }
+
+/**
+ * #getUnitary
+ *
+ * Returns Unitary, gathers info from input fields
+ * @return {Unitary}
+ */
+function getUnitary() {
+	var uni = [[0,0],[0,0]];
+	gate[0][0] = parseFloat($("#input_gate_a").val());
+	gate[0][1] = parseFloat($("#input_gate_b").val());
+	gate[1][0] = parseFloat($("#input_gate_c").val());
+	gate[1][1] = parseFloat($("#input_gate_d").val());
+	return gate;
+} // getUnitary
+
+/**
+ * #getHamiltonian
+ *
+ * Returns hamiltonian, gathers info from input fields
+ * @return {hamiltonian}
+ */
+function getHamiltonian() {
+	var hamil = [[0,0],[0,0]];
+	hamil[0][0] = parseFloat($("#input_hamil_a").val());
+	hamil[0][1] = parseFloat($("#input_hamil_b").val());
+	hamil[1][0] = parseFloat($("#input_hamil_c").val());
+	hamil[1][1] = parseFloat($("#input_hamil_d").val());
+	return hamil;
+} // getHamiltonian
+
+/**
+ * #setUnitaryMatrix
+ *
+ * Displays the noise matrices E1 and E2
+ * @param {E1}
+ * @param {E2}
+ */
+function setUnitaryMatrix(U) {
+    $("#input_gate_a").val(sliceDecimals(U[0][0]));
+	$("#input_gate_b").val(sliceDecimals(U[0][1]));
+	$("#input_gate_c").val(sliceDecimals(U[1][0]));
+	$("#input_gate_d").val(sliceDecimals(U[1][1]));
+} // setUnitaryMatrix
 
 /**
  * #setNoiseMatrices

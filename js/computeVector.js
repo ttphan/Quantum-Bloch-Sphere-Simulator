@@ -360,6 +360,18 @@ function isValidHermitian(densMatrix) {
 }
 
 /**
+ * #isValidUnitary
+ *
+ * Check if unitary is valid
+ * 
+ * @param  {density matrix}
+ * @return {Boolean}
+ */
+function isValidUnitary(densMatrix) {
+      return matrixEquals(math.multiply(densMatrix, conjugateTranspose(densMatrix)),identity);
+}
+
+/**
  * #isValidEigenvalues
  *
  * Check if density matrix is valid: eigenvalues should be 0 < lambda < 1

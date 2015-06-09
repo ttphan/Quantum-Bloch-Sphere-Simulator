@@ -171,6 +171,10 @@ canvas {
 	height: 100%;
 }
 
+.canvasSphere {
+	margin-left: 15px;
+}
+
 .range-slider {
     position: relative;
     height: 60px;
@@ -223,4 +227,14 @@ canvas {
 
 #titleblock h1 {
 	color: #D8D8D8;
+}
+
+.unvisible {
+	visibility: hidden;
+}
+
+.buttonMargin {
+	margin-left: 8px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
