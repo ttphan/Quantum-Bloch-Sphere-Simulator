@@ -854,63 +854,64 @@ $(document).ready(function() {
 			computeMixed();
 		}
 	}
-});
 
-/**
- * #addEventMixedSliders
- *
- * Sets up the connection between the mixed sliders
- */
-function addEventMixedSliders() {
-	var sliders = $('[class^="js-range-slider-mixed"]');
+	/**
+	 * #addEventMixedSliders
+	 *
+	 * Sets up the connection between the mixed sliders
+	 */
+	function addEventMixedSliders() {
+		var sliders = $('[class^="js-range-slider-mixed"]');
 
-	sliders.each(function(index) {
-		var slider = $(this).data("ionRangeSlider");
-		var self = $(this);
+		sliders.each(function(index) {
+			var slider = $(this).data("ionRangeSlider");
+			var self = $(this);
 
-		slider.update({
-			onChange: function(data) {
-				var slidersActive = $("input[id^='check-active']:checked").length;
-				var delta = -1;
+			slider.update({
+				onChange: function(data) {
+					var slidersActive = $("input[id^='check-active']:checked").length;
+					var delta = -1;
 
-				var otherSliders = $('[class^="js-range-slider-mixed"]');
-				otherSliders = otherSliders.not(self[0])
+					var otherSliders = $('[class^="js-range-slider-mixed"]');
+					otherSliders = otherSliders.not(self[0])
 
-				sliders.not(self[0]).each(function() {
-					if( $(this).data("ionRangeSlider").options.from_fixed ) {
-						otherSliders = otherSliders.not($(this));
-					}
-				})
-
-				sliders.each(function() {
-					delta += $(this).data("ionRangeSlider").result.from;
-				})
-
-				otherSliders.each(function() {
-					var otherSlider = $(this).data("ionRangeSlider");
-					var old_value = otherSlider.result.from;
-					var new_value = old_value - delta/(otherSliders.length)
-
-					if (new_value < 0 || data.from == 1) {
-						new_value = 0
-					}
-					if (new_value > 1) {
-						new_value = 1
-					}
-
-					otherSlider.update({
-						from: new_value
+					sliders.not(self[0]).each(function() {
+						if( $(this).data("ionRangeSlider").options.from_fixed ) {
+							otherSliders = otherSliders.not($(this));
+						}
 					})
-				})
-			},
-			onFinish: function(data) {
-				var old_value = data.from;
-				finalizeMixed(slider)
-			}
 
+					sliders.each(function() {
+						delta += $(this).data("ionRangeSlider").result.from;
+					})
+
+					otherSliders.each(function() {
+						var otherSlider = $(this).data("ionRangeSlider");
+						var old_value = otherSlider.result.from;
+						var new_value = old_value - delta/(otherSliders.length)
+
+						if (new_value < 0 || data.from == 1) {
+							new_value = 0
+						}
+						if (new_value > 1) {
+							new_value = 1
+						}
+
+						otherSlider.update({
+							from: new_value
+						})
+					})
+				},
+				onFinish: function(data) {
+					var old_value = data.from;
+					finalizeMixed(slider);
+					computeMixed();
+				}
+
+			})
 		})
-	})
-}
+	}
+});
 
 /**
  * #getDensityMatrix
