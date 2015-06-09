@@ -293,8 +293,18 @@ $(document).ready(function() {
 			createSliders(i);
 		}
 		$("#noise-select").on('click', updateBottomBlochSphere);
-		$("#gate-update_button").on('click', updateTransArrowsBlochSphere);
+		$("#gate-update_button").on('click', drawTransformedArrows);
 		$("#btn_compute_mixed").on('click', computeMixed);
+		$("#gate-select").on('change', drawTransformedArrows);
+		$("#noise_r").on('change', updateNoiseSlider);
+		$("#noise_slider").on('change', onNoiseSelectionChanged);
+		$("#gate-select").on('change', onUnitarySelectionChanged);
+		$("#angle_input").on('change', onUnitarySelectionChanged);
+		$("#time_slider").on('change', onUnitarySelectionChanged);
+		$("#time_t").on('change', function() {
+			$('#time_slider').data("ionRangeSlider").update({from: parseFloat($("#time_t").val())})
+		})
+
 		makeNoiseTab();	
 		addEventMixedSliders();	
 		onUnitarySelectionChanged();
@@ -419,19 +429,6 @@ $(document).ready(function() {
 		$("#input_noise_E2_d").val(0);
 
 		drawTransformedArrows();
-
-		render();
-	}
-
-	/**
-	 * #UpdateTransArrowsBlochSphere
-	 *
-	 * Resets the bottom Bloch-sphere and transformation matrix
-	 */
-	function updateTransArrowsBlochSphere() {
-		// Bloch sphere object
-		drawTransformedArrows();
-		render();
 	}
 
 	/**
@@ -812,17 +809,144 @@ $(document).ready(function() {
 			})
 		})
 	}
-});
 
-/**
- * #updateNoiseSlider
- *
- * Updates the slider in the noise tab
- */
-function updateNoiseSlider(element) {
-	$('.js-range-slider-noise').data("ionRangeSlider").update({from: 1-element.value});
-	onNoiseSelectionChanged();
-}	
+	/**
+	 * #onNoiseSelectionChanged
+	 *
+	 * Handles the noise selection dropdown events
+	 */
+	function onNoiseSelectionChanged() {
+		$("#noise_r").val(1 - $("#noise_slider").val());
+
+		var x = $("#noise-select").val();
+		var r = 1 - parseFloat($("#noise_slider").val());
+		var s_r = Math.sqrt(r);
+		var s_emr = Math.sqrt(1-r);
+		
+		
+		if (x == "D") { // depolarizing
+		  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
+		  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
+		}
+		if (x == "PhX") { // dephase x
+		  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
+		  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
+		}
+		if (x == "PhZ") { // dephase y
+		  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
+		  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
+		}
+		if (x == "A") { // amplitude damping
+		  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
+		  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
+		}
+		if (x == "user") { // user defined function
+		  $("#noise-update_button").removeClass("invisible");
+		  $('#input_noise_E1_a').prop('disabled', false);
+		  $('#input_noise_E1_b').prop('disabled', false);
+		  $('#input_noise_E1_c').prop('disabled', false);
+		  $('#input_noise_E1_d').prop('disabled', false);
+		  $('#input_noise_E2_a').prop('disabled', false);
+		  $('#input_noise_E2_b').prop('disabled', false);
+		  $('#input_noise_E2_c').prop('disabled', false);
+		  $('#input_noise_E2_d').prop('disabled', false);
+		} // if
+		else {
+		  $("#noise-update_button").addClass("invisible");
+		  $('#input_noise_E1_a').prop('disabled', true);
+		  $('#input_noise_E1_b').prop('disabled', true);
+		  $('#input_noise_E1_c').prop('disabled', true);
+		  $('#input_noise_E1_d').prop('disabled', true);
+		  $('#input_noise_E2_a').prop('disabled', true);
+		  $('#input_noise_E2_b').prop('disabled', true);
+		  $('#input_noise_E2_c').prop('disabled', true);
+		  $('#input_noise_E2_d').prop('disabled', true);
+		} // else
+	}
+
+	function onUnitarySelectionChanged() {
+		$("#angle-for-uni").addClass('invisible');
+
+		var gate = $("#gate-select").val();
+		var state = $("#state-select").val();
+		
+		if (gate == "hamil") { // user defined function
+		  	$("#hamiltonian").removeClass("invisible");
+		  	$("#timeslider").removeClass("invisible");
+		  	$(".js-range-slider-unitary").ionRangeSlider({
+		  	    type: "single",
+		  	    grid: true,
+		  	    min: 0,
+		  	    max: 100,
+		  	    from: 0,
+		  	    step: 0.01,
+		  		onChange: function (data) {
+		  			$('#time_t').val(data.from);
+		  	       	drawTransformedArrows();
+		  	    },
+		  		prettify: function (num) {
+		  		  return sliceDecimals(num);
+		  		}
+		  	});	
+
+		  	var time = parseFloat($("#time_slider").val());
+		  	var hamiltonian = getHamiltonian();
+			setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
+			$("#time_t").val($("#time_slider").val());
+		}
+		else {	
+			// Destroy unitary slider if it exists
+			var unitarySlider = $(".js-range-slider-unitary").data("ionRangeSlider");
+			unitarySlider && unitarySlider.destroy();
+
+			$("#hamiltonian").addClass("invisible");
+			$("#timeslider").addClass("invisible");	
+
+
+			if (gate == "X") { // // Pauli-X
+			  	setUnitaryMatrix(gateX);
+			}
+			else if (gate == "Y") { // // Pauli-Y
+			  	setUnitaryMatrix(gateY);
+			}
+			else if (gate == "Z") { // Pauli-Z
+			  	setUnitaryMatrix(gateZ);
+			}
+			else if (gate == "H") { // Hadamard
+			  	setUnitaryMatrix(gateH);
+			}
+			else if (gate == "R") {
+				var gateR = makePhaseGate(parseFloat($("#angle_input").val()));
+				setUnitaryMatrix(gateR);
+				$("#angle-for-uni").removeClass("invisible");
+			}
+		}
+		if (gate == "user") { // Hadamard	  	
+			$("#gate-update_button").removeClass("invisible");
+		  	$('#input_gate_a').prop('disabled', false);
+		  	$('#input_gate_b').prop('disabled', false);
+		  	$('#input_gate_c').prop('disabled', false);
+		  	$('#input_gate_d').prop('disabled', false);
+		} else {
+			$('#input_gate_a').prop('disabled', true);
+			$('#input_gate_b').prop('disabled', true);
+			$('#input_gate_c').prop('disabled', true);
+			$('#input_gate_d').prop('disabled', true);
+		}	
+	}
+
+	/**
+	 * #updateNoiseSlider
+	 *
+	 * Updates the slider in the noise tab
+	 */
+	function updateNoiseSlider() {
+		console.log(this.value);
+		$('.js-range-slider-noise').data("ionRangeSlider").update({from: 1-this.value});
+		onNoiseSelectionChanged();
+	}
+});
+	
 
 /**
  * #getDensityMatrix
@@ -945,133 +1069,6 @@ function checkActive(checkbox) {
 function checkLock(checkbox) {
 	var checkId = checkbox.id.slice(-1);
 	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from_fixed: checkbox.checked})
-}
-
-/**
- * #onNoiseSelectionChanged
- *
- * Handles the noise selection dropdown events
- */
-function onNoiseSelectionChanged() {
-	$("#noise_r").val(1 - $("#noise_slider").val());
-
-	var x = $("#noise-select").val();
-	var r = 1 - parseFloat($("#noise_slider").val());
-	var s_r = Math.sqrt(r);
-	var s_emr = Math.sqrt(1-r);
-
-	$('#noise-equation-img').removeClass("invisible");
-	$("#noise-update_button").addClass("invisible");
-	$('#input_noise_E1_a').prop('disabled', true);
-	$('#input_noise_E1_b').prop('disabled', true);
-	$('#input_noise_E1_c').prop('disabled', true);
-	$('#input_noise_E1_d').prop('disabled', true);
-	$('#input_noise_E2_a').prop('disabled', true);
-	$('#input_noise_E2_b').prop('disabled', true);
-	$('#input_noise_E2_c').prop('disabled', true);
-	$('#input_noise_E2_d').prop('disabled', true);
-	
-	
-	if (x == "D") { // depolarizing
-	  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
-	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
-	} 
-	else if (x == "PhX") { // dephase x
-	  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
-	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
-	}
-	else if (x == "PhZ") { // dephase y
-	  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
-	  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
-	}
-	else if (x == "A") { // amplitude damping
-	  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
-	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
-	}
-	else if (x == "user") { // user defined function
-	  $("#noise-update_button").removeClass("invisible");
-	  $('#noise-equation-img').addClass("invisible");
-	  $('#input_noise_E1_a').prop('disabled', false);
-	  $('#input_noise_E1_b').prop('disabled', false);
-	  $('#input_noise_E1_c').prop('disabled', false);
-	  $('#input_noise_E1_d').prop('disabled', false);
-	  $('#input_noise_E2_a').prop('disabled', false);
-	  $('#input_noise_E2_b').prop('disabled', false);
-	  $('#input_noise_E2_c').prop('disabled', false);
-	  $('#input_noise_E2_d').prop('disabled', false);
-	} // if
-
-}
-
-
-function onUnitarySelectionChanged() {
-	$("#time_t").val($("#time_slider").val());
-	$("#angle-for-uni").addClass('invisible');
-
-	var gate = $("#gate-select").val();
-	var state = $("#state-select").val();
-	
-	if (gate == "hamil") { // user defined function
-	  	$("#hamiltonian").removeClass("invisible");
-	  	$("#timeslider").removeClass("invisible");
-	  	var time = parseFloat($("#time_slider").val());
-	  	var hamiltonian = getHamiltonian();
-	  	setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
-		
-		$(".js-range-slider-unitary").ionRangeSlider({
-		    type: "single",
-		    grid: true,
-		    min: 0,
-		    max: 100,
-		    from: 0,
-		    step: 0.01,
-			onChange: function (data) {
-		       //updateStatesUnitary();
-		    },
-			prettify: function (num) {
-			  return sliceDecimals(num);
-			}
-		});	
-	}
-	else {	
-		// Destroy unitary slider if it exists
-		var unitarySlider = $(".js-range-slider-unitary").data("ionRangeSlider");
-		unitarySlider && unitarySlider.destroy();
-
-		$("#hamiltonian").addClass("invisible");
-		$("#timeslider").addClass("invisible");	
-
-
-		if (gate == "X") { // // Pauli-X
-		  	setUnitaryMatrix(gateX);
-		}
-		else if (gate == "Y") { // // Pauli-Y
-		  	setUnitaryMatrix(gateY);
-		}
-		else if (gate == "Z") { // Pauli-Z
-		  	setUnitaryMatrix(gateZ);
-		}
-		else if (gate == "H") { // Hadamard
-		  	setUnitaryMatrix(gateH);
-		}
-		else if (gate == "R") {
-			var gateR = makePhaseGate(parseFloat($("#angle_input").val()));
-			setUnitaryMatrix(gateR);
-			$("#angle-for-uni").removeClass("invisible");
-		}
-	}
-	if (gate == "user") { // Hadamard	  	
-		$("#gate-update_button").removeClass("invisible");
-	  	$('#input_gate_a').prop('disabled', false);
-	  	$('#input_gate_b').prop('disabled', false);
-	  	$('#input_gate_c').prop('disabled', false);
-	  	$('#input_gate_d').prop('disabled', false);
-	} else {
-		$('#input_gate_a').prop('disabled', true);
-		$('#input_gate_b').prop('disabled', true);
-		$('#input_gate_c').prop('disabled', true);
-		$('#input_gate_d').prop('disabled', true);
-	}	
 }
 
 /**
