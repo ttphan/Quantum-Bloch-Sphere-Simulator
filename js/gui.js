@@ -297,6 +297,7 @@ $(document).ready(function() {
 		$("#btn_compute_mixed").on('click', computeMixed);
 		makeNoiseTab();	
 		addEventMixedSliders();	
+		onUnitarySelectionChanged();
 	}
 
 	/**
@@ -429,7 +430,7 @@ $(document).ready(function() {
 	 */
 	function updateTransArrowsBlochSphere() {
 		// Bloch sphere object
-
+		drawTransformedArrows();
 		render();
 	}
 
@@ -441,10 +442,10 @@ $(document).ready(function() {
 	 */
 	function getE1() {
 	  var E1 = [[0,0],[0,0]];
-	  E1[0][0] = parseFloat($("#input_noise_E1_a").val());
-	  E1[0][1] = parseFloat($("#input_noise_E1_b").val());
-	  E1[1][0] = parseFloat($("#input_noise_E1_c").val());
-	  E1[1][1] = parseFloat($("#input_noise_E1_d").val());
+	  E1[0][0] = math.complex($("#input_noise_E1_a").val());
+	  E1[0][1] = math.complex($("#input_noise_E1_b").val());
+	  E1[1][0] = math.complex($("#input_noise_E1_c").val());
+	  E1[1][1] = math.complex($("#input_noise_E1_d").val());
 	  return E1
 	} // getE1
 	
@@ -457,10 +458,10 @@ $(document).ready(function() {
 	 */
 	function getE2() {
 	  var E2 = [[0,0],[0,0]];
-	  E2[0][0] = parseFloat($("#input_noise_E2_a").val());
-	  E2[0][1] = parseFloat($("#input_noise_E2_b").val());
-	  E2[1][0] = parseFloat($("#input_noise_E2_c").val());
-	  E2[1][1] = parseFloat($("#input_noise_E2_d").val());
+	  E2[0][0] = math.complex($("#input_noise_E2_a").val());
+	  E2[0][1] = math.complex($("#input_noise_E2_b").val());
+	  E2[1][0] = math.complex($("#input_noise_E2_c").val());
+	  E2[1][1] = math.complex($("#input_noise_E2_d").val());
 	  return E2
 	} // getE2
 
@@ -958,26 +959,38 @@ function onNoiseSelectionChanged() {
 	var r = 1 - parseFloat($("#noise_slider").val());
 	var s_r = Math.sqrt(r);
 	var s_emr = Math.sqrt(1-r);
+
+	$('#noise-equation-img').removeClass("invisible");
+	$("#noise-update_button").addClass("invisible");
+	$('#input_noise_E1_a').prop('disabled', true);
+	$('#input_noise_E1_b').prop('disabled', true);
+	$('#input_noise_E1_c').prop('disabled', true);
+	$('#input_noise_E1_d').prop('disabled', true);
+	$('#input_noise_E2_a').prop('disabled', true);
+	$('#input_noise_E2_b').prop('disabled', true);
+	$('#input_noise_E2_c').prop('disabled', true);
+	$('#input_noise_E2_d').prop('disabled', true);
 	
 	
 	if (x == "D") { // depolarizing
 	  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
-	}
-	if (x == "PhX") { // dephase x
+	} 
+	else if (x == "PhX") { // dephase x
 	  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
 	}
-	if (x == "PhZ") { // dephase y
+	else if (x == "PhZ") { // dephase y
 	  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
 	}
-	if (x == "A") { // amplitude damping
+	else if (x == "A") { // amplitude damping
 	  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
 	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
 	}
-	if (x == "user") { // user defined function
+	else if (x == "user") { // user defined function
 	  $("#noise-update_button").removeClass("invisible");
+	  $('#noise-equation-img').addClass("invisible");
 	  $('#input_noise_E1_a').prop('disabled', false);
 	  $('#input_noise_E1_b').prop('disabled', false);
 	  $('#input_noise_E1_c').prop('disabled', false);
@@ -987,17 +1000,7 @@ function onNoiseSelectionChanged() {
 	  $('#input_noise_E2_c').prop('disabled', false);
 	  $('#input_noise_E2_d').prop('disabled', false);
 	} // if
-	else {
-	  $("#noise-update_button").addClass("invisible");
-	  $('#input_noise_E1_a').prop('disabled', true);
-	  $('#input_noise_E1_b').prop('disabled', true);
-	  $('#input_noise_E1_c').prop('disabled', true);
-	  $('#input_noise_E1_d').prop('disabled', true);
-	  $('#input_noise_E2_a').prop('disabled', true);
-	  $('#input_noise_E2_b').prop('disabled', true);
-	  $('#input_noise_E2_c').prop('disabled', true);
-	  $('#input_noise_E2_d').prop('disabled', true);
-	} // else
+
 }
 
 
@@ -1079,10 +1082,10 @@ function onUnitarySelectionChanged() {
  */
 function getUnitary() {
 	var gate = [[0,0],[0,0]];
-	gate[0][0] = parseFloat($("#input_gate_a").val());
-	gate[0][1] = parseFloat($("#input_gate_b").val());
-	gate[1][0] = parseFloat($("#input_gate_c").val());
-	gate[1][1] = parseFloat($("#input_gate_d").val());
+	gate[0][0] = math.complex($("#input_gate_a").val());
+	gate[0][1] = math.complex($("#input_gate_b").val());
+	gate[1][0] = math.complex($("#input_gate_c").val());
+	gate[1][1] = math.complex($("#input_gate_d").val());
 	return gate;
 } // getUnitary
 
@@ -1094,10 +1097,10 @@ function getUnitary() {
  */
 function getHamiltonian() {
 	var hamil = [[0,0],[0,0]];
-	hamil[0][0] = parseFloat($("#input_hamil_a").val());
-	hamil[0][1] = parseFloat($("#input_hamil_b").val());
-	hamil[1][0] = parseFloat($("#input_hamil_c").val());
-	hamil[1][1] = parseFloat($("#input_hamil_d").val());
+	hamil[0][0] = math.complex($("#input_hamil_a").val());
+	hamil[0][1] = math.complex($("#input_hamil_b").val());
+	hamil[1][0] = math.complex($("#input_hamil_c").val());
+	hamil[1][1] = math.complex($("#input_hamil_d").val());
 	return hamil;
 } // getHamiltonian
 
