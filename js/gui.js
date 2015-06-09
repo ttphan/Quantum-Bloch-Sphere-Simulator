@@ -4,19 +4,21 @@ $(document).ready(function() {
 	var camera_bottom, scene_bottom, renderer_bottom;
 
 	var activeTab = 1;
-	var arrows = [null, null, null, null];
+	var arrows = [null, null, null, null, null];
 	
 	var blochSphere_bottom; // the bottom Bloch sphere
-	var transformed_arrows = [null, null, null, null];
-	var transformed_balletjes = [null, null, null, null];
+	var transformed_arrows = [null, null, null, null, null];
+	var transformed_ball = [null, null, null, null, null];
 
 	var transformation = [0.7, 1.3, 0.2];
+
+	var mixedState;
 
 	// Color values
 	var sphereColor = 0x00BFFF;
 	var axesColors = [0xFA5858,0x01DF3A,0x2E64FE];
 	var circleColors = [0xffffff, 0xD8D8D8];
-	var tabColors = ['red', 'green', 'blue', 'yellow'];
+	var tabColors = ['red', 'green', 'blue', 'yellow', 'white'];
 
 	// Geometry detail
 	var sphereSegments = [30, 30];
@@ -29,7 +31,11 @@ $(document).ready(function() {
 	//onNoiseSelectionChanged();
 	updateBottomBlochSphere( );
 
-
+	/**
+	 * #init
+	 * 
+	 * Initial THREE.js function
+	 */
 	function init() {
 		var c_top = $('#canvas-top')[0];
 		var c_bottom = $('#canvas-bottom')[0];
@@ -123,29 +129,191 @@ $(document).ready(function() {
 
 		scene_bottom.add(blochSphere_bottom)
 		
-
 		render();
-
 	}
 	
+	/**
+	 * #animate
+	 * 
+	 * THREE.js animation
+	 */
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+	}
+
+	/**
+	 * #render
+	 * 
+	 * THREE.js render, renders both top and bottom canvases
+	 */
+	function render() {
+		renderer_top.setClearColor( 0x424242, 1);
+		renderer_top.clear();
+		renderer_top.render(sceneCircles, camera_top);
+		renderer_top.clearDepth();
+		renderer_top.render(scene, camera_top);
+
+
+		renderer_bottom.setClearColor( 0x424242, 1);
+		renderer_bottom.clear();
+		renderer_bottom.render(sceneCircles_bottom, camera_top);
+		renderer_bottom.clearDepth();
+		renderer_bottom.render(scene_bottom, camera_top);
+	}
+
+	/**
+	 * #gui
+	 *
+	 * Dynamically constructs the majority of the GUI
+	 */
+	function gui() {
+		$('a[id^="tab"]').on('shown.bs.tab', function(e){
+		    var tab = $(e.target).attr('id');
+		    activeTab = parseInt(tab.substring(tab.length-1));	
+		});
+		
+		for (var i = 1; i <= 4; i++) {
+			$("#section" + i)
+					.append($("<div></div>")
+					.addClass("col-md-6")
+					.append($("<h4 id='densityMatText'>Density Matrix: </h4>"))
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_a",
+							value: '1.00',
+							type: 'text'
+						})
+						.css({
+							'width': '90px',
+							'margin': '10px'
+						})
+					)
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_b",
+							value: '0.00',
+							type: 'text'
+						})
+						.css({
+							'width': '90px',
+							'margin': '10px'
+						})
+					)
+					.append($("<br/>"))
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_c",
+							value: '0.00',
+							type: 'text'
+						})
+						.css({
+							'width': '90px',
+							'margin': '10px'
+						})
+					)
+					.append($("<input>")
+						.attr({
+							id: "input_" + i + "_d",
+							value: '0.00',
+							type: 'text'
+						})
+						.css({
+							'width': '90px',
+							'margin': '10px'
+						})
+					)
+				)
+				.append($("<div></div>")
+					.addClass("col-md-6")
+					.css({
+						'padding-bottom': '30px'
+					})
+					.append($("<h4>Wave function: </h4>"))
+					.append($("<div id='state" + i + "Text'></div>")
+					  .append($("<p>&#936 = (1)|0> + (0)|1></p>"))
+					)
+					.append($("<button></button>")
+						.attr({id: "btn_show_state_" + i})
+						.addClass("btn btn-default btn-md")
+						.text("Show state in Bloch-sphere")
+					)
+				)
+				.append($("<div class='sliders col-md-12'></div>")
+					.append($("<div class='row'></div>")
+						.append($("<div class='col-md-1 smallPadding greekAngles'></div>")
+							.append($("<h5>&#x3B8</h5>")
+							)
+						)
+						.append($("<div class='col-md-1 smallPadding'></div>")
+							.append($("<input class='inputAngles'>")
+								.attr({
+									id: "angle_" + i + "_1",
+									value: '0.00',
+									type: 'text',
+
+								})
+							)
+						)
+						.append($("<div class='range-slider col-md-10'></div>")
+						    .append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
+						)
+					)
+					.append($("<div class='row'></div>")
+						.append($("<div class='col-md-1 smallPadding greekAngles'></div>")
+							.append($("<h5>&#x3C6</h5>")
+							)
+						)
+						.append($("<div class='col-md-1 smallPadding'></div>")
+							.append($("<input class='inputAngles'>")
+								.attr({
+									id: "angle_" + i + "_2",
+									value: '0.00',
+									type: 'text',
+								})
+							)
+						)
+						.append($("<div class='range-slider col-md-10'></div>")
+						    .append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
+						)
+					)
+				)
+
+			// Event listeners to buttons
+			$("#noise-select").on('change', updateBottomBlochSphere);
+
+			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
+			$("#btn_compute_mixed").on('click', computeMixed);
+			$("#angle_" + i + "_2").on('change', updateTopSlider);
+			$("#angle_" + i + "_1").on('change', updateTopSlider);
+			
+			// Initialize sliders
+			createSliders(i);
+		}
+
+		makeNoiseTab();	
+		addEventMixedSliders();	
+	}
+
+	/**
+	 * #computeTransformedBlochSphere
+	 * 
+	 * Computes the new Bloch sphere after transformation by a
+	 * quantum noise channel.
+	 * Returns two vectors, first is scaling of each axis, 
+	 * second is position of new center
+	 * 
+	 * @return {[[scaleX, scaleY, scaleZ], center_X]}
+	 */
 	function computeTransformedBlochSphere() {
-	  var E1 = [[0,0],[0,0]];
-	  var E2 = [[0,0],[0,0]];
-	  
-	  E1[0][0] = parseFloat(document.getElementById("input_noise_E1_a").value);
-	  E1[0][1] = parseFloat(document.getElementById("input_noise_E1_b").value);
-	  E1[1][0] = parseFloat(document.getElementById("input_noise_E1_c").value);
-	  E1[1][1] = parseFloat(document.getElementById("input_noise_E1_d").value);
-	  
-	  E2[0][0] = parseFloat(document.getElementById("input_noise_E2_a").value);
-	  E2[0][1] = parseFloat(document.getElementById("input_noise_E2_b").value);
-	  E2[1][0] = parseFloat(document.getElementById("input_noise_E2_c").value);
-	  E2[1][1] = parseFloat(document.getElementById("input_noise_E2_d").value);
-      
-	  return computeNewBlochSphere(E1, E2);
+	  return computeNewBlochSphere(getE1(), getE2());
 	} // computeTransformedBlochSphere
 	
-	// draws bottom Bloch sphere at location center, with given axis lengths
+	/**
+	 * #updateBottomBlochSphere
+	 * 
+	 * Draws the bottom Bloch sphere at location center.
+	 */
 	function updateBottomBlochSphere( ) {
 
 		var tmp = computeTransformedBlochSphere();
@@ -154,14 +322,14 @@ $(document).ready(function() {
 		
 		// Switch z and y axis to compensate for computer graphics/physics
 		// difference quirks.
-		var tempHans = center.y;
+		var temp = center.y;
 		center.y = center.z;
-		center.z = tempHans;
+		center.z = temp;
 		center.z = -1 * center.z;
 		
-		var tempHans = axes[1];
+		var temp = axes[1];
 		axes[1] = axes[2];
-		axes[2] = tempHans;
+		axes[2] = temp;
 		
 		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
@@ -196,90 +364,106 @@ $(document).ready(function() {
 		
 		drawTransformedArrows();
 	} // updateBottomBlochSphere
-		
-	function animate() {
-		requestAnimationFrame( animate );
-		controls.update();
-	}
 
-	function render() {
-		renderer_top.setClearColor( 0x424242, 1);
-		renderer_top.clear();
-		renderer_top.render(sceneCircles, camera_top);
-		renderer_top.clearDepth();
-		renderer_top.render(scene, camera_top);
-
-
-		renderer_bottom.setClearColor( 0x424242, 1);
-
-		renderer_bottom.clear();
-		renderer_bottom.render(sceneCircles_bottom, camera_top);
-		renderer_bottom.clearDepth();
-		renderer_bottom.render(scene_bottom, camera_top);
-	}
+	/**
+	 * #getE1
+	 *
+	 * Returns E1, gathers info from input fields
+	 * @return {E1}
+	 */
+	function getE1() {
+	  var E1 = [[0,0],[0,0]];
+	  E1[0][0] = parseFloat($("#input_noise_E1_a").val());
+	  E1[0][1] = parseFloat($("#input_noise_E1_b").val());
+	  E1[1][0] = parseFloat($("#input_noise_E1_c").val());
+	  E1[1][1] = parseFloat($("#input_noise_E1_d").val());
+	  return E1
+	} // getE1
 	
+	/**
+	 * #getE2
+	 *
+	 * returns E2, gathers info from input fields
+	 * 
+	 * @return {E2}
+	 */
+	function getE2() {
+	  var E2 = [[0,0],[0,0]];
+	  E2[0][0] = parseFloat($("#input_noise_E2_a").val());
+	  E2[0][1] = parseFloat($("#input_noise_E2_b").val());
+	  E2[1][0] = parseFloat($("#input_noise_E2_c").val());
+	  E2[1][1] = parseFloat($("#input_noise_E2_d").val());
+	  return E2
+	} // getE2
 	
-	// draws all arrows transformed in bottom Bloch sphere
-	function drawTransformedArrows() {
-		var colours = ['red', 'green', 'blue', 'yellow'];
-			
+	/**
+	 * #drawTransformedArrows
+	 * 
+	 * Draws all vector arrows after transformation in bottom Bloch sphere
+	 */
+	function drawTransformedArrows() {			
 		// first get noise matrices E1 and E2
 		var E1 = [[0,0],[0,0]];
 		var E2 = [[0,0],[0,0]];
 	  
-		E1[0][0] = parseFloat(document.getElementById("input_noise_E1_a").value);
-		E1[0][1] = parseFloat(document.getElementById("input_noise_E1_b").value);
-		E1[1][0] = parseFloat(document.getElementById("input_noise_E1_c").value);
-		E1[1][1] = parseFloat(document.getElementById("input_noise_E1_d").value);
+		E1[0][0] = parseFloat($("#input_noise_E1_a").val());
+		E1[0][1] = parseFloat($("#input_noise_E1_b").val());
+		E1[1][0] = parseFloat($("#input_noise_E1_c").val());
+		E1[1][1] = parseFloat($("#input_noise_E1_d").val());
 		  
-		E2[0][0] = parseFloat(document.getElementById("input_noise_E2_a").value);
-		E2[0][1] = parseFloat(document.getElementById("input_noise_E2_b").value);
-		E2[1][0] = parseFloat(document.getElementById("input_noise_E2_c").value);
-		E2[1][1] = parseFloat(document.getElementById("input_noise_E2_d").value);
+		E2[0][0] = parseFloat($("#input_noise_E2_a").val());
+		E2[0][1] = parseFloat($("#input_noise_E2_b").val());
+		E2[1][0] = parseFloat($("#input_noise_E2_c").val());
+		E2[1][1] = parseFloat($("#input_noise_E2_d").val());
 			  
 		// get density matrices of all active arrows
-		for (var i = 1; i <= 4; i++) {
+		for (var i = 1; i <= arrows.length; i++) {
 		    if (arrows[i-1] != null) {
-			    //console.log("start adding arrow " + i);
-				var a = math.complex($("#input_" + i + "_a").val());
-				var b = math.complex($("#input_" + i + "_b").val());
-				var c = math.complex($("#input_" + i + "_c").val());
-				var d = math.complex($("#input_" + i + "_d").val());
+		    	if (i < 5) {
+		    		var matrix = getDensityMatrix(i);
+
+					var a = matrix[0][0];
+					var b = matrix[0][1];
+					var c = matrix[1][0];
+					var d = matrix[1][1];
+				}
+				else {
+					var a = mixedState[0][0];
+					var b = mixedState[0][1];
+					var c = mixedState[1][0];
+					var d = mixedState[1][1];
+				}
 				
 				var transformed_densityMat = channelNoise([[a,b],[c,d]],E1,E2);
 				var dir = getVector(transformed_densityMat);
-				//var dir = getVector([[a,b],[c,d]]);
 				
 				// Switch z and y axis to compensate for computer graphics/physics
 				// difference quirks.
-				var tempHans = dir.y;
+				var temp = dir.y;
 				dir.y = dir.z;
-				dir.z = tempHans;
+				dir.z = temp;
 				dir.z = -1 * dir.z;
 				
 				var origin = computeNewBlochSphere(E1, E2)[1];
-				tempHans = origin.y;
+				temp = origin.y;
 				origin.y = origin.z;
-				origin.z = tempHans;
+				origin.z = temp;
 				origin.z = -1 * origin.z;
 				
 				var length = dir.length();
 
-				var hex = colours[i-1];
+				var hex = tabColors[i-1];
 				
 				//
 				// creating the fcking line:
 				//
 				var geometry = new THREE.Geometry();
 				
-				//geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
-				
 				geometry.vertices.push(origin); // start
 				geometry.vertices.push(dir); // end
 				
 				var material = new THREE.LineBasicMaterial({color: hex});
 				var arrow = new THREE.Line(geometry, material);
-				//arrow.name = "homo";
 				
 				if (transformed_arrows[i-1] != null) {
 					scene_bottom.remove(transformed_arrows[i-1]);
@@ -290,28 +474,40 @@ $(document).ready(function() {
 				
 				// Also add sphere at end of arrow:
 				var geometry2 = new THREE.SphereGeometry( 0.05, 16, 12 );
-				//geometry2.applyMatrix( new THREE.Matrix4().makeTranslation(dir.x, dir.y, dir.z));
 				var sphereMaterial = new THREE.MeshBasicMaterial({color: hex});
-				var balletje = new THREE.Mesh(geometry2, sphereMaterial);
-				balletje.translateX(dir.x);
-				balletje.translateY(dir.y);
-				balletje.translateZ(dir.z);
+				var ball = new THREE.Mesh(geometry2, sphereMaterial);
+				ball.translateX(dir.x);
+				ball.translateY(dir.y);
+				ball.translateZ(dir.z);
 				
-				if (transformed_balletjes[i-1] != null) {
-					scene_bottom.remove(transformed_balletjes[i-1]);
+				if (transformed_ball[i-1] != null) {
+					scene_bottom.remove(transformed_ball[i-1]);
 				} // if
 
-				transformed_balletjes[i-1] = balletje;	
-				scene_bottom.add(balletje);
+				transformed_ball[i-1] = ball;	
+				scene_bottom.add(ball);
 
 			} // if
 		} // for
-		//console.log("render");
 		render();
 	} // drawTransformedArrows
 
-	function drawArrow() {
-	    var dir = getVector(getDensityMatrix(activeTab));
+	/**
+	 * #drawArrow
+	 *
+	 * Draws state vector arrow of the current active tab in the Bloch sphere. 
+	 * If a 3-vector is given as parameter, that vector will be drawn instead.
+	 * 
+	 * @param  {[x, y, z]}
+	 */
+	function drawArrow(vector) {
+		var index = activeTab - 1;
+		var dir = getVector(getDensityMatrix(activeTab));
+
+		if (vector !== undefined) {
+			dir = vector;
+			index = 4
+		} 
 
 	    // Switch z and y axis to compensate for computer graphics/physics
 	    // difference quirks.
@@ -322,15 +518,15 @@ $(document).ready(function() {
 		
 		var origin = new THREE.Vector3( 0, 0, 0 );
 		var length = dir.length();
+		var hex = tabColors[index];
 
-		var hex = tabColors[activeTab - 1];
 		var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
 
-		if (arrows[activeTab-1] != null) {
-			scene.remove(arrows[activeTab-1]);
+		if (arrows[index] != null) {
+			scene.remove(arrows[index]);
 		}
 
-		arrows[activeTab-1] = arrow;
+		arrows[index] = arrow;
 		scene.add( arrow );
 
 		
@@ -338,54 +534,52 @@ $(document).ready(function() {
 
 	} // drawArrow
 
+	/**
+	 * #ifValidDrawArrow
+	 * 
+	 * Checks if the density matrix of the current active tab is a valid density
+	 * matrix. If true, call drawArrow, if not display error.}
+	 */
 	function ifValidDrawArrow() {
 	    var mat = getDensityMatrix(activeTab)
 
 		if (!isValidTrace(mat) || !isValidHermitian(mat)) {// || !isValidEigenvalues(mat)) {
-			alert("This density matrix does not represent a valid state!");
+			errorModal("Error: Invalid state", "This density matrix does not represent a valid state!");
 		} else {
 			drawArrow();
 		}
 	}
 
+	/**
+	 * #updateTopSlider
+	 *
+	 * Updates the slider in the top div
+	 */
 	function updateTopSlider() {
 		var textId = this.id.slice(-1);
 		$('.js-range-slider-1-' + textId).data("ionRangeSlider").update({from: this.value});
 		updateStateGui(activeTab);
 	}
 
+	/**
+	 * #computeMixed
+	 *
+	 * Computes the mixed state and draws associated state vector arrow.
+	 * If the probabilities don't add up to 1, display error.
+	 */
 	function computeMixed() {
 		if (mixedValidityCheck()) {
-			var states = [];
+			var p = [];
+			var densMats = [];
 			var sliders = $('[class^="js-range-slider-mixed"]');
 
 			sliders.each(function(i) {
-				p = $(this).data("ionRangeSlider").result.from;
-				states[i] = math.multiply(p, getDensityMatrix(i+1));
+				p[i] = $(this).data("ionRangeSlider").result.from;
+				densMats[i] = getDensityMatrix(i+1);
 			});
 
-			var mixedState = math.add(states[0], states[1]);
-			mixedState = math.add(mixedState, states[2]);
-			mixedState = math.add(mixedState, states[3]);
-
-			var dir = getVector(mixedState);
-			
-		    // Switch z and y axis to compensate for computer graphics/physics
-		    // difference quirks.
-		    temp = dir.y;
-		    dir.y = dir.z;
-		    dir.z = temp;
-		    dir.z = -1 * dir.z;
-			
-			var origin = new THREE.Vector3( 0, 0, 0 );
-			var length = dir.length();
-
-			var hex = '#551A8B';
-			var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
-
-			scene.add( arrow );
-
-			render();
+			mixedState = makeMixedState(densMats[0], p[0], densMats[1], p[1], densMats[2], p[2], densMats[3], p[3]);
+			drawArrow(getVector(mixedState));
 		}
 		else {
 			errorModal('Error: Invalid probabilities', 'Make sure the probabilities add up to 1!');
@@ -522,9 +716,16 @@ $(document).ready(function() {
 
 		makeNoiseTab();	
 		addEventMixedSliders();	
-		addUnitaryTab();
+		makeUnitaryTab();
 	}
 
+
+	/**
+	 * #createSliders
+	 * 
+	 * Creates the sliders in the top div and mixed tabs.
+	 * @param  {i: index}
+	 */
 	function createSliders(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
 		    $phi = $(".js-range-slider-" + i + "-2"),
@@ -572,6 +773,11 @@ $(document).ready(function() {
 		second = $phi.data("ionRangeSlider");
 	}
 
+	/**
+	 * #makeNoiseTab
+	 *
+	 * Constructs the noise channel tab
+	 */
 	function makeNoiseTab() {
 		// slider:
 		var $R = $(".js-range-slider-noise");
@@ -592,6 +798,7 @@ $(document).ready(function() {
 
 		onNoiseSelectionChanged();
 	}
+
 
 	function makeUnitaryTab() {
 		// slider:
@@ -615,6 +822,12 @@ $(document).ready(function() {
 
 	}
 
+
+	/**
+	 * #updateStateGui
+	 *
+	 * Updates the state GUI of the top div and draws the quantum state arrow
+	 */
 	function updateStateGui(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
 		    $phi = $(".js-range-slider-" + i + "-2")
@@ -640,6 +853,11 @@ $(document).ready(function() {
 	}
 });
 
+/**
+ * #addEventMixedSliders
+ *
+ * Sets up the connection between the mixed sliders
+ */
 function addEventMixedSliders() {
 	var sliders = $('[class^="js-range-slider-mixed"]');
 
@@ -691,6 +909,13 @@ function addEventMixedSliders() {
 	})
 }
 
+/**
+ * #getDensityMatrix
+ *
+ * Gets the density matrix of state i and returns it in a 2x2 matrix
+ * @param  {i: The state id}
+ * @return {[a,b, [c,d]]}
+ */
 function getDensityMatrix(i) {
 	var a = math.complex($("#input_" + i + "_a").val());
 	var b = math.complex($("#input_" + i + "_b").val());
@@ -700,6 +925,12 @@ function getDensityMatrix(i) {
 	return [[a,b],[c,d]];
 }
 
+/**
+ * #mixedValidityCheck
+ *
+ * Check if the mixed state is valid and returns the result
+ * @return {boolean}
+ */
 function mixedValidityCheck() {
 	var sliders = $('[class^="js-range-slider-mixed"]');
 	var total = 0;
@@ -715,12 +946,25 @@ function mixedValidityCheck() {
 	return true
 }
 
+/**
+ * #errorModal
+ *
+ * Generic error modal to be displayed upon error or other alerts
+ * @param  {title}
+ * @param  {body}
+ */
 function errorModal(title, body) {
 	$('#errorModal .modal-title').text(title);
 	$('#errorModal .modal-body').text(body);
 	$('#errorModal').modal();
 }
 
+/**
+ * #finalizeMixed
+ *
+ * Takes care of rounding error in the mixed sliders
+ * @param  {slider}
+ */
 function finalizeMixed(slider) {
 	var sliders = $('[class^="js-range-slider-mixed"]');
 	var total = 0;
@@ -737,6 +981,11 @@ function finalizeMixed(slider) {
 	updateMixedGui();
 }
 
+/**
+ * #updateMixedGui
+ *
+ * Updates the mixed state tab GUI
+ */
 function updateMixedGui() {
 	var sliders = $('[class^="js-range-slider-mixed"]')
 	var states = [];
@@ -745,7 +994,7 @@ function updateMixedGui() {
 		states[i] = $(this).data("ionRangeSlider").result.from;
 	})
 
-	$('#mixedStateFunction').html("Wave function: &#936&#x2098 = <span class='state-1'>" + states[0] + 
+	$('#mixedStateFunction').html("Wave function: &#936 = <span class='state-1'>" + states[0] + 
 		"</span>&#x00B7&#936&#x2081 + <span class='state-2'>" + states[1] + 
 		"</span>&#x00B7&#936&#x2082 + <span class='state-3'>" + states[2] + 
 		"</span>&#x00B7&#936&#x2083 + <span class='state-4'>" + states[3] + 
@@ -753,6 +1002,12 @@ function updateMixedGui() {
 	);
 }
 
+/**
+ * #checkActive
+ * 
+ * Handles the active checkbox events
+ * @param  {checkbox}
+ */
 function checkActive(checkbox) {
 	var checkId = checkbox.id.slice(-1);
 	$('#check-lock-' + checkId).prop('checked', false);
@@ -766,40 +1021,53 @@ function checkActive(checkbox) {
 	})
 }
 
+/**
+ * #checkActive
+ * 
+ * Handles the probability lock checkbox events
+ * @param  {checkbox}
+ */
 function checkLock(checkbox) {
 	var checkId = checkbox.id.slice(-1);
 	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from_fixed: checkbox.checked})
 }
 
-
+/**
+ * #onNoiseSelectionChanged
+ *
+ * Handles the noise selection dropdown events
+ */
 function onNoiseSelectionChanged() {
-	var x = document.getElementById("noise-select").value;
-	var r = 1 - parseFloat(document.getElementById("noise_slider").value);
+	var x = $("#noise-select").val();
+	var r = 1 - parseFloat($("#noise_slider").val());
 	var s_r = Math.sqrt(r);
 	var s_emr = Math.sqrt(1-r);
 	
-	//console.log("r = " + r);
 	
 	if (x == "D") { // depolarizing
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_D.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
 	}
 	if (x == "PhX") { // dephase x
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhX.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
 	}
 	if (x == "PhZ") { // dephase y
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_PhZ.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
 	  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
 	}
 	if (x == "A") { // amplitude damping
-	  document.getElementById("noise-equation-img").src = "img/noiseEq_A.png";
+	  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
 	  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
 	}
 	if (x == "user") { // user defined function
-	  ; // make slider disabled or smth!
-	}
+	  document.getElementById("noise-update_button").style.visibility = "visible";
+	} // if
+	else {
+	  document.getElementById("noise-update_button").style.visibility = "hidden";
+	} // else
 }
+
 
 function onUnitarySelectionChanged() {
 	// var x = document.getElementById("noise-select").value;
@@ -830,19 +1098,32 @@ function onUnitarySelectionChanged() {
 	// }
 }
 
-
+/**
+ * #setNoiseMatrices
+ *
+ * Displays the noise matrices E1 and E2
+ * @param {E1}
+ * @param {E2}
+ */
 function setNoiseMatrices(E1, E2) {
-    document.getElementById("input_noise_E1_a").value = sliceDecimals(E1[0][0]);
-	document.getElementById("input_noise_E1_b").value = sliceDecimals(E1[0][1]);
-	document.getElementById("input_noise_E1_c").value = sliceDecimals(E1[1][0]);
-	document.getElementById("input_noise_E1_d").value = sliceDecimals(E1[1][1]);
+    $("#input_noise_E1_a").val(sliceDecimals(E1[0][0]));
+	$("#input_noise_E1_b").val(sliceDecimals(E1[0][1]));
+	$("#input_noise_E1_c").val(sliceDecimals(E1[1][0]));
+	$("#input_noise_E1_d").val(sliceDecimals(E1[1][1]));
 	
-    document.getElementById("input_noise_E2_a").value = sliceDecimals(E2[0][0]);
-	document.getElementById("input_noise_E2_b").value = sliceDecimals(E2[0][1]);
-	document.getElementById("input_noise_E2_c").value = sliceDecimals(E2[1][0]);
-	document.getElementById("input_noise_E2_d").value = sliceDecimals(E2[1][1]);
+    $("#input_noise_E2_a").val(sliceDecimals(E2[0][0]));
+	$("#input_noise_E2_b").val(sliceDecimals(E2[0][1]));
+	$("#input_noise_E2_c").val(sliceDecimals(E2[1][0]));
+	$("#input_noise_E2_d").val(sliceDecimals(E2[1][1]));
 } // setNoiseMatrices
 
+/**
+ * #sliceDecimals
+ *
+ * Rounds numbers to 2 decimals, capable of handling complex objects
+ * @param  {number: real or complex}
+ * @return {result: real or complex}
+ */
 function sliceDecimals(number) {
 	var result;
 
@@ -859,6 +1140,15 @@ function sliceDecimals(number) {
 	return result;
 }
 
+/**
+ * #buildAxes
+ * 
+ * Constructs and returns the 3 axes for the Bloch sphere
+ * 
+ * @param  {length}
+ * @param  {colors}
+ * @return {axes}
+ */
 function buildAxes( length, colors ) {
 	var axes = new THREE.Object3D();
 
@@ -881,6 +1171,16 @@ function buildAxes( length, colors ) {
 	return axes;
 }
 
+/**
+ * #buildAxisLabel
+ *
+ * Creates the label for the Bloch sphere axis
+ * @param  {text}
+ * @param  {position}
+ * @param  {color}
+ * @param  {size}
+ * @return {text: THREE.js object}
+ */
 function buildAxisLabel (text, pos, color, size) {
 	var  textGeo = new THREE.TextGeometry(text, {
         size: size,
@@ -899,6 +1199,17 @@ function buildAxisLabel (text, pos, color, size) {
 	return text;
 }
 
+/**
+ * #buildAxis
+ *
+ * Builds axis from source to destination with a specific color and dashed if specified.
+ * 
+ * @param  {source}
+ * @param  {destination}
+ * @param  {colorHex}
+ * @param  {dashed: boolean}
+ * @return {axis}
+ */
 function buildAxis( src, dst, colorHex, dashed ) {
 	var geom = new THREE.Geometry(),
 		mat; 
@@ -916,9 +1227,18 @@ function buildAxis( src, dst, colorHex, dashed ) {
 	var axis = new THREE.Line( geom, mat, THREE.LinePieces );
 
 	return axis;
-
 }
 
+/**
+ * #buildCircles
+ *
+ * Creates guiding circles in Bloch spheres. If a vector is supplied, the vector will be used to transform
+ * the circles.
+ * 
+ * @param  {colors}
+ * @param  {vector}
+ * @return {circles}
+ */
 function buildCircles(colors, vector) {
 	var circles = new THREE.Object3D();
 	var a, b, c;
@@ -935,6 +1255,19 @@ function buildCircles(colors, vector) {
 	return circles;
 }
 
+/**
+ * #buildCircle
+ *
+ * Builds the circle with the specified radius, amount of segments, rotation angle and color. If a vector is
+ * supplied, the vector will be used to transform the circle.
+ * 
+ * @param  {radius}
+ * @param  {segments}
+ * @param  {rotation}
+ * @param  {vector}
+ * @param  {colors}
+ * @return {circle}
+ */
 function buildCircle(radius,segments,rot, vector, colors) {
 	var circle = new THREE.Object3D();
 
