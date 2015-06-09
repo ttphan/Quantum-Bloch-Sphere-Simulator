@@ -580,7 +580,7 @@ $(document).ready(function() {
 			drawArrow(getVector(mixedState));
 		}
 		else {
-			errorModal('Error: Invalid probabilities', 'Make sure the probabilities add up to 1!');
+			errorModal('Error: Invalid probabilities', 'Make sure the probabilities of the mixed state wave function add up to 1!');
 		}
 	}
 
@@ -848,6 +848,11 @@ $(document).ready(function() {
 		$("#input_" + i + "_d").val(sliceDecimals(matrix[1][1]));
 
 		drawArrow();
+
+		// If there are any active mixed state sliders
+		if ($("input[id^='check-active']:checked").length > 1) {
+			computeMixed();
+		}
 	}
 });
 

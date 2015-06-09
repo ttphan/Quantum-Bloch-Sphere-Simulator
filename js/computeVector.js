@@ -457,8 +457,16 @@ function getUnitaryAtTime(hamiltonian, time) {
  * @return {mixed state}
  */
 function makeMixedState(densMat1, prob1, densMat2, prob2, densMat3, prob3, densMat4, prob4) {
-      return math.chain(math.multiply(densMat1,prob1)).add(math.multiply(densMat2,prob2))
-                  .add(math.multiply(densMat3,prob3)).add(math.multiply(densMat2,prob2)).done();
+      var state1 = math.multiply(prob1, densMat1);
+      var state2 = math.multiply(prob2, densMat2);
+      var state3 = math.multiply(prob3, densMat3);
+      var state4 = math.multiply(prob4, densMat4); 
+
+      var matrix = math.add(state1, state2);
+      matrix = math.add(matrix, state3);
+      matrix = math.add(matrix, state4);
+
+      return matrix;
 }
 
 /**
