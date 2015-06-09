@@ -113,7 +113,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<h4 class="indentText"> Noise type: </h4> 
-										<select id="noise-select" onchange="onNoiseSelectionChanged();">
+										<select id="noise-select">
 											<option value="D">Depolarizing</option>
 											<option value="PhX">Dephase X</option>
 											<option value="PhZ">Dephase Z</option>
@@ -175,7 +175,7 @@
 												<h4 class="state-1">&#936&#x2081</h4>
 											</div>
 											<div class='col-md-10'>
-												<label><input type="checkbox" id="check-active-1" name="checkbox" value="value" conchange="checkActive(this)"> Active </label>
+												<label><input type="checkbox" id="check-active-1" name="checkbox" value="value" onchange="checkActive(this)"> Active </label>
 												<label><input type="checkbox" id="check-lock-1" name="checkbox" value="value" onchange="checkLock(this)" disabled='true'> Lock probability </label>
 											</div>
 										</div>

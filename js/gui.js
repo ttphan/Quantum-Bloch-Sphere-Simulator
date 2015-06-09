@@ -292,7 +292,7 @@ $(document).ready(function() {
 			// Initialize sliders
 			createSliders(i);
 		}
-		$("#noise-select").on('click', updateBottomBlochSphere);
+		$("#noise-select").on('click', onNoiseSelectionChanged);
 		$("#gate-update_button").on('click', drawTransformedArrows);
 		$("#btn_compute_mixed").on('click', computeMixed);
 		$("#gate-select").on('change', drawTransformedArrows);
@@ -338,7 +338,6 @@ $(document).ready(function() {
 	 * Draws the bottom Bloch sphere at location center.
 	 */
 	function updateBottomBlochSphere( ) {
-
 		var tmp = computeTransformedBlochSphere();
 		var axes = tmp[0];
 		var center = tmp[1];
@@ -941,7 +940,6 @@ $(document).ready(function() {
 	 * Updates the slider in the noise tab
 	 */
 	function updateNoiseSlider() {
-		console.log(this.value);
 		$('.js-range-slider-noise').data("ionRangeSlider").update({from: 1-this.value});
 		onNoiseSelectionChanged();
 	}
