@@ -15,7 +15,7 @@ $(document).ready(function() {
 	var mixedState;
 
 	// Color values
-	var sphereColor = 0x00BFFF;
+	var sphereColor = 0x045FB4;
 	var axesColors = [0xFA5858,0x01DF3A,0x2E64FE];
 	var circleColors = [0xffffff, 0xD8D8D8];
 	var tabColors = ['red', 'green', 'blue', 'yellow', 'white'];
@@ -173,6 +173,10 @@ $(document).ready(function() {
 		    var tab = $(e.target).attr('id');
 		    activeTab = parseInt(tab.substring(tab.length-1));	
 		});
+
+		$('#bottom-tab3').on('shown.bs.tab', function(e){
+		    resetBlochSphere();
+		});
 		
 		for (var i = 1; i <= 4; i++) {
 			$("#section" + i)
@@ -282,7 +286,7 @@ $(document).ready(function() {
 
 			// Event listeners to buttons
 			$("#noise-select").on('click', updateBottomBlochSphere);
-			$("#gate-update_button").on('click', onUnitarySelectionChanged);
+			$("#gate-update_button").on('click', updateTransArrowsBlochSphere);
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
 			$("#angle_" + i + "_1").on('change', updateTopSlider);
@@ -344,7 +348,7 @@ $(document).ready(function() {
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
 
 		var sphereMaterialNoise = new THREE.MeshBasicMaterial( { 
-			color: 0x0099CC, 
+			color: sphereColor, 
 			transparent: true, 
 			opacity: 0.25 
 		});
@@ -420,6 +424,17 @@ $(document).ready(function() {
 	}
 
 	/**
+	 * #UpdateTransArrowsBlochSphere
+	 *
+	 * Resets the bottom Bloch-sphere and transformation matrix
+	 */
+	function updateTransArrowsBlochSphere() {
+		// Bloch sphere object
+
+		render();
+	}
+
+	/**
 	 * #getE1
 	 *
 	 * Returns E1, gathers info from input fields
@@ -456,10 +471,12 @@ $(document).ready(function() {
 	 * 
 	 * Draws all vector arrows after transformation in bottom Bloch sphere
 	 */
-	function drawTransformedArrows() {			
+	function drawTransformedArrows() {
+		var tab3isActive = $('.active').find('#bottom-tab3').length > 0;
 		// first get noise matrices E1 and E2
 		var E1 = getE1();
 		var E2 = getE2();
+		var unitary = getUnitary();
 			  
 		// get density matrices of all active arrows
 		for (var i = 1; i <= arrows.length; i++) {
@@ -480,6 +497,13 @@ $(document).ready(function() {
 				}
 				
 				var transformed_densityMat = channelNoise([[a,b],[c,d]],E1,E2);
+
+				if (tab3isActive) {
+				    transformed_densityMat = applyGateToDensMat([[a,b],[c,d]], unitary);
+				}
+
+				//var transformed_densityMat = applyGateToDensMat([[a,b],[c,d]], unitary);
+
 				var dir = getVector(transformed_densityMat);
 				
 				// Switch z and y axis to compensate for computer graphics/physics
@@ -496,34 +520,21 @@ $(document).ready(function() {
 				origin.z = -1 * origin.z;
 				
 				var length = dir.length();
-
 				var hex = tabColors[i-1];
 				
 				//
-				// creating the fcking line:
+				// creating the line:
 				//
-				var geometry = new THREE.Geometry();
-				
-				geometry.vertices.push(origin); // start
-				geometry.vertices.push(dir); // end
-				
-				var material = new THREE.LineBasicMaterial({color: hex});
-				var arrow = new THREE.Line(geometry, material);
-				
+				var arrow = getArrow(origin, dir, hex);
+
 				if (transformed_arrows[i-1] != null) {
 					scene_bottom.remove(transformed_arrows[i-1]);
 				} // if
-
 				transformed_arrows[i-1] = arrow;
 				scene_bottom.add(arrow);
 				
 				// Also add sphere at end of arrow:
-				var geometry2 = new THREE.SphereGeometry( 0.05, 16, 12 );
-				var sphereMaterial = new THREE.MeshBasicMaterial({color: hex});
-				var ball = new THREE.Mesh(geometry2, sphereMaterial);
-				ball.translateX(dir.x);
-				ball.translateY(dir.y);
-				ball.translateZ(dir.z);
+				var ball = getBall(dir, hex);
 				
 				if (transformed_ball[i-1] != null) {
 					scene_bottom.remove(transformed_ball[i-1]);
@@ -637,6 +648,10 @@ $(document).ready(function() {
 		    var tab = $(e.target).attr('id');
 		    activeTab = parseInt(tab.substring(tab.length-1));	
 		});
+
+		$('#bottom-tab3').on('shown.bs.tab', function(e){
+		    resetBlochSphere();
+		});		
 		
 		for (var i = 1; i <= 4; i++) {
 			$("#section" + i)//.append($('<h3>State ' + i + '</h3>'))
@@ -844,6 +859,7 @@ $(document).ready(function() {
 
 		onNoiseSelectionChanged();
 	}
+
 
 	/**
 	 * #updateStateGui
@@ -1176,8 +1192,20 @@ function onUnitarySelectionChanged() {
 		  	setUnitaryMatrix(gateH);
 		}
 	}
+<<<<<<< Updated upstream
 
 	if (gate == "user") { // Hadamard	  	
+=======
+	if (gate == "R") { // Phase
+		$("#angle-for-uni").removeClass("invisible");
+		var angle = parseFloat($("#angle_input").val());
+		setUnitaryMatrix([[1,0],[0,math.exp(math.multiply(complexi,angle))]]);		
+	} else {
+		$("#angle-for-uni").addClass("invisible");		
+	}
+
+	if (gate == "user") { // user	  	
+>>>>>>> Stashed changes
 		$("#gate-update_button").removeClass("invisible");
 	  	$('#input_gate_a').prop('disabled', false);
 	  	$('#input_gate_b').prop('disabled', false);
@@ -1189,6 +1217,22 @@ function onUnitarySelectionChanged() {
 		$('#input_gate_c').prop('disabled', true);
 		$('#input_gate_d').prop('disabled', true);
 	}	
+<<<<<<< Updated upstream
+=======
+
+	if (gate == "hamil") { // hamiltonian
+	  	$("#hamiltonian").removeClass("invisible");
+	  	$("#timeslider").removeClass("invisible");
+	  	var time = parseFloat($("#time_slider").val());
+	  	var hamiltonian = getHamiltonian();
+	  	setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
+	} // if
+	else {
+		$("#hamiltonian").addClass("invisible");
+	  	$("#timeslider").addClass("invisible");		
+
+	} // else
+>>>>>>> Stashed changes
 }
 
 /**
@@ -1198,7 +1242,7 @@ function onUnitarySelectionChanged() {
  * @return {Unitary}
  */
 function getUnitary() {
-	var uni = [[0,0],[0,0]];
+	var gate = [[0,0],[0,0]];
 	gate[0][0] = parseFloat($("#input_gate_a").val());
 	gate[0][1] = parseFloat($("#input_gate_b").val());
 	gate[1][0] = parseFloat($("#input_gate_c").val());
@@ -1366,6 +1410,26 @@ function buildAxis( src, dst, colorHex, dashed ) {
 	return axis;
 }
 
+function getArrow(origin, dir, hex) {
+	var geometry = new THREE.Geometry();
+	
+	geometry.vertices.push(origin); // start
+	geometry.vertices.push(dir); // end
+	
+	var material = new THREE.LineBasicMaterial({color: hex});
+	return new THREE.Line(geometry, material);			
+}
+
+function getBall(dir, hex) {
+	var geometry2 = new THREE.SphereGeometry( 0.05, 16, 12 );
+	var sphereMaterial = new THREE.MeshBasicMaterial({color: hex});
+	var ball = new THREE.Mesh(geometry2, sphereMaterial);
+	ball.translateX(dir.x);
+	ball.translateY(dir.y);
+	ball.translateZ(dir.z);
+	return ball;
+}
+
 /**
  * #buildCircles
  *
@@ -1436,7 +1500,7 @@ function buildCircle(radius,segments,rot, vector, colors) {
 			color: colors[0], 
 			transparent: true, 
 			side: THREE.DoubleSide,
-			opacity: 0.3,
+			opacity: 0.2,
 			depthWrite: false, 
 			depthTest: false
 		});

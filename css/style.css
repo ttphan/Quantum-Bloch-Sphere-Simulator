@@ -221,7 +221,7 @@ canvas {
 }
 
 #titleblock {
-	background-color: #0B4C5F;
+	background-color: #0B3861;
 	border: 0px;
 }
 
@@ -237,4 +237,17 @@ canvas {
 	margin-left: 8px;
 	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+#bottom-section3 .buttonMargin {
+	margin-top: 30px;
+}
+
+#mixedStateFunction {
+	margin-left: 8px;	
+}
+
+label {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
 }

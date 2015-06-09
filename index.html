@@ -162,7 +162,7 @@
 							</div>
 
 							<div id="bottom-section2" class="tab-pane fade">
-								<h4 id="mixedStateFunction">Wave function: &#936 = <span class='state-1'>0</span>&#x00B7&#936&#x2081 + <span class='state-2'>0</span>&#x00B7&#936&#x2082 + <span class='state-3'>0</span>&#x00B7&#936&#x2083 + <span class='state-4'>0</span>&#x00B7&#936&#x2084</h4>
+								<p id="mixedStateFunction">Wave function: &#936 = <span class='state-1'>0</span>&#x00B7&#936&#x2081 + <span class='state-2'>0</span>&#x00B7&#936&#x2082 + <span class='state-3'>0</span>&#x00B7&#936&#x2083 + <span class='state-4'>0</span>&#x00B7&#936&#x2084</p>
 
 								<div class='row'>
 									<div class='range-slider'>
@@ -240,41 +240,47 @@
 											<option value="H">H-gate: Hadamard</option>
 											<option value="R">Phase Shift</option>
 											<option value="hamil">Evolving State</option>
-											<option value="user">User defined unitary</option>								
+											<option value="user">User defined unitary</option>				
+
 										</select>
-										<button class="btn btn-default btn-md buttonMargin " id="gate-update_button">Show transformed state</button>
+										<div id="angle-for-uni" class="col-md-12">
+											Phase: <input id="angle_input" type="text" value="0" style="width:80px; margin:10px;" onchange="onUnitarySelectionChanged()"></input>
+										</div>
+
 
 									</div>
 
 									<div class="col-md-6">
-										<h4 class="indentText"> Apply on state: </h4> 
+										<button class="btn btn-default btn-md buttonMargin " id="gate-update_button">Show transformed state</button>
+
+<!-- 										<h4 class="indentText"> Apply on state: </h4> 
 										<select id="state-select" onchange="onUnitarySelectionChanged()">
 											<option value="psi1"> &#936&#x2081 </option>
 											<option value="psi2"> &#936&#x2082</option>
 											<option value="psi3"> &#936&#x2083</option>
 											<option value="psi4"> &#936&#x2084</option>
 											<option value="psiAll"> All States</option>							
-										</select>
+										</select> -->
 									</div>
 								</div>
 								
 								<div class='row'>
 									<div class="col-md-6">
 									  <h4 class="indentText">Unitary</h4>
-									  <input id="input_gate_a" type="text" style="width:80px; margin:10px;" disabled></input>
-									  <input id="input_gate_b" type="text" style="width:80px; margin:10px;" disabled></input>
+									  <input id="input_gate_a" type="text" style="width:85px; margin:10px;" disabled></input>
+									  <input id="input_gate_b" type="text" style="width:85px; margin:10px;" disabled></input>
 									  <br/>
-									  <input id="input_gate_c" type="text" style="width:80px; margin:10px;" disabled></input>
-									  <input id="input_gate_d" type="text" style="width:80px; margin:10px;" disabled></input>
+									  <input id="input_gate_c" type="text" style="width:85px; margin:10px;" disabled></input>
+									  <input id="input_gate_d" type="text" style="width:85px; margin:10px;" disabled></input>
 									</div>
 									
 									<div id="hamiltonian" class="col-md-6">
 									  <h4 class="indentText">Hamiltonian</h4>
-									  <input id="input_hamil_a" type="text" style="width:80px; margin:10px;"></input>
-									  <input id="input_hamil_b" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_hamil_a" type="text" style="width:85px; margin:10px;" value="0"></input>
+									  <input id="input_hamil_b" type="text" style="width:85px; margin:10px;" value="1"></input>
 									  <br/>
-									  <input id="input_hamil_c" type="text" style="width:80px; margin:10px;"></input>
-									  <input id="input_hamil_d" type="text" style="width:80px; margin:10px;"></input>
+									  <input id="input_hamil_c" type="text" style="width:85px; margin:10px;" value="1"></input>
+									  <input id="input_hamil_d" type="text" style="width:85px; margin:10px;" value="0"></input>
 									</div>
 								</div>
 
