@@ -28,8 +28,6 @@ $(document).ready(function() {
 	init();
 	animate();
 	gui();
-	//makeNoiseTab();
-	//onNoiseSelectionChanged();
 	updateBottomBlochSphere( );
 
 	/**
@@ -294,6 +292,8 @@ $(document).ready(function() {
 		}
 		$("#noise-select").on('click', onNoiseSelectionChanged);
 		$("#noise-select").on('click', updateBottomBlochSphere);
+		$("#noise-update_button").on('click', onNoiseSelectionChanged);
+		$("#noise-update_button").on('click', updateBottomBlochSphere);
 		$("#gate-update_button").on('click', drawTransformedArrows);
 		$("#btn_compute_mixed").on('click', computeMixed);
 		$("#gate-select").on('change', drawTransformedArrows);
@@ -302,9 +302,7 @@ $(document).ready(function() {
 		$("#gate-select").on('change', onUnitarySelectionChanged);
 		$("#angle_input").on('change', onUnitarySelectionChanged);
 		$("#time_slider").on('change', onUnitarySelectionChanged);
-		$("#time_t").on('change', function() {
-			$('#time_slider').data("ionRangeSlider").update({from: parseFloat($("#time_t").val())})
-		})
+		$("#time_t").on('change', updateTimeSlider);
 
 		makeNoiseTab();	
 		addEventMixedSliders();	
@@ -329,6 +327,7 @@ $(document).ready(function() {
 	  // if so, we check for validity
 	  if ($("#noise-select").val() == "user" && !isValidNoiseMatrices(E1, E2)) {
 		errorModal('Error: Invalid noise matrix!', "Sums of product of matrices and their complex conjugates don't add up to the identity!" );
+	  	return;
 	  } // if
 	  return computeNewBlochSphere(getE1(), getE2());
 	} // computeTransformedBlochSphere
@@ -608,6 +607,14 @@ $(document).ready(function() {
 	 */
 	function updateTopSlider() {
 		var textId = this.id.slice(-1);
+		var degr = parseFloat(this.value);
+
+		if (degr > 180*textId) {
+			this.value = 180*textId;	
+		} else if (degr < 0) {
+			this.value = 0.00;	
+		}
+
 		$('.js-range-slider-1-' + textId).data("ionRangeSlider").update({from: this.value});
 		updateStateGui(activeTab);
 	}
@@ -725,7 +732,7 @@ $(document).ready(function() {
 	 */
 	function updateStateGui(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
-		    $phi = $(".js-range-slider-" + i + "-2")
+		    $phi = $(".js-range-slider-" + i + "-2");
 
 		var radTheta = parseFloat($theta.val()) / 180 * Math.PI;
 		var radPhi = parseFloat($phi.val()) / 180 * Math.PI;
@@ -822,26 +829,38 @@ $(document).ready(function() {
 		var r = 1 - parseFloat($("#noise_slider").val());
 		var s_r = Math.sqrt(r);
 		var s_emr = Math.sqrt(1-r);
+
+		$("#noise-equation-img").removeClass("invisible");
+		$("#noise-update_button").addClass("invisible");
+		$('#input_noise_E1_a').prop('disabled', true);
+		$('#input_noise_E1_b').prop('disabled', true);
+		$('#input_noise_E1_c').prop('disabled', true);
+		$('#input_noise_E1_d').prop('disabled', true);
+		$('#input_noise_E2_a').prop('disabled', true);
+		$('#input_noise_E2_b').prop('disabled', true);
+		$('#input_noise_E2_c').prop('disabled', true);
+		$('#input_noise_E2_d').prop('disabled', true);
 		
 		
 		if (x == "D") { // depolarizing
 		  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
 		  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
 		}
-		if (x == "PhX") { // dephase x
+		else if (x == "PhX") { // dephase x
 		  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
 		  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
 		}
-		if (x == "PhZ") { // dephase y
+		else if (x == "PhZ") { // dephase y
 		  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
 		  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
 		}
-		if (x == "A") { // amplitude damping
+		else if (x == "A") { // amplitude damping
 		  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
 		  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
 		}
-		if (x == "user") { // user defined function
+		else if (x == "user") { // user defined function
 		  $("#noise-update_button").removeClass("invisible");
+		  $("#noise-equation-img").addClass("invisible");
 		  $('#input_noise_E1_a').prop('disabled', false);
 		  $('#input_noise_E1_b').prop('disabled', false);
 		  $('#input_noise_E1_c').prop('disabled', false);
@@ -851,17 +870,6 @@ $(document).ready(function() {
 		  $('#input_noise_E2_c').prop('disabled', false);
 		  $('#input_noise_E2_d').prop('disabled', false);
 		} // if
-		else {
-		  $("#noise-update_button").addClass("invisible");
-		  $('#input_noise_E1_a').prop('disabled', true);
-		  $('#input_noise_E1_b').prop('disabled', true);
-		  $('#input_noise_E1_c').prop('disabled', true);
-		  $('#input_noise_E1_d').prop('disabled', true);
-		  $('#input_noise_E2_a').prop('disabled', true);
-		  $('#input_noise_E2_b').prop('disabled', true);
-		  $('#input_noise_E2_c').prop('disabled', true);
-		  $('#input_noise_E2_d').prop('disabled', true);
-		} // else
 	}
 
 	function onUnitarySelectionChanged() {
@@ -893,6 +901,8 @@ $(document).ready(function() {
 		  	var hamiltonian = getHamiltonian();
 			setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
 			$("#time_t").val($("#time_slider").val());
+			drawTransformedArrows();
+
 		}
 		else {	
 			// Destroy unitary slider if it exists
@@ -916,7 +926,13 @@ $(document).ready(function() {
 			  	setUnitaryMatrix(gateH);
 			}
 			else if (gate == "R") {
-				var gateR = makePhaseGate(parseFloat($("#angle_input").val()));
+				var angle = parseFloat($("#angle_input").val());
+				if (angle > 2) {
+					$("#angle_input").val(2);
+				} else if (angle < 0) {
+					$("#angle_input").val(0);
+				}
+				var gateR = makePhaseGate(angle*Math.PI);
 				setUnitaryMatrix(gateR);
 				$("#angle-for-uni").removeClass("invisible");
 			}
@@ -934,14 +950,37 @@ $(document).ready(function() {
 			$('#input_gate_d').prop('disabled', true);
 		}	
 	}
+
 	/**
 	 * #updateNoiseSlider
 	 *
 	 * Updates the slider in the noise tab
 	 */
 	function updateNoiseSlider() {
-		$('.js-range-slider-noise').data("ionRangeSlider").update({from: 1-this.value});
+		var r = 1-this.value;
+		if (r < 0) {
+			r=0;
+		} else if (r>1) {
+			r=1;
+		}
+		$('.js-range-slider-noise').data("ionRangeSlider").update({from: r});
 		onNoiseSelectionChanged();
+	}
+
+	/**
+	 * #updateTimeSlider
+	 *
+	 * Updates the slider in the unitary tab
+	 */
+	function updateTimeSlider() {
+		var t = this.value;
+		if (t < 0) {
+			t=0;
+		} else if (t>100) {
+			t=100;
+		}
+		$('#time_slider').data("ionRangeSlider").update({from: parseFloat($("#time_t").val())})
+		onUnitarySelectionChanged();
 	}
 });
 	

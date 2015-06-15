@@ -491,8 +491,8 @@ function makeMixedState(densMat1, prob1, densMat2, prob2, densMat3, prob3, densM
  * @return {Boolean}
  */
 function matrixEquals(mat1, mat2) {
-      mat1 = math.round(math.complex(mat1),2);
-      mat2 = math.round(math.complex(mat2),2);
+      mat1 = math.round(math.complex(mat1),1);
+      mat2 = math.round(math.complex(mat2),1);
       return ((mat1[0][0].im == mat2[0][0].im) && 
               (mat1[1][0].im == mat2[1][0].im) && 
               (mat1[0][1].im == mat2[0][1].im) &&
