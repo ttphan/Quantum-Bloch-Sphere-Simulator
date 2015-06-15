@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	    <title>Quantum 4 Life</title>
-	    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-	    <meta http-equiv="Pragma" content="no-cache" />
-	    <meta http-equiv="Expires" content="0" />
-	    
+		<title>Quantum 4 Life</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		
 		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css">		
@@ -14,8 +14,12 @@
 		<link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.css">
 		<link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.skinNice.css">
 		<script src="js/lib/ion.rangeSlider.min.js"></script>
+
+
+
+		
 		<script src="js/lib/three.js"></script>
-    	<script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_regular.typeface.js"></script>
+		<script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_regular.typeface.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<script src="js/lib/OrbitControls.js"></script>
 		<script src="js/lib/math.js"></script>
@@ -318,8 +322,8 @@
 
 		<!-- Error Modal -->
 		<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalTitle" aria-hidden="true">
-		  	<div class="modal-dialog">
-			    <div class="modal-content">
+			<div class="modal-dialog">
+				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h4 class="modal-title" id="errorModalTitle">Error</h4>
@@ -330,91 +334,113 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
-			    </div>
-		  	</div>
+				</div>
+			</div>
 		</div>
 
 		<!-- Info Modal -->
-		<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalTitle" aria-hidden="true">
-		  	<div class="modal-dialog">
-			    <div class="modal-content">
+		<div class="modal multi-step fade" id="infoModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
 					<div class="modal-header">
+						<h4 class="modal-title step-1" data-step="1">Quantum Bloch-sphere Simulator</h4>
+
+						<h4 class="modal-title step-2" data-step="2">Bloch Spheres</h4>
+
+						<h4 class="modal-title step-3" data-step="3">Quantum States</h4>
+
+						<h4 class="modal-title step-4" data-step="4">Add Noise</h4>
+
+						<h4 class="modal-title step-5" data-step="5">Mixed State</h4>
+
+						<h4 class="modal-title step-6" data-step="6">Unitary Transformation</h4>
+
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="infoModalTitle">Quantum Bloch-sphere Simulator</h4>
+<!-- 						<h4 class="modal-title" id="infoModalTitle">Quantum Bloch-sphere Simulator</h4> -->
 					</div>
-					<div class="modal-body">
+					<div class="modal-body step step-1" data-step="1">
 						<p>Simulate quantum states, both pure and mixed, in a Bloch-sphere with various quantum noise channels and gates.
 						The effects of the various components are shown in real time on the right hand side in the Bloch-spheres.</p>
-						
-						<div class="panel panel-primary">
-						  	<div class="panel-heading">Bloch-spheres</div>
-						  	<div class="panel-body">
-						    	<p>Two Bloch-spheres are shown here: one at the top and one at the bottom. The top sphere represents the Bloch-sphere without any influences from settings in the tabs at the bottom left. These changes will be made visible in the bottom sphere. The top sphere can be rotated by the user, the bottom sphere will move with it. <br><br>
-						    	Computing the vector in the Bloch-sphere that represents a density matrix is done with the following formula: <br>
-						    	 	&#961 = 1/2 (I + a&#8901 &#963) <br>
-						    	Here a is the Bloch vector of the system and I is the identity. &#963 represents the three Hermitian, traceless Pauli matrices, also known as the matrices used as the X-, Y- and Z-gate. The Bloch vector can be retrieved by computing the trace of the multication of these Pauli-matrices with the density matrix. The resulting numbers will be the coordinates of the vector.
-						    </p>
-						  	</div>
-						</div>
-						
-						<div class="panel panel-primary">
-						  	<div class="panel-heading">Quantum states</div>
-						  	<div class="panel-body">
-						    	<p>In the top left panel up to 4 states can constructed and added to the Bloch-spheres. The states can be constructed with two methods: <br><br>
-						    	The first one is specifying the polor coordinates the state vector will have in the bloch sphere. As the length of the vector can not be specified, this will always be 1, so these states will always be pure states. From the coordinates the wave function can be determined using the following formula: |&#936> = cos(&#952/2)|0> + sin(&#952/2) e<sup>i&#966</sup> <br>
-						    	The density matrix can then be constructed by computing |&#936><&#936| <br><br>
-						    	The second way is to directly fill in values in the density matrix. If the user chooses this method, the wave function and polar coordinates will not be updated. This is because not all density matrices can be represented this way. If the density matrix that is filled in is a mixed state, it is impossible to find the wave function. </p> 
-						  	</div>
-						</div>
-
-						<div class="panel panel-primary">
-						  	<div class="panel-heading">Add Noise</div>
-						  	<div class="panel-body">
-						    	<p> In the noise tab various parameters can be set to visualize how noise changes the shape of the bloch sphere, and thus how it changes the pure states, which are on the surface of the sphere. The provided matrices will act on the density matrix according to the following formula: E<sub>1</sub>&#961 E<sub>1</sub><sup>&#134</sup>+E<sub>2</sub>&#961E<sub>2</sub><sup>&#134</sup>
-						    		<br><br>
-						    	There are 4 predetermined noise types available: Depolarizing, Dephasing (X or Z) and Amplitude Damping. The corresponding noise matrices and formula for the chosen type of noise will be shown upon selection. For these 4 noise types the amount of noise can be set with the slider at the bottom of the tab. r=1 means no noise (matrix E<sub>1</sub> will be the identiy and E<sub>2</sub> will be zero) and r=0 means maximum noise. <br><br>
-						    	It is also possible for the user to set its own noise matrices. In this case everything is read and computed directly from the matrices the user provides, so the slider with amount of noise 'r' will no longer be of influence. The provided noise matrices have to satisfy the condition: &#8721 E<sub>i</sub> E<sub>i</sub><sup>&#134</sup>. If this condition is not met, the transformed Bloch-sphere will not be computed.
-						    	</p>
-						  	</div>
-						</div>
-
-						<div class="panel panel-primary">
-						  	<div class="panel-heading">Mixed State</div>
-						  	<div class="panel-body">
-						    	<p>In this tab the user can create a mixed state. The components of the mixed state are the existing states the user created in the top panel. The sliders next to each state show the probability that the state will be created. The active box has to be ticked to include a state with a probability. The sum of all probabilities always adds up to 1, so when including more than two states it becomes difficult for the user to control the sliders to construct the right distribution. For this the 'Lock probability' checkbox was constructed. When ticked, the probability for that state will not change anymore and the other active states will make sure the total probability adds up to 1. <br><br>
-						    	The generated mixed state is shown as a white arrow in the bloch sphere. Mixed state Bloch vectors have a lenght smaller than 1, so they will end in the Bloch sphere and not on the surface. The transformations in the other tabs will also affect the mixed state.
-						    	</p>
-						  	</div>
-						</div>
-
-						<div class="panel panel-primary">
-						  	<div class="panel-heading">Unitary Transformation</div>
-						  	<div class="panel-body">
-						    	<p>In the last tab unitary tranformations can be applied to the states. All the states will be multiplied by the unitary in the following way: U &#961 U<sup>&#134</sup>
-						    		<br><br>
-						    	There are 5 predetermined unitaries or gates available in the dropdown menu. The first three are the Pauli-gates, X, Y, Z. On top of that the Hadamard gate and a phase shift gate can be chosen. For the latter one the user has to specify the phase shift in radians. By choosing 'user defined unitary' the user can decide and fill in any valid unitary. 
-						    	<br><br>
-						    	The other option where user input is needed is the Evolving State. In this case, the unitary is determined by a Hamiltonian and time. The unitary which is applied to the density matrix is time-dependent and can be written as follows: U(t) = e<sup>itH</sup>, where H is the hamiltionian. A slider at the bottom of the tab is provided to see how the states evolve with different time settings to construct an new Unitary.
-						    	</p>
-						  	</div>
-						</div>
-				
-
 					</div>
+					<div class="modal-body step step-2" data-step="2">	
+						<p>Two Bloch-spheres are shown here: one at the top and one at the bottom. The top sphere represents the Bloch-sphere without any influences from settings in the tabs at the bottom left. These changes will be made visible in the bottom sphere. The top sphere can be rotated by the user, the bottom sphere will move with it. <br><br>
+						Computing the vector in the Bloch-sphere that represents a density matrix is done with the following formula: <br>
+							&#961 = 1/2 (I + a&#8901 &#963) <br>
+						Here a is the Bloch vector of the system and I is the identity. &#963 represents the three Hermitian, traceless Pauli matrices, also known as the matrices used as the X-, Y- and Z-gate. The Bloch vector can be retrieved by computing the trace of the multication of these Pauli-matrices with the density matrix. The resulting numbers will be the coordinates of the vector.
+					</p>
+					</div>
+
+					<div class="modal-body step step-3" data-step="3">	
+						<p>In the top left panel up to 4 states can constructed and added to the Bloch-spheres. The states can be constructed with two methods: <br><br>
+						The first one is specifying the polor coordinates the state vector will have in the bloch sphere. As the length of the vector can not be specified, this will always be 1, so these states will always be pure states. From the coordinates the wave function can be determined using the following formula: |&#936> = cos(&#952/2)|0> + sin(&#952/2) e<sup>i&#966</sup> <br>
+						The density matrix can then be constructed by computing |&#936><&#936| <br><br>
+						The second way is to directly fill in values in the density matrix. If the user chooses this method, the wave function and polar coordinates will not be updated. This is because not all density matrices can be represented this way. If the density matrix that is filled in is a mixed state, it is impossible to find the wave function. </p> 
+					</div>
+
+					<div class="modal-body step step-4" data-step="4">
+						<p> In the noise tab various parameters can be set to visualize how noise changes the shape of the bloch sphere, and thus how it changes the pure states, which are on the surface of the sphere. The provided matrices will act on the density matrix according to the following formula: E<sub>1</sub>&#961 E<sub>1</sub><sup>&#134</sup>+E<sub>2</sub>&#961E<sub>2</sub><sup>&#134</sup>
+							<br><br>
+						There are 4 predetermined noise types available: Depolarizing, Dephasing (X or Z) and Amplitude Damping. The corresponding noise matrices and formula for the chosen type of noise will be shown upon selection. For these 4 noise types the amount of noise can be set with the slider at the bottom of the tab. r = 1 means no noise (matrix E<sub>1</sub> will be the identiy and E<sub>2</sub> will be zero) and r = 0 means maximum noise. <br><br>
+						It is also possible for the user to set its own noise matrices. In this case everything is read and computed directly from the matrices the user provides, so the slider with amount of noise 'r' will no longer be of influence. The provided noise matrices have to satisfy the condition: &#8721 E<sub>i</sub> E<sub>i</sub><sup>&#134</sup> = I, with I the identity matrix. If this condition is not met, the transformed Bloch-sphere will not be computed.
+						</p>
+					</div>
+
+					<div class="modal-body step step-5" data-step="5">
+						<p>In this tab the user can create a mixed state. The components of the mixed state are the existing states the user created in the top panel. The sliders next to each state show the probability that the state will be created. The active box has to be ticked to include a state with a probability. The sum of all probabilities always adds up to 1, so when including more than two states it becomes difficult for the user to control the sliders to construct the right distribution. For this the 'Lock probability' checkbox was constructed. When ticked, the probability for that state will not change anymore and the other active states will make sure the total probability adds up to 1. <br><br>
+						The generated mixed state is shown as a white arrow in the bloch sphere. Mixed state Bloch vectors have a lenght smaller than 1, so they will end in the Bloch sphere and not on the surface. The transformations in the other tabs will also affect the mixed state.
+						</p>
+					</div>
+
+					<div class="modal-body step step-6" data-step="6">
+						<p>In the last tab unitary tranformations can be applied to the states. All the states will be multiplied by the unitary in the following way: U &#961 U<sup>&#134</sup>
+							<br><br>
+						There are 5 predetermined unitaries or gates available in the dropdown menu. The first three are the Pauli-gates, X, Y, Z. On top of that the Hadamard gate and a phase shift gate can be chosen. For the latter one the user has to specify the phase shift in radians. By choosing 'user defined unitary' the user can decide and fill in any valid unitary. 
+						<br><br>
+						The other option where user input is needed is the Evolving State. In this case, the unitary is determined by a Hamiltonian and time. The unitary which is applied to the density matrix is time-dependent and can be written as follows: U(t) = e<sup>itH</sup>, where H is the hamiltionian. A slider at the bottom of the tab is provided to see how the states evolve with different time settings to construct an new Unitary.
+						</p>
+					</div>
+
 					<div class="modal-footer">
 						<div class='row'>
 							<div class='col-md-8' style='text-align: left'>
 								<p>Copyright &#169; 2015, created by Annemieke Verbraeck, Frank Marsman and Tung Phan</p>
 							</div>
 							<div class='col-md-4'>
+								<button type="button" class="btn btn-primary step step-2" data-step="2" onclick="sendEvent('#infoModal', 1)">Back</button>
+
+								<button type="button" class="btn btn-primary step step-3" data-step="3" onclick="sendEvent('#infoModal', 2)">Back</button>
+
+								<button type="button" class="btn btn-primary step step-4" data-step="4" onclick="sendEvent('#infoModal', 3)">Back</button>
+
+								<button type="button" class="btn btn-primary step step-5" data-step="5" onclick="sendEvent('#infoModal', 4)">Back</button>
+
+								<button type="button" class="btn btn-primary step step-6" data-step="6" onclick="sendEvent('#infoModal', 5)">Back</button>
+
+								<button type="button" class="btn btn-primary step step-1" data-step="1" onclick="sendEvent('#infoModal', 2)">Continue</button>
+
+								<button type="button" class="btn btn-primary step step-2" data-step="2" onclick="sendEvent('#infoModal', 3)">Continue</button>
+
+								<button type="button" class="btn btn-primary step step-3" data-step="3" onclick="sendEvent('#infoModal', 4)">Continue</button>
+
+								<button type="button" class="btn btn-primary step step-4" data-step="4" onclick="sendEvent('#infoModal', 5)">Continue</button>
+
+								<button type="button" class="btn btn-primary step step-5" data-step="5" onclick="sendEvent('#infoModal', 6)">Continue</button>
+
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 							</div>
 						</div>
 					</div>
-			    </div>
-		  	</div>
+				</div>
+			</div>
 		</div>
+		<!-- https://github.com/ngzhian/multi-step-modal -->
+		<script src="js/lib/multi-step-modal.js"></script>
 
+		<script>
+		sendEvent = function(sel, step) {
+			$(sel).trigger('next.m.' + step);
+		}
+		</script>
 
 	</body>
 </html>      
