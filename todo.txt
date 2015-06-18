@@ -1,0 +1,12 @@
+TODO:
+
+check if densmatrix is valid:
+  - components all <=1
+  - error-message if not valid
+
+check if densmatrix is pure
+  - trace == 1, see function in getvector.js
+
+
+make mixed state from two existing states
+  - 2 sliders, opposite, so they add up to 1

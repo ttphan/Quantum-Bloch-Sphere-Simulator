@@ -1,0 +1,246 @@
+body {
+	padding: 10px;
+	background-color: #F5F5F5;
+	background-image: url("../pic/bg.jpg");
+	background-size:cover;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#2E2E2E;
+}
+
+h1, h2, h4, h5 {
+	font-family: Georgia, serif;
+	color: #424242;
+}
+
+h1, h2 {
+	vertical-align: middle;
+	text-align: center;
+	margin-top: 10px;
+}
+
+h4, h5 {
+	text-align: left;
+	vertical-align: middle;
+}
+
+h5 {
+	text-align: center;
+}
+
+h1 {
+	font-family: Arial, sans-serif;
+	font-size: 20pt;
+}
+
+h3 {
+	font-family: Arial, sans-serif;
+	font-size: 14pt;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	color: #0B4C5F;
+}
+
+h2 {
+	font-size: 15pt;
+}
+
+
+.checkboxes h4 {
+	margin-top: 10px;
+}
+
+.checkboxes input {
+	margin-left: 5px;
+}
+
+#bottom-section2 h4 {
+	margin-left: 10px;
+}
+
+#app {
+	vertical-align: middle;
+	width: 900px;
+	height: 600px;
+}
+
+.state-1 {
+	color: red;
+}
+
+.state-2 {
+	color: green;
+}
+
+.state-3 {
+	color: blue;
+}
+
+.state-4 {
+	color: gold;
+}
+
+#computeMixed {
+	margin: 10px;
+}
+
+.blue {
+	display: table;
+	width: 100%; /* optional */
+	background-color:lightblue;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(173, 216, 230);
+	/* RGBa with 0.6 opacity */
+	background: rgba(173, 216, 230, 0.8);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+
+.alpha60 {
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(255, 255, 255);
+	/* RGBa with 0.6 opacity */
+	background: rgba(255, 255, 255, 0.6);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+
+.inputAngles {
+	margin-left: 0px;
+	width: 40px;
+	margin-top: 14px;
+
+}
+
+#state1Text {
+	font-family: georgia, serif;
+}
+
+h4.indentText {
+	margin-left: 8px;
+}
+
+div.greekAngles {
+	margin-top: 10px;
+}
+
+div.smallPadding {
+	padding-left: 1px;
+	padding-right: 1px;
+	vertical-align: middle;
+}
+
+div.blocks {
+	border: 1px solid white;
+	padding: 0px;
+}
+
+
+div#sphere, div#sphere-noise {
+	padding: 10px;
+}
+
+div.colspace {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.row {
+	margin: 0px;
+}
+
+div.spaceRow {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+canvas {
+	width: 100%;
+	height: 100%;
+}
+
+.canvasSphere {
+	margin-left: 15px;
+}
+
+.range-slider {
+    position: relative;
+    height: 60px;
+}
+
+.tab-content {
+    display: table;
+    width: 100%; /* optional */
+}
+
+/*#bottom-input, #bottom-section-1 {
+	padding: 35px;
+}*/
+
+#noise-select {
+	margin-bottom: 10px;
+}
+
+#noise-equation-img {
+	margin-top: 35px;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid white;
+}
+
+.tabTop {
+	overflow: auto;
+}
+
+.tabTop img {
+	float: left;
+}
+
+.tabTop h3 {
+	float: left;
+	position: relative;
+	margin: 0px;
+	margin-left: 5px;
+}
+
+.tab-pane select {
+	margin-left: 8px;
+}
+
+#titleblock {
+	background-color: #2E2E2E;
+	border: 0px;
+}
+
+#titleblock h1 {
+	color: #D8D8D8;
+}
+
+.invisible {
+	visibility: hidden;
+}
+
+.buttonMargin {
+	margin-left: 8px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#bottom-section3 .buttonMargin {
+	margin-top: 30px;
+}
+
+#mixedStateFunction {
+	margin: 10px;
+	margin-left: 40px;	
+	font-size: 12pt;
+}
+
+label {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
