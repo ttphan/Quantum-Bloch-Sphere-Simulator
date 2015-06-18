@@ -239,7 +239,7 @@ $(document).ready(function() {
 					.append($("<button></button>")
 						.attr({id: "btn_show_state_" + i})
 						.addClass("btn btn-default btn-md")
-						.text("Show state in Bloch-sphere")
+						.text("Show state in Bloch sphere")
 					)
 				)
 				.append($("<div class='sliders col-md-12'></div>")
@@ -390,7 +390,7 @@ $(document).ready(function() {
 	/**
 	 * #resetBlochSphere
 	 *
-	 * Resets the bottom Bloch-sphere and transformation matrix
+	 * Resets the bottom Bloch sphere and transformation matrix
 	 */
 	function resetBlochSphere() {
 		// Bloch sphere object

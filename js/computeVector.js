@@ -144,17 +144,71 @@ function getStateFromAngle(theta, phi) {
  * @return {[lambda1, lambda2]}
  */
 function getEigenvalues(matrix) {
-      a = matrix[0][0];
-      b = matrix[0][1];
-      c = matrix[1][0];
-      d = matrix[1][1];
-      partA = 1;
-      partB = math.chain(a).add(d).multiply(-1).done();
-      partC = math.subtract(math.multiply(a,d),math.multiply(c,d));
-      partsqrt = math.chain(partC).multiply(partA).multiply(-4).add(math.pow(partB,2)).sqrt().done();
-      lambda1 = math.chain(-1).multiply(partB).add(partsqrt).multiply(0.5).done();
-      lambda2 = math.chain(-1).multiply(partB).subtract(partsqrt).multiply(0.5).done();
+      var T = trace(matrix);
+      var D = math.det(matrix);
+      var part = math.chain(T)
+                     .pow(2)
+                     .divide(4)
+                     .subtract(D)
+                     .sqrt()
+                     .done();
+                                 
+      var lambda1 = math.chain(T).divide(2).add(part).done();
+      var lambda2 = math.chain(T).divide(2).subtract(part).done();
+                             
+      // a = matrix[0][0];
+      // b = matrix[0][1];
+      // c = matrix[1][0];
+      // d = matrix[1][1];
+      // partA = 1;
+      // partB = math.chain(a).add(d).multiply(-1).done();
+      // partC = math.subtract(math.multiply(a,d),math.multiply(c,d));
+      // partsqrt = math.chain(partC)
+      //             .multiply(partA)
+      //             .multiply(-4)
+      //             .add(math.pow(partB,2))
+      //             .sqrt()
+      //             .done();
+      // lambda1 = math.chain(-1)
+      //             .multiply(partB)
+      //             .add(partsqrt)
+      //             .multiply(0.5)
+      //             .done();
+      // lambda2 = math.chain(-1)
+      //             .multiply(partB)
+      //             .subtract(partsqrt)
+      //             .multiply(0.5)
+      //             .done();
       return [lambda1, lambda2];
+}
+
+/**
+ * #getEigenVectors
+ *
+ * Computes eigenvectors of 2x2 matrix
+ * returns matrix of the 2 eigenvectors of 2x2 matrix
+ * @param  {matrix}
+ * @return {[eigvec1, eigvec2]}
+ */
+function getEigenVectors(matrix) {
+      var a = matrix[0][0];
+      var b = matrix[0][1];
+      var c = matrix[1][0];
+      var d = matrix[1][1];
+      var eigval = getEigenvalues(matrix);
+      var l1 = eigval[0];
+      var l2 = eigval[1];
+      var eigvec;
+
+      if (c != 0) {
+            eigvec = [[math.subtract(l1,d), math.subtract(l2,d)],[c,c]]
+      } else if (b != 0) {
+            eigvec = [[b,b],[math.subtract(l1,a), math.subtract(l2,a)]]
+      } else {
+            eigvec = identity;
+      }
+
+      return eigvec;
 }
 
 /**
@@ -244,7 +298,10 @@ function applyGateToState(state, gate) {
  * @return {density matrix after gate}
  */
 function applyGateToDensMat(densMatrix, gate) {
-      return math.chain(gate).multiply(densMatrix).multiply(conjugateTranspose(gate)).done();
+      return math.chain(gate)
+            .multiply(densMatrix)
+            .multiply(conjugateTranspose(gate))
+            .done();
 }
 
 /**
@@ -259,8 +316,14 @@ function applyGateToDensMat(densMatrix, gate) {
  * @return {density matrix after noise}
  */
 function channelNoise(densMatrix, E1, E2) {
-      return math.add(math.chain(E1).multiply(densMatrix).multiply(conjugateTranspose(E1)).done(), 
-            math.chain(E2).multiply(densMatrix).multiply(conjugateTranspose(E2)).done());
+      return math.add(math.chain(E1)
+                        .multiply(densMatrix)
+                        .multiply(conjugateTranspose(E1))
+                        .done(), 
+                   math.chain(E2)
+                        .multiply(densMatrix)
+                        .multiply(conjugateTranspose(E2))
+                        .done());
 }
 
 /**
@@ -315,8 +378,10 @@ function dephaseNoiseZ(densMatrix, r) {
  * @return {density matrix after ampdamp}
  */
 function ampDampNoise(densMatrix, r) {
-      var a0 = math.add(stateToDens(stateZero), math.multiply(math.sqrt(r),stateToDens(stateOne)));
-      var a1 = math.multiply(math.sqrt(1-r), math.multiply(stateZero,math.transpose(stateOne)));
+      var a0 = math.add(stateToDens(stateZero), 
+            math.multiply(math.sqrt(r),stateToDens(stateOne)));
+      var a1 = math.multiply(math.sqrt(1-r), 
+            math.multiply(stateZero,math.transpose(stateOne)));
       return channelNoise(densMatrix, a0, a1);;
 }
 
@@ -396,7 +461,8 @@ function isValidEigenvalues(densMatrix) {
  * @return {Boolean}
  */
 function isValidNoiseMatrices(E1, E2) {
-      var mat = math.add(math.multiply(E1,conjugateTranspose(E1)), math.multiply(E2,conjugateTranspose(E2)));
+      var mat = math.add(math.multiply(E1,conjugateTranspose(E1)), 
+                        math.multiply(E2,conjugateTranspose(E2)));
       return matrixEquals(mat, identity);
 }
 
@@ -438,19 +504,27 @@ function getPadeApproxExp(matrix) {
       return math.divide(num,denom);
 }
 
+
 /**
  * #getUnitaryAtTime
  *
  * Computes unitary at given time for given Hamiltonian
- * Returns Pade approximation of resulting unitary
  * 
  * @param  {hamiltonian}
  * @param  {time}
  * @return {result}
  */
 function getUnitaryAtTime(hamiltonian, time) {
-      var mat = math.chain(math.complex("-i")).multiply(time).multiply(hamiltonian).done();
-      return  getPadeApproxExp(mat);
+      var eigval = getEigenvalues(hamiltonian);
+      var diagMat = math.chain(eigval)
+                  .multiply(math.complex("-i"))
+                  .multiply(time)
+                  .exp()
+                  .diag()
+                  .done();
+      var eigVecMat = getEigenVectors(hamiltonian);
+      var eigVecInv = math.inv(eigVecMat);
+      return math.chain(eigVecMat).multiply(diagMat).multiply(eigVecInv).done();
 }
 
 /**
