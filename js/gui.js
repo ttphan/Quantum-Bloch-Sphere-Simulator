@@ -1,11 +1,11 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	var camera_top, controls, scene, renderer_top;
 
 	var camera_bottom, scene_bottom, renderer_bottom;
 
 	var activeTab = 1;
 	var arrows = [null, null, null, null, null];
-	
+
 	var blochSphere_bottom; // the bottom Bloch sphere
 	var transformed_arrows = [null, null, null, null, null];
 	var transformed_ball = [null, null, null, null, null];
@@ -17,7 +17,7 @@ $(document).ready(function() {
 
 	// Color values
 	var sphereColor = 0x045FB4;
-	var axesColors = [0xFA5858,0x01DF3A,0x2E64FE];
+	var axesColors = [0xFA5858, 0x01DF3A, 0x2E64FE];
 	var circleColors = [0xffffff, 0xD8D8D8];
 	var tabColors = ['red', 'green', 'blue', 'yellow', 'white'];
 	var canvasColor = 0x2E2E2E;
@@ -29,11 +29,11 @@ $(document).ready(function() {
 	init();
 	animate();
 	gui();
-	updateBottomBlochSphere( );
+	updateBottomBlochSphere();
 
 	/**
 	 * #init
-	 * 
+	 *
 	 * Initial THREE.js function
 	 */
 	function init() {
@@ -42,12 +42,12 @@ $(document).ready(function() {
 
 		// renderer
 		//// Top
-		renderer_top = new THREE.WebGLRenderer({canvas: c_top});
+		renderer_top = new THREE.WebGLRenderer({ canvas: c_top });
 		renderer_top.setSize(c_top.width, c_top.height);
 		renderer_top.autoClear = false;
 
 		//// Bottom
-		renderer_bottom = new THREE.WebGLRenderer({canvas: c_bottom});
+		renderer_bottom = new THREE.WebGLRenderer({ canvas: c_bottom });
 		renderer_bottom.setSize(c_bottom.width, c_bottom.height);
 		renderer_bottom.autoClear = false;
 
@@ -57,16 +57,16 @@ $(document).ready(function() {
 		camera_top.position.z = camera_bottom.position.z = 3;
 		camera_top.position.x = camera_bottom.position.x = 1;
 		camera_top.position.y = camera_bottom.position.y = 1;
-		
+
 		// Trackball controls
-		controls = new THREE.OrbitControls( camera_top, c_top );
+		controls = new THREE.OrbitControls(camera_top, c_top);
 		controls.rotateSpeed = 1.0;
 		controls.noPan = true;
 
 		controls.minDistance = 2;
 		controls.maxDistance = 5;
 
-		controls.addEventListener( 'change', render );
+		controls.addEventListener('change', render);
 
 		// scene
 		//// Top
@@ -74,20 +74,20 @@ $(document).ready(function() {
 		sceneCircles = new THREE.Scene();
 
 		//// Bottom
-		scene_bottom = new THREE.Scene(); 
+		scene_bottom = new THREE.Scene();
 		sceneCircles_bottom = new THREE.Scene();
 
 
 		////////////////////// TOP ////////////////////////////////
 		// Bloch sphere object
 		var blochSphere = new THREE.Object3D();
-				
+
 		// sphere
 		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
-		var sphereMaterial = new THREE.MeshBasicMaterial( { 
-			color: sphereColor, 
-			transparent: true, 
-			opacity: 0.25 
+		var sphereMaterial = new THREE.MeshBasicMaterial({
+			color: sphereColor,
+			transparent: true,
+			opacity: 0.25
 		});
 
 		var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
@@ -98,23 +98,23 @@ $(document).ready(function() {
 		sceneCircles.add(circles);
 
 		// Add axes
-		var axes = buildAxes( 1.5, axesColors );
-		scene.add( axes );
+		var axes = buildAxes(1.5, axesColors);
+		scene.add(axes);
 
 		scene.add(blochSphere);
-		
-		
-		/////////////////////// BOTTOM /////////////////////////////////
-		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
-		geometry.applyMatrix( new THREE.Matrix4().makeScale( transformation[0], transformation[1], transformation[2] ) );
 
-		var sphereMaterialNoise = new THREE.MeshBasicMaterial( { 
-			color: sphereColor, 
-			transparent: true, 
-			opacity: 0.25 
+
+		/////////////////////// BOTTOM /////////////////////////////////
+		var geometry = new THREE.SphereGeometry(1, 16, 12);
+		geometry.applyMatrix(new THREE.Matrix4().makeScale(transformation[0], transformation[1], transformation[2]));
+
+		var sphereMaterialNoise = new THREE.MeshBasicMaterial({
+			color: sphereColor,
+			transparent: true,
+			opacity: 0.25
 		});
 
-		
+
 		blochSphere_bottom = new THREE.Object3D();
 
 		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
@@ -128,34 +128,34 @@ $(document).ready(function() {
 		// blochSphere_bottom.add(circles_bottom);
 
 		scene_bottom.add(blochSphere_bottom);
-		
+
 		render();
 	}
-	
+
 	/**
 	 * #animate
-	 * 
+	 *
 	 * THREE.js animation
 	 */
 	function animate() {
-		requestAnimationFrame( animate );
+		requestAnimationFrame(animate);
 		controls.update();
 	}
 
 	/**
 	 * #render
-	 * 
+	 *
 	 * THREE.js render, renders both top and bottom canvases
 	 */
 	function render() {
-		renderer_top.setClearColor( canvasColor, 1);
+		renderer_top.setClearColor(canvasColor, 1);
 		renderer_top.clear();
 		renderer_top.render(sceneCircles, camera_top);
 		renderer_top.clearDepth();
 		renderer_top.render(scene, camera_top);
 
 
-		renderer_bottom.setClearColor( canvasColor, 1);
+		renderer_bottom.setClearColor(canvasColor, 1);
 		renderer_bottom.clear();
 		renderer_bottom.render(sceneCircles_bottom, camera_top);
 		renderer_bottom.clearDepth();
@@ -168,18 +168,18 @@ $(document).ready(function() {
 	 * Dynamically constructs the majority of the GUI
 	 */
 	function gui() {
-		$('a[id^="tab"]').on('shown.bs.tab', function(e){
-		    var tab = $(e.target).attr('id');
-		    activeTab = parseInt(tab.substring(tab.length-1));	
+		$('a[id^="tab"]').on('shown.bs.tab', function (e) {
+			var tab = $(e.target).attr('id');
+			activeTab = parseInt(tab.substring(tab.length - 1));
 		});
 
-		$('#bottom-tab3').on('shown.bs.tab', function(e){
-		    resetBlochSphere();
+		$('#bottom-tab3').on('shown.bs.tab', function (e) {
+			resetBlochSphere();
 		});
-		
+
 		for (var i = 1; i <= 4; i++) {
 			$("#section" + i)
-					.append($("<div></div>")
+				.append($("<div></div>")
 					.addClass("col-md-6")
 					.append($("<h4 id='densityMatText'>Density Matrix: </h4>"))
 					.append($("<input>")
@@ -235,10 +235,10 @@ $(document).ready(function() {
 					})
 					.append($("<h4>Wave function: </h4>"))
 					.append($("<div id='state" + i + "Text'></div>")
-					  .append($("<p>&#936 = (1)|0> + (0)|1></p>"))
+						.append($("<p>&#936 = (1)|0> + (0)|1></p>"))
 					)
 					.append($("<button></button>")
-						.attr({id: "btn_show_state_" + i})
+						.attr({ id: "btn_show_state_" + i })
 						.addClass("btn btn-default btn-md")
 						.text("Show state in Bloch sphere")
 					)
@@ -260,7 +260,7 @@ $(document).ready(function() {
 							)
 						)
 						.append($("<div class='range-slider col-md-10'></div>")
-						    .append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
+							.append($("<input type='text' class='js-range-slider-" + i + "-1' value='' />"))
 						)
 					)
 					.append($("<div class='row'></div>")
@@ -278,7 +278,7 @@ $(document).ready(function() {
 							)
 						)
 						.append($("<div class='range-slider col-md-10'></div>")
-						    .append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
+							.append($("<input type='text' class='js-range-slider-" + i + "-2' value='' />"))
 						)
 					)
 				)
@@ -287,7 +287,7 @@ $(document).ready(function() {
 			$("#btn_show_state_" + i).on('click', ifValidDrawArrow);
 			$("#angle_" + i + "_2").on('change', updateTopSlider);
 			$("#angle_" + i + "_1").on('change', updateTopSlider);
-			
+
 			// Initialize sliders
 			createSliders(i);
 		}
@@ -305,65 +305,65 @@ $(document).ready(function() {
 		$("#time_slider").on('change', onUnitarySelectionChanged);
 		$("#time_t").on('change', updateTimeSlider);
 
-		makeNoiseTab();	
-		addEventMixedSliders();	
+		makeNoiseTab();
+		addEventMixedSliders();
 		onUnitarySelectionChanged();
 	}
 
 	/**
 	 * #computeTransformedBlochSphere
-	 * 
+	 *
 	 * Computes the new Bloch sphere after transformation by a
 	 * quantum noise channel.
-	 * Returns two vectors, first is scaling of each axis, 
+	 * Returns two vectors, first is scaling of each axis,
 	 * second is position of new center
-	 * 
+	 *
 	 * @return {[[scaleX, scaleY, scaleZ], center_X]}
 	 */
 	function computeTransformedBlochSphere() {
-	  var E1 = getE1();
-	  var E2 = getE2();
-	
-	  // we check whether E1 and E2 are defined by user.
-	  // if so, we check for validity
-	  if ($("#noise-select").val() == "user" && !isValidNoiseMatrices(E1, E2)) {
-		errorModal('Error: Invalid noise matrix!', "Sums of product of matrices and their complex conjugates don't add up to the identity!" );
-	  	return;
-	  } // if
-	  return computeNewBlochSphere(getE1(), getE2());
+		var E1 = getE1();
+		var E2 = getE2();
+
+		// we check whether E1 and E2 are defined by user.
+		// if so, we check for validity
+		if ($("#noise-select").val() == "user" && !isValidNoiseMatrices(E1, E2)) {
+			errorModal('Error: Invalid noise matrix!', "Sums of product of matrices and their complex conjugates don't add up to the identity!");
+			return;
+		} // if
+		return computeNewBlochSphere(getE1(), getE2());
 	} // computeTransformedBlochSphere
-	
+
 	/**
 	 * #updateBottomBlochSphere
-	 * 
+	 *
 	 * Draws the bottom Bloch sphere at location center.
 	 */
-	function updateBottomBlochSphere( ) {
+	function updateBottomBlochSphere() {
 		var tmp = computeTransformedBlochSphere();
 		var axes = tmp[0];
 		var center = tmp[1];
-		
+
 		// Switch z and y axis to compensate for computer graphics/physics
 		// difference quirks.
 		var temp = center.y;
 		center.y = center.z;
 		center.z = temp;
 		center.z = -1 * center.z;
-		
+
 		var temp = axes[1];
 		axes[1] = axes[2];
 		axes[2] = temp;
-		
-		var geometry = new THREE.SphereGeometry( 1, 16, 12 );
-		geometry.applyMatrix( new THREE.Matrix4().makeScale( axes[0], axes[1], axes[2] ) );
 
-		var sphereMaterialNoise = new THREE.MeshBasicMaterial( { 
-			color: sphereColor, 
-			transparent: true, 
-			opacity: 0.25 
+		var geometry = new THREE.SphereGeometry(1, 16, 12);
+		geometry.applyMatrix(new THREE.Matrix4().makeScale(axes[0], axes[1], axes[2]));
+
+		var sphereMaterialNoise = new THREE.MeshBasicMaterial({
+			color: sphereColor,
+			transparent: true,
+			opacity: 0.25
 		});
 
-		
+
 		var newblochSphere_bottom = new THREE.Object3D();
 
 		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
@@ -375,7 +375,7 @@ $(document).ready(function() {
 		// sceneCircles_bottom.add(circles_bottom)
 
 		// newblochSphere_bottom.add(circles_bottom);
-		
+
 		newblochSphere_bottom.translateX(center.x);
 		newblochSphere_bottom.translateY(center.y);
 		newblochSphere_bottom.translateZ(center.z);
@@ -384,7 +384,7 @@ $(document).ready(function() {
 		scene_bottom.remove(blochSphere_bottom);
 		blochSphere_bottom = newblochSphere_bottom;
 		scene_bottom.add(newblochSphere_bottom);
-		
+
 		drawTransformedArrows();
 	} // updateBottomBlochSphere
 
@@ -396,13 +396,13 @@ $(document).ready(function() {
 	function resetBlochSphere() {
 		// Bloch sphere object
 		var newBlochSphere = new THREE.Object3D();
-				
+
 		// sphere
 		var sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
-		var sphereMaterial = new THREE.MeshBasicMaterial( { 
-			color: sphereColor, 
-			transparent: true, 
-			opacity: 0.25 
+		var sphereMaterial = new THREE.MeshBasicMaterial({
+			color: sphereColor,
+			transparent: true,
+			opacity: 0.25
 		});
 
 		var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
@@ -417,7 +417,7 @@ $(document).ready(function() {
 		blochSphere_bottom = newBlochSphere;
 		scene_bottom.add(newBlochSphere);
 
-		$("#noise_slider").data("ionRangeSlider").update({from: 0})
+		$("#noise_slider").data("ionRangeSlider").update({ from: 0 })
 		$("#input_noise_E1_a").val(1);
 		$("#input_noise_E1_b").val(0);
 		$("#input_noise_E1_c").val(0);
@@ -438,34 +438,34 @@ $(document).ready(function() {
 	 * @return {E1}
 	 */
 	function getE1() {
-	  var E1 = [[0,0],[0,0]];
-	  E1[0][0] = math.complex($("#input_noise_E1_a").val());
-	  E1[0][1] = math.complex($("#input_noise_E1_b").val());
-	  E1[1][0] = math.complex($("#input_noise_E1_c").val());
-	  E1[1][1] = math.complex($("#input_noise_E1_d").val());
-	  return E1
+		var E1 = [[0, 0], [0, 0]];
+		E1[0][0] = math.complex($("#input_noise_E1_a").val());
+		E1[0][1] = math.complex($("#input_noise_E1_b").val());
+		E1[1][0] = math.complex($("#input_noise_E1_c").val());
+		E1[1][1] = math.complex($("#input_noise_E1_d").val());
+		return E1
 	} // getE1
-	
+
 	/**
 	 * #getE2
 	 *
 	 * returns E2, gathers info from input fields
-	 * 
+	 *
 	 * @return {E2}
 	 */
 	function getE2() {
-	  var E2 = [[0,0],[0,0]];
-	  E2[0][0] = math.complex($("#input_noise_E2_a").val());
-	  E2[0][1] = math.complex($("#input_noise_E2_b").val());
-	  E2[1][0] = math.complex($("#input_noise_E2_c").val());
-	  E2[1][1] = math.complex($("#input_noise_E2_d").val());
-	  return E2
+		var E2 = [[0, 0], [0, 0]];
+		E2[0][0] = math.complex($("#input_noise_E2_a").val());
+		E2[0][1] = math.complex($("#input_noise_E2_b").val());
+		E2[1][0] = math.complex($("#input_noise_E2_c").val());
+		E2[1][1] = math.complex($("#input_noise_E2_d").val());
+		return E2
 	} // getE2
 
 
 	/**
 	 * #drawTransformedArrows
-	 * 
+	 *
 	 * Draws all vector arrows after transformation in bottom Bloch sphere
 	 */
 	function drawTransformedArrows() {
@@ -474,12 +474,12 @@ $(document).ready(function() {
 		var E1 = getE1();
 		var E2 = getE2();
 		var unitary = getUnitary();
-			  
+
 		// get density matrices of all active arrows
 		for (var i = 1; i <= arrows.length; i++) {
-		    if (arrows[i-1] != null) {
-		    	if (i < 5) {
-		    		var matrix = getDensityMatrix(i);
+			if (arrows[i - 1] != null) {
+				if (i < 5) {
+					var matrix = getDensityMatrix(i);
 
 					var a = matrix[0][0];
 					var b = matrix[0][1];
@@ -492,50 +492,50 @@ $(document).ready(function() {
 					var c = mixedState[1][0];
 					var d = mixedState[1][1];
 				}
-				
-				var transformed_densityMat = channelNoise([[a,b],[c,d]],E1,E2);
+
+				var transformed_densityMat = channelNoise([[a, b], [c, d]], E1, E2);
 
 				if (tab3isActive) {
-				    transformed_densityMat = applyGateToDensMat([[a,b],[c,d]], unitary);
+					transformed_densityMat = applyGateToDensMat([[a, b], [c, d]], unitary);
 				}
 
 				var dir = getVector(transformed_densityMat);
-				
+
 				// Switch z and y axis to compensate for computer graphics/physics
 				// difference quirks.
 				var temp = dir.y;
 				dir.y = dir.z;
 				dir.z = temp;
 				dir.z = -1 * dir.z;
-				
+
 				var origin = computeNewBlochSphere(E1, E2)[1];
 				temp = origin.y;
 				origin.y = origin.z;
 				origin.z = temp;
 				origin.z = -1 * origin.z;
-				
+
 				var length = dir.length();
-				var hex = tabColors[i-1];
-				
+				var hex = tabColors[i - 1];
+
 				//
 				// creating the line:
 				//
 				var arrow = getArrow(origin, dir, hex);
 
-				if (transformed_arrows[i-1] != null) {
-					scene_bottom.remove(transformed_arrows[i-1]);
+				if (transformed_arrows[i - 1] != null) {
+					scene_bottom.remove(transformed_arrows[i - 1]);
 				} // if
-				transformed_arrows[i-1] = arrow;
+				transformed_arrows[i - 1] = arrow;
 				scene_bottom.add(arrow);
-				
+
 				// Also add sphere at end of arrow:
 				var ball = getBall(dir, hex);
-				
-				if (transformed_ball[i-1] != null) {
-					scene_bottom.remove(transformed_ball[i-1]);
+
+				if (transformed_ball[i - 1] != null) {
+					scene_bottom.remove(transformed_ball[i - 1]);
 				} // if
 
-				transformed_ball[i-1] = ball;	
+				transformed_ball[i - 1] = ball;
 				scene_bottom.add(ball);
 
 			} // if
@@ -546,9 +546,9 @@ $(document).ready(function() {
 	/**
 	 * #drawArrow
 	 *
-	 * Draws state vector arrow of the current active tab in the Bloch sphere. 
+	 * Draws state vector arrow of the current active tab in the Bloch sphere.
 	 * If a 3-vector is given as parameter, that vector will be drawn instead.
-	 * 
+	 *
 	 * @param  {[x, y, z]}
 	 */
 	function drawArrow(vector) {
@@ -558,23 +558,23 @@ $(document).ready(function() {
 		if (vector !== undefined) {
 			dir = vector;
 			index = 4
-		} 
+		}
 
-	    // Switch z and y axis to compensate for computer graphics/physics
-	    // difference quirks.
-	    temp = dir.y;
-	    dir.y = dir.z;
-	    dir.z = temp;
-	    dir.z = -1 * dir.z;
-		
-		var origin = new THREE.Vector3( 0, 0, 0 );
+		// Switch z and y axis to compensate for computer graphics/physics
+		// difference quirks.
+		temp = dir.y;
+		dir.y = dir.z;
+		dir.z = temp;
+		dir.z = -1 * dir.z;
+
+		var origin = new THREE.Vector3(0, 0, 0);
 		var length = dir.length();
 		var hex = tabColors[index];
 
 
 
 		// var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
-		var arrow = getArrow( origin, dir, hex );
+		var arrow = getArrow(origin, dir, hex);
 
 
 		if (arrows[index] != null) {
@@ -582,35 +582,35 @@ $(document).ready(function() {
 		}
 
 		arrows[index] = arrow;
-		scene.add( arrow );
+		scene.add(arrow);
 
 
 
 
 
-    var ball = getBall(dir, hex);
-    if (balls[index-1] != null) scene.remove(balls[index-1]);
-    balls[index-1] = ball;
-    scene.add(ball);
+		var ball = getBall(dir, hex);
+		if (balls[index - 1] != null) scene.remove(balls[index - 1]);
+		balls[index - 1] = ball;
+		scene.add(ball);
 
 
 
 
 
 
-		
+
 		drawTransformedArrows();
 
 	} // drawArrow
 
 	/**
 	 * #ifValidDrawArrow
-	 * 
+	 *
 	 * Checks if the density matrix of the current active tab is a valid density
 	 * matrix. If true, call drawArrow, if not display error.}
 	 */
 	function ifValidDrawArrow() {
-	    var mat = getDensityMatrix(activeTab)
+		var mat = getDensityMatrix(activeTab)
 
 		if (!isValidTrace(mat) || !isValidHermitian(mat)) {// || !isValidEigenvalues(mat)) {
 			errorModal("Error: Invalid state", "This density matrix does not represent a valid state!");
@@ -628,13 +628,13 @@ $(document).ready(function() {
 		var textId = this.id.slice(-1);
 		var degr = parseFloat(this.value);
 
-		if (degr > 180*textId) {
-			this.value = 180*textId;	
+		if (degr > 180 * textId) {
+			this.value = 180 * textId;
 		} else if (degr < 0) {
-			this.value = 0.00;	
+			this.value = 0.00;
 		}
 
-		$('.js-range-slider-1-' + textId).data("ionRangeSlider").update({from: this.value});
+		$('.js-range-slider-1-' + textId).data("ionRangeSlider").update({ from: this.value });
 		updateStateGui(activeTab);
 	}
 
@@ -651,9 +651,9 @@ $(document).ready(function() {
 			var densMats = [];
 			var sliders = $('[class^="js-range-slider-mixed"]');
 
-			sliders.each(function(i) {
+			sliders.each(function (i) {
 				p[i] = $(this).data("ionRangeSlider").result.from;
-				densMats[i] = getDensityMatrix(i+1);
+				densMats[i] = getDensityMatrix(i + 1);
 			});
 
 			mixedState = makeMixedState(densMats[0], p[0], densMats[1], p[1], densMats[2], p[2], densMats[3], p[3]);
@@ -666,51 +666,51 @@ $(document).ready(function() {
 
 	/**
 	 * #createSliders
-	 * 
+	 *
 	 * Creates the sliders in the top div and mixed tabs.
 	 * @param  {i: index}
 	 */
 	function createSliders(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
-		    $phi = $(".js-range-slider-" + i + "-2"),
-		    $mixed = $(".js-range-slider-mixed-" + i),
-		    first,
-		    second;
+			$phi = $(".js-range-slider-" + i + "-2"),
+			$mixed = $(".js-range-slider-mixed-" + i),
+			first,
+			second;
 
 		$theta.ionRangeSlider({
-		    type: "single",
-		    grid: true,
-		    min: 0,
-		    max: 180,
-		    from: 0,
-		    step: 0.1,
-		    onChange: function (data) {
-		    	$("#angle_" + i + "_1").val(data.from);
-		        updateStateGui(i);
-		    }
+			type: "single",
+			grid: true,
+			min: 0,
+			max: 180,
+			from: 0,
+			step: 0.1,
+			onChange: function (data) {
+				$("#angle_" + i + "_1").val(data.from);
+				updateStateGui(i);
+			}
 		});
 
 		$phi.ionRangeSlider({
-		    type: "single",
-		    grid: true,
-		    min: 0,
-		    max: 360,
-		    from: 0,
-		    step: 0.1,
-		    onChange: function (data) {
-		    	$("#angle_" + i + "_2").val(data.from);
-		        updateStateGui(i);
-		    }
+			type: "single",
+			grid: true,
+			min: 0,
+			max: 360,
+			from: 0,
+			step: 0.1,
+			onChange: function (data) {
+				$("#angle_" + i + "_2").val(data.from);
+				updateStateGui(i);
+			}
 		});
 
 		$mixed.ionRangeSlider({
-		    type: "single",
-		    grid: true,
-		    min: 0,
-		    max: 1,
-		    from: 0,
-		    step: 0.01,
-		    from_fixed: true
+			type: "single",
+			grid: true,
+			min: 0,
+			max: 1,
+			from: 0,
+			step: 0.01,
+			from_fixed: true
 		});
 
 		first = $theta.data("ionRangeSlider");
@@ -726,19 +726,19 @@ $(document).ready(function() {
 		// slider:
 		var $R = $(".js-range-slider-noise");
 		$R.ionRangeSlider({
-		    type: "single",
-		    grid: true,
-		    min: 0,
-		    max: 1,
-		    from: 0,
-		    step: 0.01,
+			type: "single",
+			grid: true,
+			min: 0,
+			max: 1,
+			from: 0,
+			step: 0.01,
 			onChange: function (data) {
-		       updateBottomBlochSphere();
-		    },
+				updateBottomBlochSphere();
+			},
 			prettify: function (num) {
-			  return sliceDecimals(1-num);
+				return sliceDecimals(1 - num);
 			}
-		});	
+		});
 
 		onNoiseSelectionChanged();
 	}
@@ -751,7 +751,7 @@ $(document).ready(function() {
 	 */
 	function updateStateGui(i) {
 		var $theta = $(".js-range-slider-" + i + "-1"),
-		    $phi = $(".js-range-slider-" + i + "-2");
+			$phi = $(".js-range-slider-" + i + "-2");
 
 		var radTheta = parseFloat($theta.val()) / 180 * Math.PI;
 		var radPhi = parseFloat($phi.val()) / 180 * Math.PI;
@@ -763,8 +763,8 @@ $(document).ready(function() {
 
 		$("#state" + i + "Text").html("<p>&#936 = (" + sliceDecimals(a) + ")|0> + (" + sliceDecimals(b) + ")|1></p>");
 
-		var matrix = stateToDens([[a],[b]]);
-		
+		var matrix = stateToDens([[a], [b]]);
+
 		$("#input_" + i + "_a").val(sliceDecimals(matrix[0][0]));
 		$("#input_" + i + "_b").val(sliceDecimals(matrix[0][1]));
 		$("#input_" + i + "_c").val(sliceDecimals(matrix[1][0]));
@@ -787,32 +787,32 @@ $(document).ready(function() {
 	function addEventMixedSliders() {
 		var sliders = $('[class^="js-range-slider-mixed"]');
 
-		sliders.each(function(index) {
+		sliders.each(function (index) {
 			var slider = $(this).data("ionRangeSlider");
 			var self = $(this);
 
 			slider.update({
-				onChange: function(data) {
+				onChange: function (data) {
 					var slidersActive = $("input[id^='check-active']:checked").length;
 					var delta = -1;
 
 					var otherSliders = $('[class^="js-range-slider-mixed"]');
 					otherSliders = otherSliders.not(self[0])
 
-					sliders.not(self[0]).each(function() {
-						if( $(this).data("ionRangeSlider").options.from_fixed ) {
+					sliders.not(self[0]).each(function () {
+						if ($(this).data("ionRangeSlider").options.from_fixed) {
 							otherSliders = otherSliders.not($(this));
 						}
 					})
 
-					sliders.each(function() {
+					sliders.each(function () {
 						delta += $(this).data("ionRangeSlider").result.from;
 					})
 
-					otherSliders.each(function() {
+					otherSliders.each(function () {
 						var otherSlider = $(this).data("ionRangeSlider");
 						var old_value = otherSlider.result.from;
-						var new_value = old_value - delta/(otherSliders.length)
+						var new_value = old_value - delta / (otherSliders.length)
 
 						if (new_value < 0 || data.from == 1) {
 							new_value = 0
@@ -826,7 +826,7 @@ $(document).ready(function() {
 						})
 					})
 				},
-				onFinish: function(data) {
+				onFinish: function (data) {
 					var old_value = data.from;
 					finalizeMixed(slider);
 					computeMixed();
@@ -847,7 +847,7 @@ $(document).ready(function() {
 		var x = $("#noise-select").val();
 		var r = 1 - parseFloat($("#noise_slider").val());
 		var s_r = Math.sqrt(r);
-		var s_emr = Math.sqrt(1-r);
+		var s_emr = Math.sqrt(1 - r);
 
 		$("#noise-equation-img").removeClass("invisible");
 		$("#noise-update_button").addClass("invisible");
@@ -859,35 +859,35 @@ $(document).ready(function() {
 		$('#input_noise_E2_b').prop('disabled', true);
 		$('#input_noise_E2_c').prop('disabled', true);
 		$('#input_noise_E2_d').prop('disabled', true);
-		
-		
+
+
 		if (x == "D") { // depolarizing
-		  $("#noise-equation-img").attr('src', "img/noiseEq_D.png");
-		  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,0],[0,0]]);
+			$("#noise-equation-img").attr('src', "img/noiseEq_D.png");
+			setNoiseMatrices([[s_r, 0], [0, s_r]], [[0, 0], [0, 0]]);
 		}
 		else if (x == "PhX") { // dephase x
-		  $("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
-		  setNoiseMatrices([[s_r,0],[0,s_r]], [[0,s_emr],[s_emr,0]]);
+			$("#noise-equation-img").attr('src', "img/noiseEq_PhX.png");
+			setNoiseMatrices([[s_r, 0], [0, s_r]], [[0, s_emr], [s_emr, 0]]);
 		}
 		else if (x == "PhZ") { // dephase y
-		  $("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
-		  setNoiseMatrices([[s_r,0],[0,s_r]], [[s_emr,0],[0,-1*s_emr]]);
+			$("#noise-equation-img").attr('src', "img/noiseEq_PhZ.png");
+			setNoiseMatrices([[s_r, 0], [0, s_r]], [[s_emr, 0], [0, -1 * s_emr]]);
 		}
 		else if (x == "A") { // amplitude damping
-		  $("#noise-equation-img").attr('src', "img/noiseEq_A.png");
-		  setNoiseMatrices([[1,0],[0,s_r]], [[0,s_emr],[0,0]]);
+			$("#noise-equation-img").attr('src', "img/noiseEq_A.png");
+			setNoiseMatrices([[1, 0], [0, s_r]], [[0, s_emr], [0, 0]]);
 		}
 		else if (x == "user") { // user defined function
-		  $("#noise-update_button").removeClass("invisible");
-		  $("#noise-equation-img").addClass("invisible");
-		  $('#input_noise_E1_a').prop('disabled', false);
-		  $('#input_noise_E1_b').prop('disabled', false);
-		  $('#input_noise_E1_c').prop('disabled', false);
-		  $('#input_noise_E1_d').prop('disabled', false);
-		  $('#input_noise_E2_a').prop('disabled', false);
-		  $('#input_noise_E2_b').prop('disabled', false);
-		  $('#input_noise_E2_c').prop('disabled', false);
-		  $('#input_noise_E2_d').prop('disabled', false);
+			$("#noise-update_button").removeClass("invisible");
+			$("#noise-equation-img").addClass("invisible");
+			$('#input_noise_E1_a').prop('disabled', false);
+			$('#input_noise_E1_b').prop('disabled', false);
+			$('#input_noise_E1_c').prop('disabled', false);
+			$('#input_noise_E1_d').prop('disabled', false);
+			$('#input_noise_E2_a').prop('disabled', false);
+			$('#input_noise_E2_b').prop('disabled', false);
+			$('#input_noise_E2_c').prop('disabled', false);
+			$('#input_noise_E2_d').prop('disabled', false);
 		} // if
 	}
 
@@ -896,53 +896,53 @@ $(document).ready(function() {
 
 		var gate = $("#gate-select").val();
 		var state = $("#state-select").val();
-		
-		if (gate == "hamil") { // user defined function
-		  	$("#hamiltonian").removeClass("invisible");
-		  	$("#timeslider").removeClass("invisible");
-		  	$(".js-range-slider-unitary").ionRangeSlider({
-		  	    type: "single",
-		  	    grid: true,
-		  	    min: 0,
-		  	    max: 100,
-		  	    from: 0,
-		  	    step: 0.01,
-		  		onChange: function (data) {
-		  			$('#time_t').val(data.from);
-		  	       	drawTransformedArrows();
-		  	    },
-		  		prettify: function (num) {
-		  		  return sliceDecimals(num);
-		  		}
-		  	});	
 
-		  	var time = parseFloat($("#time_slider").val());
-		  	var hamiltonian = getHamiltonian();
-			setUnitaryMatrix(getUnitaryAtTime(hamiltonian,time));
+		if (gate == "hamil") { // user defined function
+			$("#hamiltonian").removeClass("invisible");
+			$("#timeslider").removeClass("invisible");
+			$(".js-range-slider-unitary").ionRangeSlider({
+				type: "single",
+				grid: true,
+				min: 0,
+				max: 100,
+				from: 0,
+				step: 0.01,
+				onChange: function (data) {
+					$('#time_t').val(data.from);
+					drawTransformedArrows();
+				},
+				prettify: function (num) {
+					return sliceDecimals(num);
+				}
+			});
+
+			var time = parseFloat($("#time_slider").val());
+			var hamiltonian = getHamiltonian();
+			setUnitaryMatrix(getUnitaryAtTime(hamiltonian, time));
 			$("#time_t").val($("#time_slider").val());
 			drawTransformedArrows();
 
 		}
-		else {	
+		else {
 			// Destroy unitary slider if it exists
 			var unitarySlider = $(".js-range-slider-unitary").data("ionRangeSlider");
 			unitarySlider && unitarySlider.destroy();
 
 			$("#hamiltonian").addClass("invisible");
-			$("#timeslider").addClass("invisible");	
+			$("#timeslider").addClass("invisible");
 
 
 			if (gate == "X") { // // Pauli-X
-			  	setUnitaryMatrix(gateX);
+				setUnitaryMatrix(gateX);
 			}
 			else if (gate == "Y") { // // Pauli-Y
-			  	setUnitaryMatrix(gateY);
+				setUnitaryMatrix(gateY);
 			}
 			else if (gate == "Z") { // Pauli-Z
-			  	setUnitaryMatrix(gateZ);
+				setUnitaryMatrix(gateZ);
 			}
 			else if (gate == "H") { // Hadamard
-			  	setUnitaryMatrix(gateH);
+				setUnitaryMatrix(gateH);
 			}
 			else if (gate == "R") {
 				var angle = parseFloat($("#angle_input").val());
@@ -951,23 +951,23 @@ $(document).ready(function() {
 				} else if (angle < 0) {
 					$("#angle_input").val(0);
 				}
-				var gateR = makePhaseGate(angle*Math.PI);
+				var gateR = makePhaseGate(angle * Math.PI);
 				setUnitaryMatrix(gateR);
 				$("#angle-for-uni").removeClass("invisible");
 			}
 		}
-		if (gate == "user") { // Hadamard	  	
+		if (gate == "user") { // Hadamard
 			$("#gate-update_button").removeClass("invisible");
-		  	$('#input_gate_a').prop('disabled', false);
-		  	$('#input_gate_b').prop('disabled', false);
-		  	$('#input_gate_c').prop('disabled', false);
-		  	$('#input_gate_d').prop('disabled', false);
+			$('#input_gate_a').prop('disabled', false);
+			$('#input_gate_b').prop('disabled', false);
+			$('#input_gate_c').prop('disabled', false);
+			$('#input_gate_d').prop('disabled', false);
 		} else {
 			$('#input_gate_a').prop('disabled', true);
 			$('#input_gate_b').prop('disabled', true);
 			$('#input_gate_c').prop('disabled', true);
 			$('#input_gate_d').prop('disabled', true);
-		}	
+		}
 	}
 
 	/**
@@ -976,13 +976,13 @@ $(document).ready(function() {
 	 * Updates the slider in the noise tab
 	 */
 	function updateNoiseSlider() {
-		var r = 1-this.value;
+		var r = 1 - this.value;
 		if (r < 0) {
-			r=0;
-		} else if (r>1) {
-			r=1;
+			r = 0;
+		} else if (r > 1) {
+			r = 1;
 		}
-		$('.js-range-slider-noise').data("ionRangeSlider").update({from: r});
+		$('.js-range-slider-noise').data("ionRangeSlider").update({ from: r });
 		onNoiseSelectionChanged();
 	}
 
@@ -994,15 +994,15 @@ $(document).ready(function() {
 	function updateTimeSlider() {
 		var t = this.value;
 		if (t < 0) {
-			t=0;
-		} else if (t>100) {
-			t=100;
+			t = 0;
+		} else if (t > 100) {
+			t = 100;
 		}
-		$('#time_slider').data("ionRangeSlider").update({from: parseFloat($("#time_t").val())})
+		$('#time_slider').data("ionRangeSlider").update({ from: parseFloat($("#time_t").val()) })
 		onUnitarySelectionChanged();
 	}
 });
-	
+
 
 /**
  * #getDensityMatrix
@@ -1017,7 +1017,7 @@ function getDensityMatrix(i) {
 	var c = math.complex($("#input_" + i + "_c").val());
 	var d = math.complex($("#input_" + i + "_d").val());
 
-	return [[a,b],[c,d]];
+	return [[a, b], [c, d]];
 }
 
 /**
@@ -1030,7 +1030,7 @@ function mixedValidityCheck() {
 	var sliders = $('[class^="js-range-slider-mixed"]');
 	var total = 0;
 
-	sliders.each(function() {
+	sliders.each(function () {
 		total += $(this).data("ionRangeSlider").result.from;
 	});
 
@@ -1065,12 +1065,12 @@ function finalizeMixed(slider) {
 	var total = 0;
 	var old_value = slider.result.from;
 
-	sliders.each(function() {
+	sliders.each(function () {
 		total += $(this).data("ionRangeSlider").result.from;
 	});
 
 	if (+total.toFixed(2) != 1 && !slider.options.from_fixed) {
-		slider.update({from: old_value + (1 - total)})
+		slider.update({ from: old_value + (1 - total) })
 	}
 
 	updateMixedGui();
@@ -1084,47 +1084,47 @@ function finalizeMixed(slider) {
 function updateMixedGui() {
 	var sliders = $('[class^="js-range-slider-mixed"]')
 	var states = [];
-	
-	sliders.each(function(i) {
+
+	sliders.each(function (i) {
 		states[i] = $(this).data("ionRangeSlider").result.from;
 	})
 
-	$('#mixedStateFunction').html("Wave function: &#936 = <span class='state-1'>" + states[0] + 
-		"</span>&#x00B7&#936&#x2081 + <span class='state-2'>" + states[1] + 
-		"</span>&#x00B7&#936&#x2082 + <span class='state-3'>" + states[2] + 
-		"</span>&#x00B7&#936&#x2083 + <span class='state-4'>" + states[3] + 
+	$('#mixedStateFunction').html("Wave function: &#936 = <span class='state-1'>" + states[0] +
+		"</span>&#x00B7&#936&#x2081 + <span class='state-2'>" + states[1] +
+		"</span>&#x00B7&#936&#x2082 + <span class='state-3'>" + states[2] +
+		"</span>&#x00B7&#936&#x2083 + <span class='state-4'>" + states[3] +
 		"</span>&#x00B7&#936&#x2084"
 	);
 }
 
 /**
  * #checkActive
- * 
+ *
  * Handles the active checkbox events
  * @param  {checkbox}
  */
 function checkActive(checkbox) {
 	var checkId = checkbox.id.slice(-1);
 	$('#check-lock-' + checkId).prop('checked', false);
-	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from: 0, from_fixed: !checkbox.checked})
+	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({ from: 0, from_fixed: !checkbox.checked })
 	$('#check-lock-' + checkId).prop('disabled', !checkbox.checked);
 
 	var sliders = $('[class^="js-range-slider-mixed"]');
 
-	sliders.each(function() {
+	sliders.each(function () {
 		finalizeMixed($(this).data("ionRangeSlider"));
 	})
 }
 
 /**
  * #checkActive
- * 
+ *
  * Handles the probability lock checkbox events
  * @param  {checkbox}
  */
 function checkLock(checkbox) {
 	var checkId = checkbox.id.slice(-1);
-	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({from_fixed: checkbox.checked})
+	$(".js-range-slider-mixed-" + checkId).data("ionRangeSlider").update({ from_fixed: checkbox.checked })
 }
 
 /**
@@ -1134,7 +1134,7 @@ function checkLock(checkbox) {
  * @return {Unitary}
  */
 function getUnitary() {
-	var gate = [[0,0],[0,0]];
+	var gate = [[0, 0], [0, 0]];
 	gate[0][0] = math.complex($("#input_gate_a").val());
 	gate[0][1] = math.complex($("#input_gate_b").val());
 	gate[1][0] = math.complex($("#input_gate_c").val());
@@ -1149,7 +1149,7 @@ function getUnitary() {
  * @return {hamiltonian}
  */
 function getHamiltonian() {
-	var hamil = [[0,0],[0,0]];
+	var hamil = [[0, 0], [0, 0]];
 	hamil[0][0] = math.complex($("#input_hamil_a").val());
 	hamil[0][1] = math.complex($("#input_hamil_b").val());
 	hamil[1][0] = math.complex($("#input_hamil_c").val());
@@ -1165,7 +1165,7 @@ function getHamiltonian() {
  * @param {E2}
  */
 function setUnitaryMatrix(U) {
-    $("#input_gate_a").val(sliceDecimals(U[0][0]));
+	$("#input_gate_a").val(sliceDecimals(U[0][0]));
 	$("#input_gate_b").val(sliceDecimals(U[0][1]));
 	$("#input_gate_c").val(sliceDecimals(U[1][0]));
 	$("#input_gate_d").val(sliceDecimals(U[1][1]));
@@ -1179,12 +1179,12 @@ function setUnitaryMatrix(U) {
  * @param {E2}
  */
 function setNoiseMatrices(E1, E2) {
-    $("#input_noise_E1_a").val(sliceDecimals(E1[0][0]));
+	$("#input_noise_E1_a").val(sliceDecimals(E1[0][0]));
 	$("#input_noise_E1_b").val(sliceDecimals(E1[0][1]));
 	$("#input_noise_E1_c").val(sliceDecimals(E1[1][0]));
 	$("#input_noise_E1_d").val(sliceDecimals(E1[1][1]));
-	
-    $("#input_noise_E2_a").val(sliceDecimals(E2[0][0]));
+
+	$("#input_noise_E2_a").val(sliceDecimals(E2[0][0]));
 	$("#input_noise_E2_b").val(sliceDecimals(E2[0][1]));
 	$("#input_noise_E2_c").val(sliceDecimals(E2[1][0]));
 	$("#input_noise_E2_d").val(sliceDecimals(E2[1][1]));
@@ -1215,34 +1215,34 @@ function sliceDecimals(number) {
 
 /**
  * #buildAxes
- * 
+ *
  * Constructs and returns the 3 axes for the Bloch sphere
- * 
+ *
  * @param  {length}
  * @param  {colors}
  * @return {axes}
  */
-function buildAxes( length, colors ) {
+function buildAxes(length, colors) {
 	var axes = new THREE.Object3D();
 
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), colors[0], false ) ); // +X
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), colors[0], true) ); // -X
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), colors[1], false ) ); // +Y
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), colors[1], true ) ); // -Y
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), colors[2], true ) ); // +Z
-	axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), colors[2], false ) ); // -Z
+	axes.add(buildAxis(new THREE.Vector3(0, 0, 0), new THREE.Vector3(length, 0, 0), colors[0], false)); // +X
+	axes.add(buildAxis(new THREE.Vector3(0, 0, 0), new THREE.Vector3(-length, 0, 0), colors[0], true)); // -X
+	axes.add(buildAxis(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, length, 0), colors[1], false)); // +Y
+	axes.add(buildAxis(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -length, 0), colors[1], true)); // -Y
+	axes.add(buildAxis(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, length), colors[2], true)); // +Z
+	axes.add(buildAxis(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -length), colors[2], false)); // -Z
 
 	sizeXYZ = 0.1;
 	sizeStates = 0.1;
-	axes.add( buildAxisLabel( 'x', new THREE.Vector3( 1.1*length, 0, 0 ), colors[0], sizeXYZ) ); // +X
-	axes.add( buildAxisLabel( '|+>', new THREE.Vector3( 1.01, 0.02, 0 ), 'white', sizeStates ) ); //|+>
-	axes.add( buildAxisLabel( '|->', new THREE.Vector3( -1.2, 0.02, 0 ), 'white', sizeStates) ); //|->
-	axes.add( buildAxisLabel( 'z', new THREE.Vector3( 0, 1.1 * length, 0 ), colors[1], sizeXYZ) ); // +Z
-	axes.add( buildAxisLabel( '|0>', new THREE.Vector3( 0.01, 1.1, 0 ), 'white', sizeStates ) ); //|+>
-	axes.add( buildAxisLabel( '|1>', new THREE.Vector3( 0.01, -1.15, 0 ), 'white', sizeStates) ); //|->
-	axes.add( buildAxisLabel( 'y', new THREE.Vector3( 0, 0, -1.1*length ), colors[2], sizeXYZ ) ); // +Y
-	axes.add( buildAxisLabel( '|-i>', new THREE.Vector3( 0, 0.01, 1.2 ), 'white', sizeStates ) ); //|+>
-	axes.add( buildAxisLabel( '|i>', new THREE.Vector3( 0, 0.01, -1.2 ), 'white', sizeStates) ); //|->
+	axes.add(buildAxisLabel('x', new THREE.Vector3(1.1 * length, 0, 0), colors[0], sizeXYZ)); // +X
+	axes.add(buildAxisLabel('|+>', new THREE.Vector3(1.01, 0.02, 0), 'white', sizeStates)); //|+>
+	axes.add(buildAxisLabel('|->', new THREE.Vector3(-1.2, 0.02, 0), 'white', sizeStates)); //|->
+	axes.add(buildAxisLabel('z', new THREE.Vector3(0, 1.1 * length, 0), colors[1], sizeXYZ)); // +Z
+	axes.add(buildAxisLabel('|0>', new THREE.Vector3(0.01, 1.1, 0), 'white', sizeStates)); //|+>
+	axes.add(buildAxisLabel('|1>', new THREE.Vector3(0.01, -1.15, 0), 'white', sizeStates)); //|->
+	axes.add(buildAxisLabel('y', new THREE.Vector3(0, 0, -1.1 * length), colors[2], sizeXYZ)); // +Y
+	axes.add(buildAxisLabel('|-i>', new THREE.Vector3(0, 0.01, 1.2), 'white', sizeStates)); //|+>
+	axes.add(buildAxisLabel('|i>', new THREE.Vector3(0, 0.01, -1.2), 'white', sizeStates)); //|->
 	return axes;
 }
 
@@ -1256,17 +1256,17 @@ function buildAxes( length, colors ) {
  * @param  {size}
  * @return {text: THREE.js object}
  */
-function buildAxisLabel (text, pos, color, size) {
-	var  textGeo = new THREE.TextGeometry(text, {
-        size: size,
-        height: 0.01,
-        curveSegments: 50,
-        font: "helvetiker",
-        style: "normal"
-    });
+function buildAxisLabel(text, pos, color, size) {
+	var textGeo = new THREE.TextGeometry(text, {
+		size: size,
+		height: 0.01,
+		curveSegments: 50,
+		font: "helvetiker",
+		style: "normal"
+	});
 
-	var  textMaterial = new THREE.MeshBasicMaterial({ color: color });
-	var  text = new THREE.Mesh(textGeo , textMaterial);
+	var textMaterial = new THREE.MeshBasicMaterial({ color: color });
+	var text = new THREE.Mesh(textGeo, textMaterial);
 	text.position.x = pos.x;
 	text.position.y = pos.y;
 	text.position.z = pos.z;
@@ -1278,28 +1278,28 @@ function buildAxisLabel (text, pos, color, size) {
  * #buildAxis
  *
  * Builds axis from source to destination with a specific color and dashed if specified.
- * 
+ *
  * @param  {source}
  * @param  {destination}
  * @param  {colorHex}
  * @param  {dashed: boolean}
  * @return {axis}
  */
-function buildAxis( src, dst, colorHex, dashed ) {
+function buildAxis(src, dst, colorHex, dashed) {
 	var geom = new THREE.Geometry(),
-		mat; 
+		mat;
 
-	if(dashed) {
+	if (dashed) {
 		mat = new THREE.LineDashedMaterial({ linewidth: 1, color: colorHex, dashSize: 0.1, gapSize: 0.1 });
 	} else {
 		mat = new THREE.LineBasicMaterial({ linewidth: 1, color: colorHex, depthTest: false });
 	}
 
-	geom.vertices.push( src.clone() );
-	geom.vertices.push( dst.clone() );
+	geom.vertices.push(src.clone());
+	geom.vertices.push(dst.clone());
 	geom.computeLineDistances(); // This one is SUPER important, otherwise dashed lines will appear as simple plain lines
 
-	var axis = new THREE.Line( geom, mat, THREE.LinePieces );
+	var axis = new THREE.Line(geom, mat, THREE.LinePieces);
 
 	return axis;
 }
@@ -1307,11 +1307,11 @@ function buildAxis( src, dst, colorHex, dashed ) {
 function getArrow(origin, dir, hex) {
 	// var geometry = new THREE.Geometry();
 
-  // console.log(origin, dir);
+	// console.log(origin, dir);
 
 	// geometry.vertices.push(origin); // start
 	// geometry.vertices.push(dir); // end
-	
+
 	// var material = new THREE.LineBasicMaterial({color: hex, linewidth: 2});
 	// return new THREE.Line(geometry, material);
 
@@ -1321,17 +1321,17 @@ function getArrow(origin, dir, hex) {
 	// var material = new THREE.LineBasicMaterial({color: hex, linewidth: 2});
 	// return new THREE.Mesh(geometry, material);
 
-  // TODO: upgrade three.js to use CatmullRomCurve3 for vecotr arrows with thickness https://stackoverflow.com/questions/11638883/thickness-of-lines-using-three-linebasicmaterial
-  // const path = THREE.CatmullRomCurve3([origin, dir]);
-  const path = new THREE.LineCurve3(origin, dir);
-  const geometry = new THREE.TubeGeometry( path, 20, .01, 8, true);
-  const material = new THREE.MeshBasicMaterial( { color: hex } );
-  return new THREE.Mesh( geometry, material );
+	// TODO: upgrade three.js to use CatmullRomCurve3 for vecotr arrows with thickness https://stackoverflow.com/questions/11638883/thickness-of-lines-using-three-linebasicmaterial
+	// const path = THREE.CatmullRomCurve3([origin, dir]);
+	const path = new THREE.LineCurve3(origin, dir);
+	const geometry = new THREE.TubeGeometry(path, 20, .01, 8, true);
+	const material = new THREE.MeshBasicMaterial({ color: hex });
+	return new THREE.Mesh(geometry, material);
 }
 
 function getBall(dir, hex) {
-	var geometry2 = new THREE.SphereGeometry( 0.05, 16, 12 );
-	var sphereMaterial = new THREE.MeshBasicMaterial({color: hex});
+	var geometry2 = new THREE.SphereGeometry(0.05, 16, 12);
+	var sphereMaterial = new THREE.MeshBasicMaterial({ color: hex });
 	var ball = new THREE.Mesh(geometry2, sphereMaterial);
 	ball.translateX(dir.x);
 	ball.translateY(dir.y);
@@ -1344,7 +1344,7 @@ function getBall(dir, hex) {
  *
  * Creates guiding circles in Bloch spheres. If a vector is supplied, the vector will be used to transform
  * the circles.
- * 
+ *
  * @param  {colors}
  * @param  {vector}
  * @return {circles}
@@ -1370,7 +1370,7 @@ function buildCircles(colors, vector) {
  *
  * Builds the circle with the specified radius, amount of segments, rotation angle and color. If a vector is
  * supplied, the vector will be used to transform the circle.
- * 
+ *
  * @param  {radius}
  * @param  {segments}
  * @param  {rotation}
@@ -1378,47 +1378,47 @@ function buildCircles(colors, vector) {
  * @param  {colors}
  * @return {circle}
  */
-function buildCircle(radius,segments,rot, vector, colors) {
+function buildCircle(radius, segments, rot, vector, colors) {
 	var circle = new THREE.Object3D();
 
-	var circleGeometry = new THREE.CircleGeometry( radius, segments );
-	var lineGeometry = new THREE.CircleGeometry( radius, segments );
+	var circleGeometry = new THREE.CircleGeometry(radius, segments);
+	var lineGeometry = new THREE.CircleGeometry(radius, segments);
 
 	if (vector !== undefined && vector[0] !== undefined) {
-		circleGeometry.applyMatrix( new THREE.Matrix4().makeScale( vector[0], vector[1], vector[2] ) );
-		lineGeometry.applyMatrix( new THREE.Matrix4().makeScale( vector[0], vector[1], vector[2] ) );
+		circleGeometry.applyMatrix(new THREE.Matrix4().makeScale(vector[0], vector[1], vector[2]));
+		lineGeometry.applyMatrix(new THREE.Matrix4().makeScale(vector[0], vector[1], vector[2]));
 	}
-	
-	var lineMaterial = new THREE.LineDashedMaterial( {
-		color: colors[1], 
+
+	var lineMaterial = new THREE.LineDashedMaterial({
+		color: colors[1],
 		transparent: true,
 		opacity: 0.5,
-		depthWrite: false, 
+		depthWrite: false,
 		depthTest: false,
 		dashSize: 0.1,
-		gapSize: 0.1, 
+		gapSize: 0.1,
 		linewidth: 1
 	});
 
 	lineGeometry.computeLineDistances();
-	
-	var line = new THREE.Line(lineGeometry,lineMaterial);
 
-	if (rot ==='x') {
-		var circleMaterial = new THREE.MeshBasicMaterial( { 
-			color: colors[0], 
-			transparent: true, 
+	var line = new THREE.Line(lineGeometry, lineMaterial);
+
+	if (rot === 'x') {
+		var circleMaterial = new THREE.MeshBasicMaterial({
+			color: colors[0],
+			transparent: true,
 			side: THREE.DoubleSide,
 			opacity: 0.2,
-			depthWrite: false, 
+			depthWrite: false,
 			depthTest: false
 		});
-		var base =  new THREE.Mesh(circleGeometry, circleMaterial);
-		circle.rotation.x = Math.PI/2; 
+		var base = new THREE.Mesh(circleGeometry, circleMaterial);
+		circle.rotation.x = Math.PI / 2;
 		circle.add(base);
 	}
-	else if (rot ==='y') {
-		circle.rotation.y = Math.PI/2; 
+	else if (rot === 'y') {
+		circle.rotation.y = Math.PI / 2;
 	}
 
 	circle.add(line);
