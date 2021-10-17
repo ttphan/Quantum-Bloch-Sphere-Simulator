@@ -1,8 +1,8 @@
 body {
 	padding: 10px;
-	background-color: #F5F5F5;
-	background-image: url("../pic/bg.jpg");
-	background-size:cover;
+	/* background-color: #F5F5F5; */
+	/* background-image: url("../pic/bg.jpg"); */
+	/* background-size:cover; */
 	font-family: Arial, Helvetica, sans-serif;
 	color:#2E2E2E;
 }
@@ -59,8 +59,8 @@ h2 {
 
 #app {
 	vertical-align: middle;
-	width: 900px;
-	height: 600px;
+	/* width: 900px;
+	height: 600px; */
 }
 
 .state-1 {
@@ -110,9 +110,8 @@ h2 {
 
 .inputAngles {
 	margin-left: 0px;
-	width: 40px;
+	width: 50px;
 	margin-top: 14px;
-
 }
 
 #state1Text {
@@ -140,7 +139,7 @@ div.blocks {
 
 
 div#sphere, div#sphere-noise {
-	padding: 10px;
+	/* padding: 10px; */
 }
 
 div.colspace {
@@ -153,7 +152,7 @@ div.colspace {
 }
 
 div.spaceRow {
-	margin-top: 10px;
+	/* margin-top: 10px; */
 	margin-bottom: 10px;
 }
 
@@ -163,7 +162,7 @@ canvas {
 }
 
 .canvasSphere {
-	margin-left: 15px;
+	/* margin-left: 15px; */
 }
 
 .range-slider {
@@ -209,6 +208,7 @@ canvas {
 
 .tab-pane select {
 	margin-left: 8px;
+	min-width: 5px;
 }
 
 #titleblock {
@@ -236,7 +236,7 @@ canvas {
 
 #mixedStateFunction {
 	margin: 10px;
-	margin-left: 40px;	
+	margin-left: 40px;
 	font-size: 12pt;
 }
 

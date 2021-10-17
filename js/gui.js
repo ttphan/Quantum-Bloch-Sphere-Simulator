@@ -9,6 +9,7 @@ $(document).ready(function() {
 	var blochSphere_bottom; // the bottom Bloch sphere
 	var transformed_arrows = [null, null, null, null, null];
 	var transformed_ball = [null, null, null, null, null];
+	var balls = [null, null, null, null, null];
 
 	var transformation = [0.7, 1.3, 0.2];
 
@@ -119,14 +120,14 @@ $(document).ready(function() {
 		var sphere_bottom = new THREE.Mesh(geometry, sphereMaterialNoise);
 		blochSphere_bottom.add(sphere_bottom);
 
-		scene_bottom.add(buildAxes(1.5, axesColors))
+		scene_bottom.add(buildAxes(1.5, axesColors));
 
-		var circles_bottom = buildCircles(circleColors, transformation);
-		sceneCircles_bottom.add(circles_bottom)
+		// var circles_bottom = buildCircles(circleColors, transformation);
+		// sceneCircles_bottom.add(circles_bottom);
 
-		blochSphere_bottom.add(circles_bottom);
+		// blochSphere_bottom.add(circles_bottom);
 
-		scene_bottom.add(blochSphere_bottom)
+		scene_bottom.add(blochSphere_bottom);
 		
 		render();
 	}
@@ -253,7 +254,7 @@ $(document).ready(function() {
 								.attr({
 									id: "angle_" + i + "_1",
 									value: '0.00',
-									type: 'text',
+									type: 'number',
 
 								})
 							)
@@ -272,7 +273,7 @@ $(document).ready(function() {
 								.attr({
 									id: "angle_" + i + "_2",
 									value: '0.00',
-									type: 'text',
+									type: 'number',
 								})
 							)
 						)
@@ -371,9 +372,9 @@ $(document).ready(function() {
 		//newblochSphere_bottom.add(buildAxes(1.5));
 
 		var circles_bottom = buildCircles(circleColors, axes);
-		sceneCircles_bottom.add(circles_bottom)
+		// sceneCircles_bottom.add(circles_bottom)
 
-		newblochSphere_bottom.add(circles_bottom);
+		// newblochSphere_bottom.add(circles_bottom);
 		
 		newblochSphere_bottom.translateX(center.x);
 		newblochSphere_bottom.translateY(center.y);
@@ -570,7 +571,11 @@ $(document).ready(function() {
 		var length = dir.length();
 		var hex = tabColors[index];
 
-		var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
+
+
+		// var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
+		var arrow = getArrow( origin, dir, hex );
+
 
 		if (arrows[index] != null) {
 			scene.remove(arrows[index]);
@@ -578,6 +583,20 @@ $(document).ready(function() {
 
 		arrows[index] = arrow;
 		scene.add( arrow );
+
+
+
+
+
+    var ball = getBall(dir, hex);
+    if (balls[index-1] != null) scene.remove(balls[index-1]);
+    balls[index-1] = ball;
+    scene.add(ball);
+
+
+
+
+
 
 		
 		drawTransformedArrows();
@@ -1218,10 +1237,12 @@ function buildAxes( length, colors ) {
 	axes.add( buildAxisLabel( 'x', new THREE.Vector3( 1.1*length, 0, 0 ), colors[0], sizeXYZ) ); // +X
 	axes.add( buildAxisLabel( '|+>', new THREE.Vector3( 1.01, 0.02, 0 ), 'white', sizeStates ) ); //|+>
 	axes.add( buildAxisLabel( '|->', new THREE.Vector3( -1.2, 0.02, 0 ), 'white', sizeStates) ); //|->
-	axes.add( buildAxisLabel( 'z', new THREE.Vector3( 0, 1.1*length, 0 ), colors[1], sizeXYZ) ); // +Z
+	axes.add( buildAxisLabel( 'z', new THREE.Vector3( 0, 1.1 * length, 0 ), colors[1], sizeXYZ) ); // +Z
 	axes.add( buildAxisLabel( '|0>', new THREE.Vector3( 0.01, 1.1, 0 ), 'white', sizeStates ) ); //|+>
 	axes.add( buildAxisLabel( '|1>', new THREE.Vector3( 0.01, -1.15, 0 ), 'white', sizeStates) ); //|->
 	axes.add( buildAxisLabel( 'y', new THREE.Vector3( 0, 0, -1.1*length ), colors[2], sizeXYZ ) ); // +Y
+	axes.add( buildAxisLabel( '|-i>', new THREE.Vector3( 0, 0.01, 1.2 ), 'white', sizeStates ) ); //|+>
+	axes.add( buildAxisLabel( '|i>', new THREE.Vector3( 0, 0.01, -1.2 ), 'white', sizeStates) ); //|->
 	return axes;
 }
 
@@ -1284,13 +1305,28 @@ function buildAxis( src, dst, colorHex, dashed ) {
 }
 
 function getArrow(origin, dir, hex) {
-	var geometry = new THREE.Geometry();
+	// var geometry = new THREE.Geometry();
+
+  // console.log(origin, dir);
+
+	// geometry.vertices.push(origin); // start
+	// geometry.vertices.push(dir); // end
 	
-	geometry.vertices.push(origin); // start
-	geometry.vertices.push(dir); // end
-	
-	var material = new THREE.LineBasicMaterial({color: hex});
-	return new THREE.Line(geometry, material);			
+	// var material = new THREE.LineBasicMaterial({color: hex, linewidth: 2});
+	// return new THREE.Line(geometry, material);
+
+
+
+	// var geometry = new THREE.CylinderGeometry();
+	// var material = new THREE.LineBasicMaterial({color: hex, linewidth: 2});
+	// return new THREE.Mesh(geometry, material);
+
+  // TODO: upgrade three.js to use CatmullRomCurve3 for vecotr arrows with thickness https://stackoverflow.com/questions/11638883/thickness-of-lines-using-three-linebasicmaterial
+  // const path = THREE.CatmullRomCurve3([origin, dir]);
+  const path = new THREE.LineCurve3(origin, dir);
+  const geometry = new THREE.TubeGeometry( path, 20, .01, 8, true);
+  const material = new THREE.MeshBasicMaterial( { color: hex } );
+  return new THREE.Mesh( geometry, material );
 }
 
 function getBall(dir, hex) {

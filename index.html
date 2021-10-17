@@ -6,7 +6,7 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
 		
-		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css">		
 		
@@ -19,9 +19,25 @@
 
 		
 		<script src="js/lib/three.js"></script>
-		<script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_regular.typeface.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!-- <script type="module" src='https://cdn.skypack.dev/three@0.133.1'></script> -->
+    <!-- <script type="text/css" src='https://cdn.skypack.dev/pin/three@v0.133.1-dCIBIz3pnzocx0lNrLHe/mode=imports/optimized/three.js'></script> -->
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'></script> -->
+    <!-- <script src="https://threejs.org/build/three.js"></script> -->
+    <!-- <script type="module">
+    export * from '/-/three@v0.133.1-dCIBIz3pnzocx0lNrLHe/dist=es2020,mode=imports,min/optimized/three.js';
+    export {THREE} from '/-/three@v0.133.1-dCIBIz3pnzocx0lNrLHe/dist=es2020,mode=imports,min/optimized/three.js';</script> -->
+    <!-- <script type="module">
+    import * as THREE from 'https://cdn.skypack.dev/three';
+    import {OrbitControls} from 'https://cdn.skypack.dev/three/examples/jsm/controls/OrbitControls.js';
+    </script> -->
+    <!-- <script type="module">import * as THREE from 'https://cdn.skypack.dev/three@0.133.1';</script> -->
 		<script src="js/lib/OrbitControls.js"></script>
+
+
+    <script src="js/lib/helvetiker_regular.typeface.js"></script>
+		
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
 		<script src="js/lib/math.js"></script>
 		<script src="js/computeVector.js"></script>
 		<script src="js/gui.js"></script>
@@ -35,14 +51,18 @@
 		<center>
 		
 		<div id = "app" class="blue">
-			<div id="titleblock" class="col-md-12 colspace alpha60 spaceRow blocks"> 
+			<div id="titleblock" class="col-md-12 colspace alpha60 spaceRow"> 
 				<h1 id="titel">
 					Quantum Bloch sphere Simulator 
 				</h1>
 			</div>
 			<div id="inputfields" class="col-md-7 colspace container">
+
+
+
+        <!-- 1st row spaceRow -->
 				<div class="row spaceRow">	
-					<div class="blocks alpha60">
+					<div class="alpha60">
 						<ul class="nav nav-tabs">
 							<li class="active">
 								<a data-toggle="tab" href="#section1" id='tab1'>
@@ -90,10 +110,16 @@
 					</div>
 					
 				</div>
-				
+
+
+
+        <!-- 2nd row spaceRow -->
 				<div class="row spaceRow">
 
-					<div class="blocks alpha60">
+					<div class="alpha60">
+
+
+
 						<ul class="nav nav-tabs">
 							<li class="active">
 								<a data-toggle="tab" href="#bottom-section1" id='bottom-tab1'>
@@ -111,6 +137,9 @@
 								</a>
 							</li>
 						</ul>
+
+
+
 						<div class="tab-content">
 							<div id="bottom-section1" class="tab-pane fade in active">
 
@@ -290,7 +319,7 @@
 											<h5>t</h5>
 										</div>
 										<div class="col-md-1 smallPadding">
-											<input id="time_t" class="inputAngles" type="text" value="0.00">
+											<input id="time_t" class="inputAngles" type="number" value="0.00", step=".05">
 										</div>
 
 										<div class='range-slider col-md-10'>
@@ -305,11 +334,11 @@
 
 			</div>
 			<div class="col-md-5 colspace">
-				<div id="sphere" class="blocks spaceRow alpha60 sphere">
-					<canvas id="canvas-top" class="canvasSphere" width="300" height="300"></canvas>
+				<div id="sphere" class="spaceRow alpha60 sphere">
+					<canvas id="canvas-top" class="canvasSphere" width="500" height="500"></canvas>
 				</div>
-				<div id="sphere-noise" class="blocks spaceRow alpha60 sphere">
-					<canvas id="canvas-bottom" class="canvasSphere" width="300" height="300"></canvas>
+				<div id="sphere-noise" class="spaceRow alpha60 sphere">
+					<canvas id="canvas-bottom" class="canvasSphere" width="500" height="500"></canvas>
 				</div>
 				<div style="float:right">
 					<button type="button" class="btn btn-default glyphicon glyphicon-info-sign" data-toggle="modal" data-target="#infoModal"></button>
@@ -342,23 +371,58 @@
 		<div class="modal multi-step fade" id="infoModal">
 			<div class="modal-dialog">
 				<div class="modal-content">
+
 					<div class="modal-header">
-						<h4 class="modal-title step-1" data-step="1">Quantum Bloch-sphere Simulator</h4>
+          <!-- <div class="navbar-header"> -->
 
-						<h4 class="modal-title step-2" data-step="2">Bloch Spheres</h4>
+            <!-- <div class="navbar-left"> -->
+              <h4 class="modal-title step-1 left" data-step="1">Quantum Bloch-sphere Simulator</h4>
 
-						<h4 class="modal-title step-3" data-step="3">Quantum States</h4>
+              <h4 class="modal-title step-2" data-step="2">Bloch Spheres</h4>
 
-						<h4 class="modal-title step-4" data-step="4">Add Noise</h4>
+              <h4 class="modal-title step-3" data-step="3">Quantum States</h4>
 
-						<h4 class="modal-title step-5" data-step="5">Mixed State</h4>
+              <h4 class="modal-title step-4" data-step="4">Add Noise</h4>
 
-						<h4 class="modal-title step-6" data-step="6">Unitary Transformation</h4>
+              <h4 class="modal-title step-5" data-step="5">Mixed State</h4>
+
+              <h4 class="modal-title step-6" data-step="6">Unitary Transformation</h4>
+            <!-- </div> -->
 
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+
+            <!-- <div> -->
+            <!-- <div class="close"> -->
+            <!-- <div class='col-md-4'> -->
+            <!-- <div class="navbar-right btn-nav">
+              <button type="button" class="btn btn-primary step step-2" data-step="2" onclick="sendEvent('#infoModal', 1)">Back</button>
+
+              <button type="button" class="btn btn-primary step step-3" data-step="3" onclick="sendEvent('#infoModal', 2)">Back</button>
+
+              <button type="button" class="btn btn-primary step step-4" data-step="4" onclick="sendEvent('#infoModal', 3)">Back</button>
+
+              <button type="button" class="btn btn-primary step step-5" data-step="5" onclick="sendEvent('#infoModal', 4)">Back</button>
+
+              <button type="button" class="btn btn-primary step step-6" data-step="6" onclick="sendEvent('#infoModal', 5)">Back</button>
+
+              <button type="button" class="btn btn-primary step step-1" data-step="1" onclick="sendEvent('#infoModal', 2)">Continue</button>
+
+              <button type="button" class="btn btn-primary step step-2" data-step="2" onclick="sendEvent('#infoModal', 3)">Continue</button>
+
+              <button type="button" class="btn btn-primary step step-3" data-step="3" onclick="sendEvent('#infoModal', 4)">Continue</button>
+
+              <button type="button" class="btn btn-primary step step-4" data-step="4" onclick="sendEvent('#infoModal', 5)">Continue</button>
+
+              <button type="button" class="btn btn-primary step step-5" data-step="5" onclick="sendEvent('#infoModal', 6)">Continue</button>
+
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div> -->
 					
 
 					</div>
+
+					<div style="min-height:30em">
 					<div class="modal-body step step-1" data-step="1">
 						<p>Simulate quantum states, both pure and mixed, in a Bloch-sphere with various quantum noise channels and gates.
 						The effects of the various components are shown in real time on the right hand side in the Bloch-spheres.</p>
@@ -400,12 +464,15 @@
 						The other option where user input is needed is the Evolving State. In this case, the unitary is determined by a Hamiltonian and time. The unitary which is applied to the density matrix is time-dependent and can be written as follows: U(t) = e<sup>itH</sup>, where H is the hamiltionian. A slider at the bottom of the tab is provided to see how the states evolve with different time settings to construct an new Unitary.
 						</p>
 					</div>
+					</div>
 
 					<div class="modal-footer">
 						<div class='row'>
 							<div class='col-md-8' style='text-align: left'>
 								<p>Copyright &#169; 2015, created by Annemieke Verbraeck, Frank Marsman and Tung Phan</p>
 							</div>
+
+
 							<div class='col-md-4'>
 								<button type="button" class="btn btn-primary step step-2" data-step="2" onclick="sendEvent('#infoModal', 1)">Back</button>
 
@@ -427,8 +494,10 @@
 
 								<button type="button" class="btn btn-primary step step-5" data-step="5" onclick="sendEvent('#infoModal', 6)">Continue</button>
 
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
 							</div>
+
+
 						</div>
 					</div>
 				</div>

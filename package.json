@@ -1,0 +1,23 @@
+{
+  "name": "quantum-bloch-sphere-simulator",
+  "version": "0.1.0",
+  "description": "Simulate quantum states, both pure and mixed, in a Bloch-sphere with various quantum noise channels and gates. The effects of the various components are shown in real time on the right hand side in the Bloch-spheres.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klezm/Quantum-Bloch-Sphere-Simulator.git"
+  },
+  "keywords": [
+    "quantum-computing",
+    "qubit",
+    "bloch-sphere"
+  ],
+  "homepage": "https://github.com/klezm/Quantum-Bloch-Sphere-Simulator",
+  "devDependencies": {
+    "http-server": "^13.0.2"
+  },
+  "dependencies": {}
+}
