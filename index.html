@@ -54,12 +54,17 @@
 	<center>
 
 		<div id="app" class="blue">
-			<div id="titleblock" class="col-md-12 colspace alpha60 spaceRow">
+			<div id="titleblock" class="col-md-12 colspace alpha60 spaceRow grid-title">
 				<h1 id="titel">
 					Quantum Bloch sphere Simulator
+					<div style="float:right">
+						<button type="button" class="btn btn-default glyphicon glyphicon-info-sign" data-toggle="modal"
+							data-target="#infoModal"></button>
+					</div>
 				</h1>
 			</div>
-			<div id="inputfields" class="col-md-7 colspace container">
+
+			<div id="inputfields" class="grid-user-inputs">
 
 
 
@@ -379,16 +384,12 @@
 				</div>
 
 			</div>
-			<div class="col-md-5 colspace">
-				<div id="sphere" class="spaceRow alpha60 sphere">
+			<div class="col-md-5 colspace grid-bloch-sphere">
+				<div id="sphere" class="sphere">
 					<canvas id="canvas-top" class="canvasSphere" width="500" height="500"></canvas>
 				</div>
-				<div id="sphere-noise" class="spaceRow alpha60 sphere">
+				<div id="sphere-noise" class="sphere">
 					<canvas id="canvas-bottom" class="canvasSphere" width="500" height="500"></canvas>
-				</div>
-				<div style="float:right">
-					<button type="button" class="btn btn-default glyphicon glyphicon-info-sign" data-toggle="modal"
-						data-target="#infoModal"></button>
 				</div>
 			</div>
 

@@ -43,12 +43,14 @@ $(document).ready(function () {
 		// renderer
 		//// Top
 		renderer_top = new THREE.WebGLRenderer({ canvas: c_top });
-		renderer_top.setSize(c_top.width, c_top.height);
+		// renderer_top.setSize(c_top.width, c_top.height);
+		renderer_top.setSize(window.innerWidth * 0.5, window.innerHeight * 0.45);
 		renderer_top.autoClear = false;
 
 		//// Bottom
 		renderer_bottom = new THREE.WebGLRenderer({ canvas: c_bottom });
-		renderer_bottom.setSize(c_bottom.width, c_bottom.height);
+		// renderer_bottom.setSize(c_bottom.width, c_bottom.height);
+		renderer_bottom.setSize(window.innerWidth * 0.5, window.innerHeight * 0.45);
 		renderer_bottom.autoClear = false;
 
 		// camera
